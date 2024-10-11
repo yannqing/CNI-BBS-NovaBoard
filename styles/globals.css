@@ -10,17 +10,11 @@
     display: none; /* Chrome, Safari 和 Opera */
 }
 
-@keyframes slideIn {
-    from {
-        transform: translateY(20px); /* 向下位移 */
-        opacity: 0; /* 初始透明度 */
-    }
-    to {
-        transform: translateY(0); /* 恢复到原位 */
-        opacity: 1; /* 完全不透明 */
-    }
-}
-
-.animate-slide-in {
-    animation: slideIn 0.3s ease-out; /* 动画时长和缓动函数 */
+/**
+ * 不换行，溢出用省略号表示
+ */
+.ellipsis {
+    white-space: nowrap;       /* 不换行 */
+    overflow: hidden;          /* 溢出隐藏 */
+    text-overflow: ellipsis;   /* 用省略号表示溢出部分 */
 }

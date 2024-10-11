@@ -86,6 +86,7 @@ service.interceptors.response.use(
       if (data) {
         // 假设响应数据中包含加密数据和 IV
         let ivBase64 = response.headers["iv"]; // 从响应头中获取 IV
+
         // 如果取到 iv 则解密。
         if (ivBase64) {
           let decryptedData = decrypt(data, ivBase64); // 解密数据

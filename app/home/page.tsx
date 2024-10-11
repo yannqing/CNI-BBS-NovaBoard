@@ -1,93 +1,51 @@
 "use client";
 
-import { Card, CardBody, CardFooter } from "@nextui-org/card";
+import { Card, CardBody, CardFooter, CardHeader } from "@nextui-org/card";
 import { Image } from "@nextui-org/image";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { Tooltip } from "@nextui-org/tooltip";
+import { User } from "@nextui-org/user";
+import { Button } from "@nextui-org/button";
+import { Avatar } from "@nextui-org/avatar";
 
+import { ErrorCode } from "@/types/error/ErrorCode";
+import { BaseResponse } from "@/types";
+import { externalPost, GetPostListRequest, Post } from "@/types/post/post";
+import { queryPostList } from "@/app/home/action";
 import HomeLayout from "@/app/home/layout";
 
 export default function HomePage() {
-  const list = [
-    {
-      title: "Orange",
-      img: "https://nextui.org/images/hero-card-complete.jpeg",
-      price: "$5.50",
-    },
-    {
-      title: "Tangerine",
-      img: "https://nextui.org/images/album-cover.png",
-      price: "$3.00",
-    },
-    {
-      title: "Raspberry",
-      img: "https://nextui.org/images/fruit-8.jpeg",
-      price: "$10.00",
-    },
-    {
-      title: "Lemon",
-      img: "https://nextui.org/images/fruit-7.jpeg",
-      price: "$5.30",
-    },
-    {
-      title: "Avocado",
-      img: "https://nextui.org/images/fruit-6.jpeg",
-      price: "$15.70",
-    },
-    {
-      title: "Lemon 2",
-      img: "https://nextui.org/images/fruit-5.jpeg",
-      price: "$8.00",
-    },
-    {
-      title: "Banana",
-      img: "https://nextui.org/images/fruit-4.jpeg",
-      price: "$7.50",
-    },
-    {
-      title: "Watermelon",
-      img: "https://nextui.org/images/fruit-3.jpeg",
-      price: "$12.20",
-    },
-    {
-      title: "Watermelon",
-      img: "https://nextui.org/images/fruit-2.jpeg",
-      price: "$12.20",
-    },
-    {
-      title: "Watermelon",
-      img: "https://nextui.org/images/fruit-1.jpeg",
-      price: "$12.20",
-    },
-    {
-      title: "Watermelon",
-      img: "https://nextui.org/images/card-example-5.jpeg",
-      price: "$12.20",
-    },
-    {
-      title: "Watermelon",
-      img: "https://nextui.org/images/card-example-6.jpeg",
-      price: "$12.20",
-    },
-    {
-      title: "Watermelon",
-      img: "https://nextui.org/images/card-example-2.jpeg",
-      price: "$12.20",
-    },
-    {
-      title: "Watermelon",
-      img: "https://nextui.org/images/card-example-3.jpeg",
-      price: "$12.20",
-    },
-    {
-      title: "Watermelon",
-      img: "https://nextui.org/images/card-example-4.jpeg",
-      price: "$12.20",
-    },
-    {
-      title: "Watermelon",
-      img: "https://blogback.yannqing.com/api/v2/objects/avatar/0vqxqul8pu2skmwokn.jpg",
-      price: "$12.20",
-    },
-  ];
+  const request: GetPostListRequest = {
+    pageNo: 1,
+    pageSize: 10,
+    postId: "",
+    categoryId: "",
+    tagIds: [],
+  };
+
+  const [isFollowed, setIsFollowed] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res: BaseResponse<externalPost> = await queryPostList(request);
+
+        if (res.data) {
+          setList(res.data.records);
+        } else {
+          // 后端返回无数据
+          toast.error(ErrorCode.SERVER_ERROR.message);
+        }
+      } catch (error) {
+        console.error("err--->", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const [list, setList] = useState<Post[]>([]);
 
   return (
     <HomeLayout>
@@ -105,13 +63,92 @@ export default function HomePage() {
                 className="w-full object-cover h-[140px]"
                 radius="lg"
                 shadow="sm"
-                src={item.img}
+                src={item.urls[0].mediaUrl}
                 width="100%"
               />
             </CardBody>
-            <CardFooter className="text-small justify-between">
-              <b>{item.title}</b>
-              <p className="text-default-500">{item.price}</p>
+            <CardFooter className="text-small flex flex-col items-start gap-y-1">
+              <div className="font-bold text-base text-left">{item.title}</div>
+              <Tooltip content={item.summary} showArrow={true}>
+                <div className="text-xs text-left ellipsis">{item.summary}</div>
+              </Tooltip>
+              <Tooltip
+                content={
+                  <Card
+                    className="max-w-[300px] border-none bg-transparent"
+                    shadow="none"
+                  >
+                    <CardHeader className="justify-between">
+                      <div className="flex gap-3">
+                        <Avatar
+                          isBordered
+                          radius="full"
+                          size="md"
+                          src="https://i.pravatar.cc/150?u=a04258114e29026702d"
+                        />
+                        <div className="flex flex-col items-start justify-center">
+                          <h4 className="text-small font-semibold leading-none text-default-600">
+                            Zoey Lang
+                          </h4>
+                          <h5 className="text-small tracking-tight text-default-500">
+                            @zoeylang
+                          </h5>
+                        </div>
+                      </div>
+                      <Button
+                        className={
+                          isFollowed
+                            ? "bg-transparent text-foreground border-default-200"
+                            : ""
+                        }
+                        color="primary"
+                        radius="full"
+                        size="sm"
+                        variant={isFollowed ? "bordered" : "solid"}
+                        onPress={() => setIsFollowed(!isFollowed)}
+                      >
+                        {isFollowed ? "Unfollow" : "Follow"}
+                      </Button>
+                    </CardHeader>
+                    <CardBody className="px-3 py-0">
+                      <p className="text-small pl-px text-default-500">
+                        Full-stack developer, @getnextui lover she/her
+                        <span aria-label="confetti" role="img">
+                          🎉
+                        </span>
+                      </p>
+                    </CardBody>
+                    <CardFooter className="gap-3">
+                      <div className="flex gap-1">
+                        <p className="font-semibold text-default-600 text-small">
+                          4
+                        </p>
+                        <p className=" text-default-500 text-small">
+                          Following
+                        </p>
+                      </div>
+                      <div className="flex gap-1">
+                        <p className="font-semibold text-default-600 text-small">
+                          97.1K
+                        </p>
+                        <p className="text-default-500 text-small">Followers</p>
+                      </div>
+                    </CardFooter>
+                  </Card>
+                }
+              >
+                <div>
+                  <User
+                    avatarProps={{
+                      src: "https://i.pravatar.cc/150?u=a04258114e29026702d",
+                      size: "sm",
+                    }}
+                    className="transition-transform mt-1"
+                    description="Product Designer"
+                    name="Zoe Lang"
+                  />
+                </div>
+              </Tooltip>
             </CardFooter>
           </Card>
         ))}

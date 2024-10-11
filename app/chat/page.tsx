@@ -53,7 +53,8 @@ export default function ChatPage() {
   const handleKeyDown = (event: any) => {
     if (event.key === "Enter") {
       event.preventDefault(); // 防止换行
-      if (inputValue.trim()) { // 确保输入不是空的
+      if (inputValue.trim()) {
+        // 确保输入不是空的
         const newMessage = {
           text: inputValue,
           side: "right",
