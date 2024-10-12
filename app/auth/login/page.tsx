@@ -53,6 +53,10 @@ export default function LoginPage() {
     });
   }
 
+  function toRegisterPage() {
+    router.push(siteConfig.innerLinks.register);
+  }
+
   return (
     <LoginLayout>
       <div className="flex flex-row gap-5">
@@ -112,7 +116,7 @@ export default function LoginPage() {
             <Button color="primary" onPress={clickToLogin}>
               Login
             </Button>
-            <Button color="primary" variant="bordered" onPress={router.push(siteConfig.innerLinks.register)}>
+            <Button color="primary" variant="bordered" onPress={toRegisterPage}>
               Registry
             </Button>
             <div className="flex-col">

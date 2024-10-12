@@ -9,14 +9,13 @@ import { EyeFilledIcon, EyeSlashFilledIcon } from "@nextui-org/shared-icons";
 import { toast } from "sonner";
 // @ts-ignore
 import { useRouter } from "next/navigation";
-
-import LoginLayout from "@/app/auth/login/layout";
 import { title } from "@/components/primitives";
 import { DiscordIcon, GithubIcon, TwitterIcon } from "@/components/icons";
 import { siteConfig } from "@/config/site";
 import { registerAction } from "@/app/auth/login/action";
 import { useGetUserContext } from "@/app/UserContext";
 import { RegisterVo } from "@/types/auth/register";
+import RegisterLayout from "@/app/auth/register/layout";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -38,7 +37,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <LoginLayout>
+    <RegisterLayout>
       <div className="flex flex-row gap-5">
         <div className="animate__animated animate__lightSpeedInRight">
           <div>
@@ -90,33 +89,12 @@ export default function RegisterPage() {
               />
             </form>
             <Checkbox className="size-1/11">Remember Me</Checkbox>
-            <Link className="size-1/11" href="#">
-              Forget Password？
-            </Link>
-            <Button color="primary" onPress={clickToRegister}>
-              Login
-            </Button>
             <Button color="primary" variant="bordered">
               Registry
             </Button>
-            <div className="flex-col">
-              <div>Or you can login with</div>
-              <br />
-              <div>
-                <Link isExternal href={siteConfig.links.twitter}>
-                  <TwitterIcon className="text-default-500" />
-                </Link>
-                <Link isExternal href={siteConfig.links.discord}>
-                  <DiscordIcon className="text-default-500 ml-2" />
-                </Link>
-                <Link isExternal href={siteConfig.links.github}>
-                  <GithubIcon className="text-default-500 ml-2" />
-                </Link>
-              </div>
-            </div>
           </div>
         </div>
       </div>
-    </LoginLayout>
+    </RegisterLayout>
   );
 }
