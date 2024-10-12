@@ -14,43 +14,27 @@ import LoginLayout from "@/app/auth/login/layout";
 import { title } from "@/components/primitives";
 import { DiscordIcon, GithubIcon, TwitterIcon } from "@/components/icons";
 import { siteConfig } from "@/config/site";
-import { loginAction } from "@/app/auth/login/action";
-import { BaseResponse } from "@/types";
+import { registerAction } from "@/app/auth/login/action";
 import { useGetUserContext } from "@/app/UserContext";
-import { userInfoCookie } from "@/common/auth/constant";
-import { LoginDTO, LoginVo } from "@/types/auth/login";
+import { RegisterVo } from "@/types/auth/register";
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const router = useRouter();
 
   const [isVisible, setIsVisible] = React.useState(false);
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
-  const { updateCookie } = useGetUserContext();
+  const { isCookiePresent, updateCookie, deleteCookie } = useGetUserContext();
 
-  const [loginRequest, setLoginRequest] = useState<LoginVo>({
+  const [registerRequest, setLoginRequest] = useState<RegisterVo>({
     username: "",
     password: "",
     loginType: "password",
     rememberMe: "0",
   });
 
-  async function clickToLogin() {
-    loginAction(loginRequest).then((res: BaseResponse<LoginDTO>) => {
-      if (res.success === true) {
-        // 判断后端返回数据是否有错
-        if (res.data) {
-          toast.success("login success");
-          router.push("/");
-          updateCookie(userInfoCookie, JSON.stringify(res.data), false);
-        } else {
-          toast.error("服务器异常，请重试！");
-        }
-      } else {
-        toast.error("登录失败，请重试");
-      }
-    });
+  async function clickToRegister() {
   }
 
   return (
@@ -58,7 +42,7 @@ export default function LoginPage() {
       <div className="flex flex-row gap-5">
         <div className="animate__animated animate__lightSpeedInRight">
           <div>
-            <h1 className={title()}>Welcome</h1>
+            <h1 className={title()}>Welcome Register</h1>
             <div className="max-w-80 mb-5 mt-5">
               To Keep connected with up please login with your personal
               information by email address and password
@@ -70,10 +54,10 @@ export default function LoginPage() {
                 autoComplete="username"
                 label="Username"
                 type="text"
-                value={loginRequest.username}
+                value={registerRequest.username}
                 onValueChange={(value) => {
                   setLoginRequest({
-                    ...loginRequest,
+                    ...registerRequest,
                     username: value,
                   });
                 }}
@@ -96,10 +80,10 @@ export default function LoginPage() {
                 }
                 label="Password"
                 type={isVisible ? "text" : "password"}
-                value={loginRequest.password}
+                value={registerRequest.password}
                 onValueChange={(value) => {
                   setLoginRequest({
-                    ...loginRequest,
+                    ...registerRequest,
                     password: value,
                   });
                 }}
@@ -109,10 +93,10 @@ export default function LoginPage() {
             <Link className="size-1/11" href="#">
               Forget Password？
             </Link>
-            <Button color="primary" onPress={clickToLogin}>
+            <Button color="primary" onPress={clickToRegister}>
               Login
             </Button>
-            <Button color="primary" variant="bordered" onPress={router.push(siteConfig.innerLinks.register)}>
+            <Button color="primary" variant="bordered">
               Registry
             </Button>
             <div className="flex-col">

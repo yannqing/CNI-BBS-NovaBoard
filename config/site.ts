@@ -60,5 +60,6 @@ export const siteConfig = {
   },
   innerLinks: {
     login: "/auth/login",
+    register: "/auth/register",
   },
 };

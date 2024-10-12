@@ -1,23 +1,27 @@
 import clsx from "clsx";
 import { Button } from "@nextui-org/button";
 import { User } from "@nextui-org/user";
-
-import { fontMono } from "@/config/fonts";
 import { Tooltip } from "@nextui-org/tooltip";
 import { Card, CardBody, CardFooter, CardHeader } from "@nextui-org/card";
 import { Avatar } from "@nextui-org/avatar";
 import { useState } from "react";
+
+import { fontMono } from "@/config/fonts";
 import { recommendUsers } from "@/app/home/action";
 
 export default function RightSideBar() {
-
   const [isFollowed, setIsFollowed] = useState(false);
-
 
   return (
     <div className="w-full mt-10">
       <div className="min-h-44 relative">
+        <div className="blur-sm flex">xxxxxxxxxxxxxxxx</div>
+        <div className="blur-sm flex justify-end">xxxxxxxx</div>
+        <div className="blur-sm flex">xxx</div>
+        <div className="blur-sm flex justify-end">xxxxxxxx</div>
         <div className="blur-sm flex">xxxxxxxx</div>
+        <div className="blur-sm flex justify-end">xxxxxxxxxxxxxxxx</div>
+        <div className="blur-sm flex">xxxx</div>
         <Button
           className={clsx(
             "absolute top-1/3 left-10 inner text-fuchsia-400 hover:bg-gradient-to-r from-purple-500 to-pink-500 font-bold",
@@ -29,7 +33,7 @@ export default function RightSideBar() {
           936 人正在热聊，点击加入
         </Button>
       </div>
-      <div className={""}>
+      <div className={"mt-10"}>
         <div>推荐作者如下：</div>
         <div>
           {recommendUsers.map((recommendUser) => (
@@ -83,9 +87,7 @@ export default function RightSideBar() {
                       <p className="font-semibold text-default-600 text-small">
                         {recommendUser.followingNumber}
                       </p>
-                      <p className=" text-default-500 text-small">
-                        Following
-                      </p>
+                      <p className=" text-default-500 text-small">Following</p>
                     </div>
                     <div className="flex gap-1">
                       <p className="font-semibold text-default-600 text-small">
@@ -106,7 +108,11 @@ export default function RightSideBar() {
                     isBordered: true,
                   }}
                   className="transition-transform mt-5"
-                  description={<span className={" block ellipsis"}>{recommendUser.description}</span>}
+                  description={
+                    <span className={" block ellipsis"}>
+                      {recommendUser.description}
+                    </span>
+                  }
                   name={recommendUser.name}
                 />
               </div>

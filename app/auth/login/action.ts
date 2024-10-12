@@ -1,7 +1,8 @@
 import service from "@/utils/axios";
-import { LoginDTO } from "@/types/auth/login/loginDTO";
+import { LoginVo } from "@/types/auth/login";
+import { RegisterVo } from "@/types/auth/register";
 
-export async function loginAction(loginRequest: LoginDTO) {
+export async function loginAction(loginRequest: LoginVo) {
   return await service({
     url: "/user/open/login",
     method: "post",
@@ -14,4 +15,8 @@ export async function logoutAction(id: string) {
     url: "/user/open/logout/" + id,
     method: "get",
   });
+}
+
+export async function registerAction(registerRequest: RegisterVo) {
+
 }

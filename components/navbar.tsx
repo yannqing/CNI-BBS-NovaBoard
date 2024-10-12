@@ -53,11 +53,11 @@ export const Navbar = () => {
 
   const router = useRouter();
 
-  const { isCookiePresent, updateCookie, deleteCookie } = useGetUserContext();
+  const { isCookiePresent, deleteCookie } = useGetUserContext();
 
   async function clickToLogout() {
     try {
-      await logoutAction(getCookie().id).then((res: BaseResponse) => {
+      await logoutAction(getCookie().id).then((res: BaseResponse<null>) => {
         if (res.success) {
           toast.success("退出登录成功！");
           router.push(currentPath);
