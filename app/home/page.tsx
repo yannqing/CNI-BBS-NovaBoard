@@ -70,7 +70,9 @@ export default function HomePage() {
             <CardFooter className="text-small flex flex-col items-start gap-y-1">
               <div className="font-bold text-base text-left">{item.title}</div>
               <Tooltip content={item.summary} showArrow={true}>
-                <div className="text-xs text-left ellipsis">{item.summary}</div>
+                <div className="text-xs text-left ellipsis w-full">
+                  {item.summary}
+                </div>
               </Tooltip>
               <Tooltip
                 content={
@@ -84,11 +86,11 @@ export default function HomePage() {
                           isBordered
                           radius="full"
                           size="md"
-                          src="https://i.pravatar.cc/150?u=a04258114e29026702d"
+                          src="https://blogback.yannqing.com/api/v2/objects/avatar/0vqxqul8pu2skmwokn.jpg"
                         />
                         <div className="flex flex-col items-start justify-center">
                           <h4 className="text-small font-semibold leading-none text-default-600">
-                            Zoey Lang
+                            yanKing
                           </h4>
                           <h5 className="text-small tracking-tight text-default-500">
                             @zoeylang
@@ -140,12 +142,12 @@ export default function HomePage() {
                 <div>
                   <User
                     avatarProps={{
-                      src: "https://i.pravatar.cc/150?u=a04258114e29026702d",
+                      src: "https://blogback.yannqing.com/api/v2/objects/avatar/0vqxqul8pu2skmwokn.jpg",
                       size: "sm",
                     }}
                     className="transition-transform mt-1"
                     description="Product Designer"
-                    name="Zoe Lang"
+                    name="yanKing"
                   />
                 </div>
               </Tooltip>

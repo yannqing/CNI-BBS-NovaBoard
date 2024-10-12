@@ -52,16 +52,29 @@ export default function RootLayout({
                 {children}
               </main>
             </UserProvider>
-            <footer className="w-full flex items-center justify-center py-3 bg-blue-500">
-              <Link
-                isExternal
-                className="flex items-center gap-1 text-current"
-                href="https://nextui-docs-v2.vercel.app?utm_source=next-app-template"
-                title="nextui.org homepage"
-              >
-                <span className="text-default-600">Powered by</span>
-                <p className="text-primary">NextUI</p>
-              </Link>
+            <footer className="w-full flex flex-col items-center justify-center py-3">
+              <div>
+                Copyright © 2024. All rights reserved. Provided by：
+                <Link
+                  isExternal
+                  className="gap-1 text-current"
+                  href="https://www.nradiowifi.com/"
+                  title="nextui.org homepage"
+                >
+                  <span className="">NRadio鲲鹏无限</span>
+                </Link>
+              </div>
+              <div>
+                备案号：
+                <Link
+                  isExternal
+                  className="gap-1 text-current"
+                  href="ehttps://beian.miit.gov.cn/"
+                  title="nextui.org homepage"
+                >
+                  <span className="">粤ICP备16055705号-7</span>
+                </Link>
+              </div>
             </footer>
           </div>
         </Providers>

@@ -1,4 +1,5 @@
 import { TopBar } from "@/components/topbar";
+import RightSideBar from "@/app/home/rightSideBar";
 
 export default function HomeLayout({
   children,
@@ -12,7 +13,9 @@ export default function HomeLayout({
           <TopBar />
           <main className="w-full mt-5">{children}</main>
         </div>
-        <div className="hidden md:flex w-1/4 ml-6 h-screen">xxx</div>
+        <div className="hidden md:flex w-1/4 ml-6 h-screen">
+          <RightSideBar />
+        </div>
       </div>
     </section>
   );

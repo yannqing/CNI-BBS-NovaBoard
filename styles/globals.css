@@ -14,6 +14,7 @@
  * 不换行，溢出用省略号表示
  */
 .ellipsis {
+    display: block; /* 必须是块级元素 */
     white-space: nowrap;       /* 不换行 */
     overflow: hidden;          /* 溢出隐藏 */
     text-overflow: ellipsis;   /* 用省略号表示溢出部分 */
