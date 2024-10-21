@@ -1,4 +1,4 @@
-import { TopBar } from "@/components/topbar";
+import { TopBar } from "@/components/home/topbar";
 import RightSideBar from "@/app/(main)/home/rightSideBar";
 
 export default function HomeLayout({

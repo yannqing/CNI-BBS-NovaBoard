@@ -30,17 +30,15 @@ import { User } from "@nextui-org/user";
 import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-import { PlusIcon } from "./PlusIcon";
-
 import { siteConfig } from "@/config/site";
-import { ThemeSwitch } from "@/components/theme-switch";
+import { ThemeSwitch } from "@/components/home/theme-switch";
 import {
   TwitterIcon,
   GithubIcon,
   DiscordIcon,
   SearchIcon,
   Logo,
-} from "@/components/icons";
+} from "@/components/home/icons";
 import { logoutAction } from "@/app/(main)/(auth)/login/action";
 import { BaseResponse } from "@/types";
 import { CustomError } from "@/types/error/Error";
@@ -110,7 +108,7 @@ export const Navbar = () => {
         <NavbarBrand className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
             <Logo />
-            <p className="font-bold text-inherit">ACME</p>
+            <p className="font-bold text-inherit">CNI-BBS</p>
           </NextLink>
         </NavbarBrand>
         <div className="hidden lg:flex gap-4 justify-start ml-2">
@@ -166,8 +164,13 @@ export const Navbar = () => {
           </Button>
         </NavbarItem>
         <NavbarItem>
-          <Button color="primary" variant="flat">
-            test
+          <Button
+            as={Link}
+            color="primary"
+            href={siteConfig.innerLinks.dashboard}
+            variant="flat"
+          >
+            dashboard
           </Button>
         </NavbarItem>
         <Dropdown
@@ -241,7 +244,7 @@ export const Navbar = () => {
               <DropdownItem key="settings">Settings</DropdownItem>
               <DropdownItem
                 key="new_project"
-                endContent={<PlusIcon className="text-large" />}
+                endContent="+"
               >
                 New Project
               </DropdownItem>

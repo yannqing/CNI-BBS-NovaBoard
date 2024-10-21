@@ -1,3 +1,5 @@
+import { UserVo } from "@/types/auth/user";
+
 export type GetPostListRequest = {
   pageNo: number;
   pageSize: number;
@@ -14,38 +16,40 @@ export type externalPost = {
 export type Post = {
   authorName: string;
   categoryVo: categoryVo;
-  create_date: number;
-  istop: string;
+  commentTime: number;
+  createTime: number;
+  isTop: string;
   postId: string;
   summary: string;
   tagVos: tagVo[];
   title: string;
   type: string;
-  update_date: number;
+  updateTime: number;
   urls: PostUrl[];
+  userVo: UserVo;
   view_counts: string;
 };
 
 export type PostUrl = {
-  createData: number;
+  createTime: number;
   id: number;
   mediaType: string;
   mediaUrl: string;
 };
 
 export type tagVo = {
-  createData: number;
+  createTime: number;
   description: string;
   tagUrl: string;
-  updateDate: number;
+  updateTime: number;
   id: number;
 };
 
 export type categoryVo = {
   categoryName: string;
   categoryUrl: string;
-  createDate: number;
+  createTime: number;
   description: string;
   id: number;
-  updateDate: number;
+  updateTime: number;
 };

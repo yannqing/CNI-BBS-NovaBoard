@@ -31,6 +31,8 @@ export default function HomePage() {
       try {
         const res: BaseResponse<externalPost> = await queryPostList(request);
 
+        console.log("查询全部帖子：", res);
+
         if (res.data) {
           setList(res.data.records);
         } else {
@@ -63,7 +65,7 @@ export default function HomePage() {
                 className="w-full object-cover h-[140px]"
                 radius="lg"
                 shadow="sm"
-                src={item.urls[0].mediaUrl}
+                src={item.urls[0]?.mediaUrl}
                 width="100%"
               />
             </CardBody>
@@ -146,8 +148,8 @@ export default function HomePage() {
                       size: "sm",
                     }}
                     className="transition-transform mt-1"
-                    description="Product Designer"
-                    name="yanKing"
+                    description={item.userVo.bio}
+                    name={item.userVo.userName}
                   />
                 </div>
               </Tooltip>

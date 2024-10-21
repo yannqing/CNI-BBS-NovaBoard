@@ -25,7 +25,6 @@ export const whiteList = [
   "/category/open/list",
   "/post/open/queryPostList",
 
-
   "/system/verif/gen/random",
   "/system/verif/check3",
 ];

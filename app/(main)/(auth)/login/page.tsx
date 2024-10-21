@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 
 import LoginLayout from "@/app/(main)/(auth)/login/layout";
 import { title } from "@/components/primitives";
-import { DiscordIcon, GithubIcon, TwitterIcon } from "@/components/icons";
+import { DiscordIcon, GithubIcon, TwitterIcon } from "@/components/home/icons";
 import { siteConfig } from "@/config/site";
 import { loginAction } from "@/app/(main)/(auth)/login/action";
 import { BaseResponse } from "@/types";

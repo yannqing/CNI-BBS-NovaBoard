@@ -1,14 +1,13 @@
 "use client";
 
 import { Input } from "@nextui-org/input";
-import { Link } from "@nextui-org/link";
 import { Checkbox } from "@nextui-org/checkbox";
 import { Button } from "@nextui-org/button";
 import React, { useState } from "react";
 import { EyeFilledIcon, EyeSlashFilledIcon } from "@nextui-org/shared-icons";
-import { toast } from "sonner";
 // @ts-ignore
 import { useRouter } from "next/navigation";
+
 import { title } from "@/components/primitives";
 import { useGetUserContext } from "@/app/UserContext";
 import { RegisterVo } from "@/types/auth/register";
@@ -30,8 +29,7 @@ export default function RegisterPage() {
     rememberMe: "0",
   });
 
-  async function clickToRegister() {
-  }
+  async function clickToRegister() {}
 
   return (
     <RegisterLayout>

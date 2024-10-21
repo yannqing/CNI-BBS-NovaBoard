@@ -1,19 +1,19 @@
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-  name: "Next.js + NextUI",
+  name: "CNI-BBS",
   description: "Make beautiful websites regardless of your design experience.",
   navItems: [
     {
-      label: "Home",
+      label: "主页",
       href: "/",
     },
     {
-      label: "About",
+      label: "关于",
       href: "/about",
     },
     {
-      label: "Chat",
+      label: "密聊",
       href: "/chat",
     },
   ],
@@ -61,5 +61,7 @@ export const siteConfig = {
   innerLinks: {
     login: "/login",
     register: "/register",
+    dashboard: "/dashboard/home",
+    about: "/about",
   },
 };

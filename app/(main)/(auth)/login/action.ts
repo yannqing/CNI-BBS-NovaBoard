@@ -17,6 +17,4 @@ export async function logoutAction(id: string) {
   });
 }
 
-export async function registerAction(registerRequest: RegisterVo) {
-
-}
+export async function registerAction(registerRequest: RegisterVo) {}
