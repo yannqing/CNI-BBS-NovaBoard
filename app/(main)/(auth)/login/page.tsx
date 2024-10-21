@@ -10,11 +10,11 @@ import { toast } from "sonner";
 // @ts-ignore
 import { useRouter } from "next/navigation";
 
-import LoginLayout from "@/app/auth/login/layout";
+import LoginLayout from "@/app/(main)/(auth)/login/layout";
 import { title } from "@/components/primitives";
 import { DiscordIcon, GithubIcon, TwitterIcon } from "@/components/icons";
 import { siteConfig } from "@/config/site";
-import { loginAction } from "@/app/auth/login/action";
+import { loginAction } from "@/app/(main)/(auth)/login/action";
 import { BaseResponse } from "@/types";
 import { useGetUserContext } from "@/app/UserContext";
 import { userInfoCookie } from "@/common/auth/constant";

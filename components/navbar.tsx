@@ -41,7 +41,7 @@ import {
   SearchIcon,
   Logo,
 } from "@/components/icons";
-import { logoutAction } from "@/app/auth/login/action";
+import { logoutAction } from "@/app/(main)/(auth)/login/action";
 import { BaseResponse } from "@/types";
 import { CustomError } from "@/types/error/Error";
 import { ErrorCode } from "@/types/error/ErrorCode";

@@ -10,12 +10,9 @@ import { toast } from "sonner";
 // @ts-ignore
 import { useRouter } from "next/navigation";
 import { title } from "@/components/primitives";
-import { DiscordIcon, GithubIcon, TwitterIcon } from "@/components/icons";
-import { siteConfig } from "@/config/site";
-import { registerAction } from "@/app/auth/login/action";
 import { useGetUserContext } from "@/app/UserContext";
 import { RegisterVo } from "@/types/auth/register";
-import RegisterLayout from "@/app/auth/register/layout";
+import RegisterLayout from "@/app/(main)/(auth)/register/layout";
 
 export default function RegisterPage() {
   const router = useRouter();

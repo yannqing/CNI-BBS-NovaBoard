@@ -1,5 +1,5 @@
 import { TopBar } from "@/components/topbar";
-import RightSideBar from "@/app/home/rightSideBar";
+import RightSideBar from "@/app/(main)/home/rightSideBar";
 
 export default function HomeLayout({
   children,

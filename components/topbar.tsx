@@ -3,7 +3,7 @@
 import { Tab, Tabs } from "@nextui-org/tabs";
 import { useEffect, useState } from "react";
 
-import { getAllCategoryAction } from "@/app/home/action";
+import { getAllCategoryAction } from "@/app/(main)/home/action";
 import { Category } from "@/types/post/category";
 
 export const TopBar = () => {

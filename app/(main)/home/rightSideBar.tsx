@@ -7,7 +7,7 @@ import { Avatar } from "@nextui-org/avatar";
 import { useState } from "react";
 
 import { fontMono } from "@/config/fonts";
-import { recommendUsers } from "@/app/home/action";
+import { recommendUsers } from "@/app/(main)/home/action";
 
 export default function RightSideBar() {
   const [isFollowed, setIsFollowed] = useState(false);

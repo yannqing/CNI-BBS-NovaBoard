@@ -12,8 +12,8 @@ import { Avatar } from "@nextui-org/avatar";
 import { ErrorCode } from "@/types/error/ErrorCode";
 import { BaseResponse } from "@/types";
 import { externalPost, GetPostListRequest, Post } from "@/types/post/post";
-import { queryPostList } from "@/app/home/action";
-import HomeLayout from "@/app/home/layout";
+import { queryPostList } from "@/app/(main)/home/action";
+import HomeLayout from "@/app/(main)/home/layout";
 
 export default function HomePage() {
   const request: GetPostListRequest = {

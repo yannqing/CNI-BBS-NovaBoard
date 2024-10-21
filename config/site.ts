@@ -59,7 +59,7 @@ export const siteConfig = {
     sponsor: "https://patreon.com/jrgarciadev",
   },
   innerLinks: {
-    login: "/auth/login",
-    register: "/auth/register",
+    login: "/login",
+    register: "/register",
   },
 };
