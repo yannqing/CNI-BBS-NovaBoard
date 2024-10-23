@@ -67,52 +67,77 @@ module.exports = {
   				accent: 'hsl(var(--sidebar-accent))',
   				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
   				border: 'hsl(var(--sidebar-border))',
-  				ring: 'hsl(var(--sidebar-ring))'
-  			}
-  		}
+  				ring: 'hsl(var(--sidebar-ring))',
+					item: 'var(--sidebar-item)'
+  			},
+				//================================ User DashBoard ================================
+				// 总览卡片颜色
+				"overview-card": 'var(--overview-card)',
+
+				// 贡献图 颜色
+				"contribution-graph": {
+					0: 'var(--contribution-graph-0)',
+					1: 'var(--contribution-graph-1)',
+					2: 'var(--contribution-graph-2)',
+					3: 'var(--contribution-graph-3)',
+					4: 'var(--contribution-graph-4)',
+					5: 'var(--contribution-graph-5)',
+					6: 'var(--contribution-graph-6)',
+					7: 'var(--contribution-graph-7)',
+					8: 'var(--contribution-graph-8)',
+					9: 'var(--contribution-graph-9)',
+					10: 'var(--contribution-graph-10)',
+				}
+  		},
   	}
   },
   darkMode: ["class", 'class'],
-  plugins: [
-    nextui({
-      themes: {
-        light: {
-          colors: {
-            background: "#FFFFFF", // or DEFAULT
-            foreground: "#11181C", // or 50 to 900 DEFAULT
-            primary: {
-              //... 50 to 900
-              foreground: "#FFFFFF",
-              DEFAULT: "#006FEE",
-            },
-            // ... rest of the colors
-          },
-        },
-        dark: {
-          colors: {
-            background: "#000000", // or DEFAULT
-            foreground: "#ECEDEE", // or 50 to 900 DEFAULT
-            primary: {
-              //... 50 to 900
-              foreground: "#FFFFFF",
-              DEFAULT: "#006FEE",
-            },
-          },
-          // ... rest of the colors
-        },
-        mytheme: {
-          // custom theme
-          extend: "dark",
-          colors: {
-            primary: {
-              DEFAULT: "#BEF264",
-              foreground: "#000000",
-            },
-            focus: "#BEF264",
-          },
-        },
-      },
-    }),
-      require("tailwindcss-animate")
-],
+	plugins: [
+		nextui({
+			themes: {
+				light: {
+					colors: {
+						background: "#FFFFFF", // or DEFAULT
+						foreground: "#11181C", // or 50 to 900 DEFAULT
+						primary: {
+							//... 50 to 900
+							foreground: "#FFFFFF",
+							DEFAULT: "#006FEE",
+						},
+						// ... rest of the colors
+					},
+				},
+				dark: {
+					colors: {
+						background: "#000000", // or DEFAULT
+						foreground: "#ECEDEE", // or 50 to 900 DEFAULT
+						primary: {
+							//... 50 to 900
+							foreground: "#FFFFFF",
+							DEFAULT: "#006FEE",
+						},
+					},
+					// ... rest of the colors
+				},
+				mytheme: {
+					// custom theme
+					extend: "dark",
+					colors: {
+						primary: {
+							DEFAULT: "#BEF264",
+							foreground: "#000000",
+						},
+						focus: "#BEF264",
+					},
+				},
+			},
+		}),
+		require("tailwindcss-animate")
+	],
+	// 设置颜色 safelist：始终被 JIT（即时编译）模式解析
+	safelist: [
+		{
+			pattern: /bg-contribution-graph-\d+/,
+		},
+	],
 }

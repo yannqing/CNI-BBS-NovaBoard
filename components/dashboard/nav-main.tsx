@@ -1,6 +1,8 @@
 "use client";
 
 import { ChevronRight, type LucideIcon } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import clsx from "clsx";
 
 import {
   Collapsible,
@@ -24,7 +26,7 @@ export function NavMain({
 }: {
   items: {
     title: string;
-    url: string;
+    url?: string;
     icon: LucideIcon;
     isActive?: boolean;
     items?: {
@@ -33,6 +35,9 @@ export function NavMain({
     }[];
   }[];
 }) {
+  const currentPath = usePathname();
+  const router = useRouter();
+
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Platform</SidebarGroupLabel>
@@ -40,11 +45,23 @@ export function NavMain({
         {items.map((item) => (
           <Collapsible key={item.title} asChild defaultOpen={item.isActive}>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip={item.title}>
-                <a href={item.url}>
+              <SidebarMenuButton
+                asChild
+                className={clsx({
+                  "border-sidebar-item border-2": currentPath === item.url,
+                })}
+                tooltip={item.title}
+              >
+                <button
+                  onClick={() => {
+                    if (item.url != null) {
+                      router.push(item.url);
+                    }
+                  }}
+                >
                   <item.icon />
                   <span>{item.title}</span>
-                </a>
+                </button>
               </SidebarMenuButton>
               {item.items?.length ? (
                 <>
@@ -58,10 +75,21 @@ export function NavMain({
                     <SidebarMenuSub>
                       {item.items?.map((subItem) => (
                         <SidebarMenuSubItem key={subItem.title}>
-                          <SidebarMenuSubButton asChild>
-                            <a href={subItem.url}>
+                          <SidebarMenuSubButton
+                            asChild
+                            className={clsx({
+                              "border-sidebar-item border-2":
+                                currentPath === subItem.url,
+                            })}
+                          >
+                            <button
+                              className={"w-full"}
+                              onClick={() => {
+                                router.push(subItem.url);
+                              }}
+                            >
                               <span>{subItem.title}</span>
-                            </a>
+                            </button>
                           </SidebarMenuSubButton>
                         </SidebarMenuSubItem>
                       ))}

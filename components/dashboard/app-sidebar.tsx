@@ -4,8 +4,8 @@ import * as React from "react";
 import {
   BookOpen,
   Bot,
+  Brain,
   Command,
-  Frame,
   LayoutGrid,
   LifeBuoy,
   Map,
@@ -14,6 +14,7 @@ import {
   Settings2,
   SquareTerminal,
 } from "lucide-react";
+import { ScrollShadow } from "@nextui-org/scroll-shadow";
 
 import { NavMain } from "@/components/dashboard/nav-main";
 import { NavProjects } from "@/components/dashboard/nav-projects";
@@ -48,11 +49,11 @@ const data = {
       title: "发布",
       url: "#",
       icon: SquareTerminal,
-      isActive: true,
+      isActive: false,
       items: [
         {
           title: "文章",
-          url: "/dashboard/yannqing/home",
+          url: "/dashboard/yannqing/photoes",
         },
         {
           title: "页面",
@@ -66,12 +67,12 @@ const data = {
     },
     {
       title: "互动",
-      url: "#",
       icon: Bot,
+      isActive: false,
       items: [
         {
           title: "未读通知",
-          url: "#",
+          url: "/dashboard/yannqing/home",
         },
         {
           title: "评论",
@@ -146,7 +147,7 @@ const data = {
     {
       name: "AI",
       url: "#",
-      icon: Frame,
+      icon: Brain,
     },
     {
       name: "应用商店",
@@ -182,9 +183,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
-        <NavSecondary className="mt-auto" items={data.navSecondary} />
+        <ScrollShadow hideScrollBar className="">
+          <NavMain items={data.navMain} />
+          <NavProjects projects={data.projects} />
+          <NavSecondary className="mt-auto" items={data.navSecondary} />
+        </ScrollShadow>
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

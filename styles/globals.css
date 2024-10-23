@@ -46,18 +46,36 @@
         --chart-4: 43 74% 66%;
         --chart-5: 27 87% 67%;
         --radius: 0.5rem;
-        --sidebar-background: 0 0% 98%;
-        --sidebar-foreground: 240 5.3% 26.1%;
-        --sidebar-primary: 240 5.9% 10%;
+/*================================ User DashBoard SideBar ================================*/
+        --sidebar-background: 240 5.9% 10%;
+        --sidebar-foreground: 240 4.8% 95.9%;
+        --sidebar-primary: 210, 100%, 46.5%;
         --sidebar-primary-foreground: 0 0% 98%;
         --sidebar-accent: 240 4.8% 95.9%;
         --sidebar-accent-foreground: 240 5.9% 10%;
         --sidebar-border: 220 13% 91%;
-        --sidebar-ring: 217.2 91.2% 59.8%}
+        --sidebar-ring: 217.2 91.2% 59.8%;
+        --sidebar-item: #10b981;
+/*================================ User DashBoard ================================*/
+        /*总览卡片颜色*/
+        --overview-card: #06b6d4;
+        /*贡献图*/
+        --contribution-graph-0: #f0fdfa;
+        --contribution-graph-1: #ccfbf1;
+        --contribution-graph-2: #99f6e4;
+        --contribution-graph-3: #5eead4;
+        --contribution-graph-4: #2dd4bf;
+        --contribution-graph-5: #14b8a6;
+        --contribution-graph-6: #0d9488;
+        --contribution-graph-7: #0f766e;
+        --contribution-graph-8: #115e59;
+        --contribution-graph-9: #134e4a;
+        --contribution-graph-10: #042f2e;
+  }
   .dark {
         --background: 240 10% 3.9%;
         --foreground: 0 0% 98%;
-        --card: 240 10% 3.9%;
+        --card: 240 5.88% 10%;
         --card-foreground: 0 0% 98%;
         --popover: 240 10% 3.9%;
         --popover-foreground: 0 0% 98%;
@@ -79,14 +97,32 @@
         --chart-3: 30 80% 55%;
         --chart-4: 280 65% 60%;
         --chart-5: 340 75% 55%;
+/*================================ User DashBoard SideBar ================================*/
         --sidebar-background: 240 5.9% 10%;
         --sidebar-foreground: 240 4.8% 95.9%;
         --sidebar-primary: 224.3 76.3% 48%;
         --sidebar-primary-foreground: 0 0% 100%;
         --sidebar-accent: 240 3.7% 15.9%;
         --sidebar-accent-foreground: 240 4.8% 95.9%;
-        --sidebar-border: 240 3.7% 15.9%;
-        --sidebar-ring: 217.2 91.2% 59.8%}
+        --sidebar-border: 220 13% 91%;
+        --sidebar-ring: 217.2 91.2% 59.8%;
+        --sidebar-item: #ec4899;
+/*================================ User DashBoard ================================*/
+        /*总览卡片颜色*/
+        --overview-card: #ec4899;
+        /*贡献图*/
+        --contribution-graph-0: #fdf4ff;
+        --contribution-graph-1: #fae8ff;
+        --contribution-graph-2: #f5d0fe;
+        --contribution-graph-3: #f0abfc;
+        --contribution-graph-4: #e879f9;
+        --contribution-graph-5: #d946ef;
+        --contribution-graph-6: #c026d3;
+        --contribution-graph-7: #a21caf;
+        --contribution-graph-8: #86198f;
+        --contribution-graph-9: #701a75;
+        --contribution-graph-10: #4a044e;
+  }
 }
 @layer base {
   * {

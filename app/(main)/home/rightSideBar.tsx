@@ -39,6 +39,7 @@ export default function RightSideBar() {
           {recommendUsers.map((recommendUser) => (
             // eslint-disable-next-line react/jsx-key
             <Tooltip
+              key={recommendUser.name}
               content={
                 <Card
                   className="max-w-[300px] border-none bg-transparent"

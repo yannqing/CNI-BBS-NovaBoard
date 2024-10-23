@@ -242,10 +242,7 @@ export const Navbar = () => {
               </DropdownItem>
               <DropdownItem key="dashboard">Dashboard</DropdownItem>
               <DropdownItem key="settings">Settings</DropdownItem>
-              <DropdownItem
-                key="new_project"
-                endContent="+"
-              >
+              <DropdownItem key="new_project" endContent="+">
                 New Project
               </DropdownItem>
             </DropdownSection>

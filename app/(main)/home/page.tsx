@@ -88,14 +88,14 @@ export default function HomePage() {
                           isBordered
                           radius="full"
                           size="md"
-                          src="https://blogback.yannqing.com/api/v2/objects/avatar/0vqxqul8pu2skmwokn.jpg"
+                          src={item.userVo.avatar}
                         />
                         <div className="flex flex-col items-start justify-center">
                           <h4 className="text-small font-semibold leading-none text-default-600">
-                            yanKing
+                            {item.userVo.userName}
                           </h4>
                           <h5 className="text-small tracking-tight text-default-500">
-                            @zoeylang
+                            {item.userVo.bio}
                           </h5>
                         </div>
                       </div>
@@ -125,7 +125,7 @@ export default function HomePage() {
                     <CardFooter className="gap-3">
                       <div className="flex gap-1">
                         <p className="font-semibold text-default-600 text-small">
-                          4
+                          {item.userVo.followingCount}
                         </p>
                         <p className=" text-default-500 text-small">
                           Following
@@ -133,7 +133,7 @@ export default function HomePage() {
                       </div>
                       <div className="flex gap-1">
                         <p className="font-semibold text-default-600 text-small">
-                          97.1K
+                          {item.userVo.fansCount}
                         </p>
                         <p className="text-default-500 text-small">Followers</p>
                       </div>
@@ -144,7 +144,7 @@ export default function HomePage() {
                 <div>
                   <User
                     avatarProps={{
-                      src: "https://blogback.yannqing.com/api/v2/objects/avatar/0vqxqul8pu2skmwokn.jpg",
+                      src: item.userVo.avatar,
                       size: "sm",
                     }}
                     className="transition-transform mt-1"
