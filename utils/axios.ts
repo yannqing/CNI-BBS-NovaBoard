@@ -34,9 +34,11 @@ service.interceptors.request.use(
 
     // 存在数据，则已登录
     if (userInfo) {
+      console.log("用户已登录，存在 token：", userInfo.token);
       // 用户已登录，则把 token 放入请求头
       config.headers["token"] = userInfo.token;
     } else {
+      console.log("用户未登录");
       // 用户未登录，判断请求路径是否在白名单内
       // 不在白名单内，直接重定向到登录页
       if (config.url && whiteList.indexOf(config.url) === -1) {
@@ -55,7 +57,7 @@ service.interceptors.request.use(
     // 2. 给 post 请求数据加密 TODO 目前默认所有 post 请求体都加密
     if (config.method === "post" && config.url && config.data) {
       const ivBase64 = generateRandomIV();
-
+      console.log("iv 加密");
       config.headers["iv"] = ivBase64;
       const jsonData = JSON.stringify(config.data);
       const encryptData = encrypt(jsonData, ivBase64);
@@ -135,7 +137,7 @@ service.interceptors.response.use(
     }
   },
   function (error) {
-    console.log("111");
+    console.log("error", error);
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
     toast.error(ErrorCode.SERVER_ERROR.message);

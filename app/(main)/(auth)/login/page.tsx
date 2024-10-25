@@ -43,6 +43,7 @@ export default function LoginPage() {
         if (res.data) {
           toast.success("login success");
           router.push("/");
+          console.log("login result", res);
           updateCookie(userInfoCookie, JSON.stringify(res.data), false);
         } else {
           toast.error("服务器异常，请重试！");

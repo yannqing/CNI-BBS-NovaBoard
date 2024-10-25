@@ -20,6 +20,8 @@
 
   - [clsx 动态类库](https://www.npmjs.com/package/clsx)
 
+  - [lucide-react](https://lucide.dev/guide/packages/lucide-react) : Icon 图标库
+
 - 工具库
 
   - axios： 请求处理
@@ -104,7 +106,8 @@ CNI-BBS 包括三个子系统，以及对应的功能点如下：
 
 1. 数据总览（各个卡片展示）
 2. **自定义实现贡献图组件**：<ContributionGraph />
-3. 
+
+
 
 
 

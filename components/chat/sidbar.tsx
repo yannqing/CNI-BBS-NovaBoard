@@ -2,8 +2,25 @@
 
 import { Listbox, ListboxItem, ListboxSection } from "@nextui-org/listbox";
 import { User } from "@nextui-org/user";
+import { useEffect } from "react";
+
+import { getChatList } from "@/app/(main)/chat/action";
+import { GetChatListRequest } from "@/types/chat/chatList";
+import { BaseResponse } from "@/types";
 
 export default function SidBar() {
+  const getChatListRequest: GetChatListRequest = {
+    pageNo: 1,
+    pageSize: 10,
+    fromId: "",
+  };
+
+  useEffect(() => {
+    getChatList(getChatListRequest, "c9c361d2-53fb-44b0-87fb-ec956682e59e").then((res: BaseResponse<any>) => {
+      console.log("getChatList Result: ", res);
+    });
+  }, []);
+
   return (
     <div className="md:max-w-[260px] border-r-1 px-1 py-2 border-default-200 dark:border-default-100 h-full flex-grow">
       <Listbox aria-label="Listbox menu with sections" variant="flat">
