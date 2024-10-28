@@ -7,6 +7,7 @@ import {
   userInfoCookie,
 } from "@/common/auth/constant";
 import { CustomError } from "@/types/error/Error";
+import { UserInfo } from "@/types/auth/user";
 
 /**
  * 设置 cookie
@@ -26,7 +27,7 @@ export function setCookie(key: string, value: string, rememberMe?: boolean) {
  * 获取 cookie
  * @param key 可选：键（没有则默认获取登录 cookie）
  */
-export function getCookie(key?: string) {
+export function getCookie(key?: string): UserInfo | null {
   let cookieStr: string;
 
   if (key) {

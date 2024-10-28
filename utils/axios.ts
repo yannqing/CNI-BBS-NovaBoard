@@ -31,19 +31,16 @@ service.interceptors.request.use(
     // 1. 判断用户是否登录
     // 从 cookie 中取出数据
     const userInfo = getCookie(userInfoCookie);
-
+    console.log(userInfo);
     // 存在数据，则已登录
     if (userInfo) {
-      console.log("用户已登录，存在 token：", userInfo.token);
       // 用户已登录，则把 token 放入请求头
       config.headers["token"] = userInfo.token;
     } else {
-      console.log("用户未登录");
       // 用户未登录，判断请求路径是否在白名单内
       // 不在白名单内，直接重定向到登录页
       if (config.url && whiteList.indexOf(config.url) === -1) {
         toast.error(ErrorCode.TOKEN_EXPIRE.message);
-        console.log("reject");
 
         // 拒绝继续请求
         return Promise.reject(
@@ -57,7 +54,6 @@ service.interceptors.request.use(
     // 2. 给 post 请求数据加密 TODO 目前默认所有 post 请求体都加密
     if (config.method === "post" && config.url && config.data) {
       const ivBase64 = generateRandomIV();
-      console.log("iv 加密");
       config.headers["iv"] = ivBase64;
       const jsonData = JSON.stringify(config.data);
       const encryptData = encrypt(jsonData, ivBase64);
@@ -88,7 +84,6 @@ service.interceptors.response.use(
       if (data) {
         // 假设响应数据中包含加密数据和 IV
         let ivBase64 = response.headers["iv"]; // 从响应头中获取 IV
-
         // 如果取到 iv 则解密。
         if (ivBase64) {
           let decryptedData = decrypt(data, ivBase64); // 解密数据
@@ -96,8 +91,6 @@ service.interceptors.response.use(
           // return { ...response, data: jsonData }; // 返回解密后的数据
           response.data = JSON.parse(decryptedData);
         }
-
-        console.log("解密后的响应：", response.data);
 
         // 解密后，判断后端错误代码
         // 1). token 过期

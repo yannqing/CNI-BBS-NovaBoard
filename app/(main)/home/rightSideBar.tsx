@@ -4,13 +4,26 @@ import { User } from "@nextui-org/user";
 import { Tooltip } from "@nextui-org/tooltip";
 import { Card, CardBody, CardFooter, CardHeader } from "@nextui-org/card";
 import { Avatar } from "@nextui-org/avatar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { fontMono } from "@/config/fonts";
-import { recommendUsers } from "@/app/(main)/home/action";
+import { getRecommendUsers } from "@/app/(main)/home/action";
+import { BaseResponse } from "@/types";
+import { RecommendUsers } from "@/types/auth/user";
 
 export default function RightSideBar() {
   const [isFollowed, setIsFollowed] = useState(false);
+
+  const [recommendUsers, setRecommendUsers] = useState<RecommendUsers[]>([]);
+
+  useEffect(() => {
+    getRecommendUsers().then((res: BaseResponse<RecommendUsers[]>) => {
+      console.log("获取推荐作者 result：", res);
+      if (res.success && res.data) {
+        setRecommendUsers(res.data);
+      }
+    });
+  }, []);
 
   return (
     <div className="w-full mt-10">
@@ -39,7 +52,7 @@ export default function RightSideBar() {
           {recommendUsers.map((recommendUser) => (
             // eslint-disable-next-line react/jsx-key
             <Tooltip
-              key={recommendUser.name}
+              key={recommendUser.userName}
               content={
                 <Card
                   className="max-w-[300px] border-none bg-transparent"
@@ -56,7 +69,7 @@ export default function RightSideBar() {
                       />
                       <div className="flex flex-col items-start justify-center">
                         <h4 className="text-small font-semibold leading-none text-default-600">
-                          {recommendUser.name}
+                          {recommendUser.userName}
                         </h4>
                         <h5 className="text-small tracking-tight text-default-500">
                           {recommendUser.email}
@@ -80,19 +93,19 @@ export default function RightSideBar() {
                   </CardHeader>
                   <CardBody className="px-3 py-0">
                     <p className="text-small pl-px text-default-500">
-                      {recommendUser.introduction}
+                      {recommendUser.bio}
                     </p>
                   </CardBody>
                   <CardFooter className="gap-3">
                     <div className="flex gap-1">
                       <p className="font-semibold text-default-600 text-small">
-                        {recommendUser.followingNumber}
+                        {recommendUser.followingCount}
                       </p>
                       <p className=" text-default-500 text-small">Following</p>
                     </div>
                     <div className="flex gap-1">
                       <p className="font-semibold text-default-600 text-small">
-                        {recommendUser.followersNumber}
+                        {recommendUser.fansCount}
                       </p>
                       <p className="text-default-500 text-small">Followers</p>
                     </div>
@@ -111,10 +124,10 @@ export default function RightSideBar() {
                   className="transition-transform mt-5"
                   description={
                     <span className={" block ellipsis"}>
-                      {recommendUser.description}
+                      {recommendUser.bio}
                     </span>
                   }
-                  name={recommendUser.name}
+                  name={recommendUser.userName}
                 />
               </div>
             </Tooltip>

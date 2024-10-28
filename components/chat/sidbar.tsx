@@ -7,19 +7,30 @@ import { useEffect } from "react";
 import { getChatList } from "@/app/(main)/chat/action";
 import { GetChatListRequest } from "@/types/chat/chatList";
 import { BaseResponse } from "@/types";
+import { getCookie } from "@/utils/cookies";
+import { userInfoCookie } from "@/common/auth/constant";
+import { toast } from "sonner";
 
 export default function SidBar() {
   const getChatListRequest: GetChatListRequest = {
     pageNo: 1,
     pageSize: 10,
-    fromId: "",
+    fromId: getCookie(userInfoCookie)?.id,
   };
 
   useEffect(() => {
-    getChatList(getChatListRequest, "c9c361d2-53fb-44b0-87fb-ec956682e59e").then((res: BaseResponse<any>) => {
+    getChatList(getChatListRequest).then((res: BaseResponse<any>) => {
       console.log("getChatList Result: ", res);
+      toast.success("获取聊天列表成功！（待完善）");
     });
   }, []);
+
+  async function clickTo() {
+    await getChatList(getChatListRequest).then((res: BaseResponse<any>) => {
+      console.log("getChatList Result: ", res);
+      toast.success("获取聊天列表成功！（待完善）");
+    });
+  }
 
   return (
     <div className="md:max-w-[260px] border-r-1 px-1 py-2 border-default-200 dark:border-default-100 h-full flex-grow">
@@ -36,6 +47,7 @@ export default function SidBar() {
                 name={""}
               />
             }
+            onClick={clickTo}
           >
             New file
           </ListboxItem>

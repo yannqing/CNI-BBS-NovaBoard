@@ -28,6 +28,13 @@ export async function queryPostList(getPostListRequest: GetPostListRequest) {
   });
 }
 
+export async function getRecommendUsers() {
+  return await service({
+    url: "/user/open/recommendedUser",
+    method: "get",
+  });
+}
+
 export const recommendUsers = [
   {
     name: "yanKing1",
