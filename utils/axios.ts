@@ -31,6 +31,7 @@ service.interceptors.request.use(
     // 1. 判断用户是否登录
     // 从 cookie 中取出数据
     const userInfo = getCookie(userInfoCookie);
+
     console.log(userInfo);
     // 存在数据，则已登录
     if (userInfo) {
@@ -54,6 +55,7 @@ service.interceptors.request.use(
     // 2. 给 post 请求数据加密 TODO 目前默认所有 post 请求体都加密
     if (config.method === "post" && config.url && config.data) {
       const ivBase64 = generateRandomIV();
+
       config.headers["iv"] = ivBase64;
       const jsonData = JSON.stringify(config.data);
       const encryptData = encrypt(jsonData, ivBase64);
@@ -84,6 +86,7 @@ service.interceptors.response.use(
       if (data) {
         // 假设响应数据中包含加密数据和 IV
         let ivBase64 = response.headers["iv"]; // 从响应头中获取 IV
+
         // 如果取到 iv 则解密。
         if (ivBase64) {
           let decryptedData = decrypt(data, ivBase64); // 解密数据

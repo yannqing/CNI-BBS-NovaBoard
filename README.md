@@ -14,13 +14,15 @@
 
   - [Tailwind CSS](https://tailwindcss.com/)
 
-  - [Sonner](https://sonner.emilkowal.ski/)： 消息提示 UI
+  - [消息提示 UI: Sonner](https://sonner.emilkowal.ski/)
 
-  - [shadcn + shadcn-ui](https://ui.shadcn.com/)： 对 nextui 的扩展
+  - [对 nextui 的扩展: shadcn + shadcn-ui](https://ui.shadcn.com/)
 
   - [clsx 动态类库](https://www.npmjs.com/package/clsx)
 
-  - [lucide-react](https://lucide.dev/guide/packages/lucide-react) : Icon 图标库
+  - [Icon 图标库 lucide-react](https://lucide.dev/guide/packages/lucide-react)
+
+  - [svg 图标处理库 @svgr/webpack]()
 
 - 工具库
 

@@ -3,13 +3,13 @@
 import { Listbox, ListboxItem, ListboxSection } from "@nextui-org/listbox";
 import { User } from "@nextui-org/user";
 import { useEffect } from "react";
+import { toast } from "sonner";
 
 import { getChatList } from "@/app/(main)/chat/action";
 import { GetChatListRequest } from "@/types/chat/chatList";
 import { BaseResponse } from "@/types";
 import { getCookie } from "@/utils/cookies";
 import { userInfoCookie } from "@/common/auth/constant";
-import { toast } from "sonner";
 
 export default function SidBar() {
   const getChatListRequest: GetChatListRequest = {
