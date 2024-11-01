@@ -12,8 +12,10 @@ import { useRouter } from "next/navigation";
 
 import LoginLayout from "@/app/(main)/(auth)/login/layout";
 import { title } from "@/components/primitives";
-import { DiscordIcon, GithubIcon, TwitterIcon } from "@/components/home/icons";
 import { siteConfig } from "@/config/site";
+import GoogleIcon from "@/public/logo/GoogleIcon.svg"
+import WeChatIcon from "@/public/logo/WeChatIcon.svg"
+import GiteeIcon from "@/public/logo/GiteeIcon.svg"
 import { loginAction } from "@/app/(main)/(auth)/login/action";
 import { BaseResponse } from "@/types";
 import { useGetUserContext } from "@/app/UserContext";
@@ -57,11 +59,10 @@ export default function LoginPage() {
   function toRegisterPage() {
     router.push(siteConfig.innerLinks.register);
   }
-
   return (
     <LoginLayout>
       <div className="flex flex-row gap-5">
-        <div className="animate__animated animate__lightSpeedInRight">
+        <div className="">
           <div>
             <h1 className={title()}>Welcome</h1>
             <div className="max-w-80 mb-5 mt-5">
@@ -120,24 +121,27 @@ export default function LoginPage() {
             <Button color="primary" variant="bordered" onPress={toRegisterPage}>
               Registry
             </Button>
-            <div className="flex-col">
-              <div>Or you can login with</div>
-              <br />
-              <div>
-                <Link isExternal href={siteConfig.links.twitter}>
-                  <TwitterIcon className="text-default-500" />
-                </Link>
-                <Link isExternal href={siteConfig.links.discord}>
-                  <DiscordIcon className="text-default-500 ml-2" />
-                </Link>
-                <Link isExternal href={siteConfig.links.github}>
-                  <GithubIcon className="text-default-500 ml-2" />
-                </Link>
-              </div>
-            </div>
+
           </div>
         </div>
       </div>
     </LoginLayout>
+
+
+  // <div className="flex-col">
+  //   <div>Or you can login with</div>
+  //   <br />
+  //   <div className={"flex gap-3"}>
+  //     <Link isExternal href={siteConfig.links.twitter}>
+  //       <GoogleIcon className="text-default-500" />
+  //     </Link>
+  //     <Link isExternal href={siteConfig.links.discord}>
+  //       <GiteeIcon className="text-default-500 w-[24px] h-[24px]" />
+  //     </Link>
+  //     <Link isExternal href={siteConfig.links.github}>
+  //       <WeChatIcon className="w-[24px] h-[24px]"/>
+  //     </Link>
+  //   </div>
+  // </div>
   );
 }
