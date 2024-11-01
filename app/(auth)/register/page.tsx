@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 import { title } from "@/components/primitives";
 import { useGetUserContext } from "@/app/UserContext";
 import { RegisterVo } from "@/types/auth/register";
-import RegisterLayout from "@/app/(main)/(auth)/register/layout";
+import RegisterLayout from "@/app/(auth)/register/layout";
 
 export default function RegisterPage() {
   const router = useRouter();
