@@ -91,7 +91,7 @@ module.exports = {
   		},
   	}
   },
-  darkMode: ["class", 'class'],
+  darkMode: ["class",],
 	plugins: [
 		nextui({
 			themes: {

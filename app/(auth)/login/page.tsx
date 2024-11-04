@@ -9,15 +9,19 @@ import { EyeFilledIcon, EyeSlashFilledIcon } from "@nextui-org/shared-icons";
 import { toast } from "sonner";
 // @ts-ignore
 import { useRouter } from "next/navigation";
+import { Card } from "@nextui-org/card";
 
-import LoginLayout from "@/app/(auth)/login/layout";
 import { title } from "@/components/primitives";
 import { siteConfig } from "@/config/site";
 import { loginAction } from "@/app/(auth)/login/action";
+import GoogleIcon from "@/public/logo/GoogleIcon.svg";
+import WeChatIcon from "@/public/logo/WeChatIcon.svg";
+import GiteeIcon from "@/public/logo/GiteeIcon.svg";
 import { BaseResponse } from "@/types";
 import { useGetUserContext } from "@/app/UserContext";
 import { userInfoCookie } from "@/common/auth/constant";
 import { LoginDTO, LoginVo } from "@/types/auth/login";
+import { ThemeSwitch } from "@/components/home/theme-switch";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -58,8 +62,8 @@ export default function LoginPage() {
   }
 
   return (
-    <LoginLayout>
-      <div className="flex flex-row gap-5">
+    <Card isBlurred className={"bg-transparent"}>
+      <div className="flex flex-row gap-5 m-5">
         <div className="">
           <div>
             <h1 className={title()}>Welcome</h1>
@@ -119,25 +123,25 @@ export default function LoginPage() {
             <Button color="primary" variant="bordered" onPress={toRegisterPage}>
               Registry
             </Button>
+            <ThemeSwitch />
+          </div>
+          <div className="flex-col">
+            <div>Or you can login with</div>
+            <br />
+            <div className={"flex gap-3"}>
+              <Link isExternal href={siteConfig.links.twitter}>
+                <GoogleIcon className="text-default-500" />
+              </Link>
+              <Link isExternal href={siteConfig.links.discord}>
+                <GiteeIcon className="text-default-500 w-[24px] h-[24px]" />
+              </Link>
+              <Link isExternal href={siteConfig.links.github}>
+                <WeChatIcon className="w-[24px] h-[24px]" />
+              </Link>
+            </div>
           </div>
         </div>
       </div>
-    </LoginLayout>
-
-    // <div className="flex-col">
-    //   <div>Or you can login with</div>
-    //   <br />
-    //   <div className={"flex gap-3"}>
-    //     <Link isExternal href={siteConfig.links.twitter}>
-    //       <GoogleIcon className="text-default-500" />
-    //     </Link>
-    //     <Link isExternal href={siteConfig.links.discord}>
-    //       <GiteeIcon className="text-default-500 w-[24px] h-[24px]" />
-    //     </Link>
-    //     <Link isExternal href={siteConfig.links.github}>
-    //       <WeChatIcon className="w-[24px] h-[24px]"/>
-    //     </Link>
-    //   </div>
-    // </div>
+    </Card>
   );
 }

@@ -58,7 +58,11 @@ export default function DashBoardHomeOverView() {
   return (
     <div className={"flex flex-wrap flex-row mt-10"}>
       {date.map((item) => (
-        <Card key={item.name} className="w-[300px] bg-overview-card m-3">
+        <Card
+          key={item.name}
+          isPressable
+          className="w-[300px] bg-overview-card m-3"
+        >
           <CardBody>
             <div className="flex flex-col">
               <span className={"flex flex-row"}>

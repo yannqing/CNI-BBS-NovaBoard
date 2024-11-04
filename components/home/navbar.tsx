@@ -53,18 +53,22 @@ export const Navbar = () => {
 
   const { isCookiePresent, deleteCookie } = useGetUserContext();
 
+  const cookie = getCookie();
+
   async function clickToLogout() {
     try {
-      await logoutAction(getCookie().id).then((res: BaseResponse<null>) => {
-        if (res.success) {
-          toast.success("退出登录成功！");
-          router.push(currentPath);
-        } else {
-          toast.error("退出登录失败，请联系管理员！");
-        }
-        // 无论是否退出成功，都要把 cookie 删除
-        deleteCookie();
-      });
+      await logoutAction(cookie !== null ? cookie.id : "").then(
+        (res: BaseResponse<null>) => {
+          if (res.success) {
+            toast.success("退出登录成功！");
+            router.push(currentPath);
+          } else {
+            toast.error("退出登录失败，请联系管理员！");
+          }
+          // 无论是否退出成功，都要把 cookie 删除
+          deleteCookie();
+        },
+      );
     } catch (error) {
       deleteCookie();
       // 异常统一被 响应拦截器捕获
