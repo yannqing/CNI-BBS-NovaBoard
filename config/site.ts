@@ -61,6 +61,7 @@ export const siteConfig = {
   innerLinks: {
     login: "/login",
     register: "/register",
+    forgetPassword: "/forget",
     dashboard: "/dashboard/home",
     about: "/about",
   },

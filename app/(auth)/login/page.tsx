@@ -40,6 +40,7 @@ export default function LoginPage() {
   });
 
   async function clickToLogin() {
+    console.log("loginRequest", loginRequest);
     loginAction(loginRequest).then((res: BaseResponse<LoginDTO>) => {
       if (res.success === true) {
         // 判断后端返回数据是否有错
@@ -113,8 +114,22 @@ export default function LoginPage() {
                 }}
               />
             </form>
-            <Checkbox className="size-1/11">Remember Me</Checkbox>
-            <Link className="size-1/11" href="#">
+            <Checkbox
+              className="size-1/11"
+              isSelected={loginRequest.rememberMe === "1"}
+              onValueChange={(value) => {
+                setLoginRequest({
+                  ...loginRequest,
+                  rememberMe: value ? "1" : "0",
+                });
+              }}
+            >
+              Remember Me
+            </Checkbox>
+            <Link
+              className="size-1/11"
+              href={siteConfig.innerLinks.forgetPassword}
+            >
               Forget Password？
             </Link>
             <Button color="primary" onPress={clickToLogin}>
@@ -125,10 +140,9 @@ export default function LoginPage() {
             </Button>
             <ThemeSwitch />
           </div>
-          <div className="flex-col">
+          <div className="flex-col mt-2">
             <div>Or you can login with</div>
-            <br />
-            <div className={"flex gap-3"}>
+            <div className={"flex gap-3 mt-2"}>
               <Link isExternal href={siteConfig.links.twitter}>
                 <GoogleIcon className="text-default-500" />
               </Link>
