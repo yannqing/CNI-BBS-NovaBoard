@@ -1,6 +1,5 @@
 import service from "@/utils/axios";
 import { LoginVo } from "@/types/auth/login";
-import { RegisterVo } from "@/types/auth/register";
 
 export async function loginAction(loginRequest: LoginVo) {
   return await service({
@@ -16,5 +15,3 @@ export async function logoutAction(id: string) {
     method: "get",
   });
 }
-
-export async function registerAction(registerRequest: RegisterVo) {}

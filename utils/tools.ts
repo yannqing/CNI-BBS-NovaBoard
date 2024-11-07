@@ -143,3 +143,23 @@ export function validatePassword(input: string): boolean {
     hasUpperCase && hasLowerCase && hasNumber && hasSpecialChar && isLongEnough
   );
 }
+
+/**
+ * 判断邮箱是否有效
+ * @param email
+ */
+export function validEmail(email: string) {
+  return email.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i);
+}
+
+/**
+ * 判断手机号是否有效
+ * @param phoneNumber
+ */
+export function validatePhoneNumber(phoneNumber: string): boolean {
+  // 正则表达式：匹配中国大陆地区的手机号
+  const phoneRegex = /^(?:\+86)?1[3-9]\d{9}$/;
+
+  // 测试手机号是否符合正则表达式
+  return phoneRegex.test(phoneNumber);
+}
