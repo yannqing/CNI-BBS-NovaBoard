@@ -94,24 +94,52 @@ export function deformatBase64(base64Str: string) {
 }
 
 /**
- * 为 url 匹配创建正则表达式
- * @param pattern
+ * 匹配路径的方法
+ * @param patterns 匹配规则
+ * @param path 匹配路径
  */
-function createRegex(pattern: string): RegExp {
-  // 将通配符转换为正则表达式
-  const regexPattern = pattern
-    .replace(/\*\*/g, ".*") // ** 匹配任意数量的路径
-    .replace(/\*/g, "[^/]+") // * 匹配单个路径段
-    .replace(/\//g, "\\/"); // 转义斜杠
+export function matchPath(patterns: string[], path: string) {
+  return patterns.some((pattern) => {
+    // 如果模式以 /** 结尾，需要特别处理
+    if (pattern.endsWith("/**")) {
+      // 移除结尾的 /** 并转义特殊字符
+      const basePath = pattern
+        .slice(0, -3)
+        .replace(/([.+?^${}()|[\]\\])/g, "\\$1");
+      const regex = new RegExp(`^${basePath}(?:|/.*)$`);
 
-  return new RegExp(`^${regexPattern}$`);
+      // console.log("Original pattern:", pattern);
+      // console.log("Converted regex:", regex);
+      // console.log("Testing path:", path);
+      // console.log("Match result:", regex.test(path));
+
+      return regex.test(path);
+    }
+
+    // 处理其他情况
+    let regexPattern = pattern
+      .replace(/\*\*/g, ".*")
+      .replace(/\*/g, "[^/]*")
+      .replace(/([.+?^${}()|[\]\\])/g, "\\$1");
+
+    const regex = new RegExp(`^${regexPattern}$`);
+
+    return regex.test(path);
+  });
 }
 
 /**
- * 使用正则表达式对 url 进行匹配
- * @param url
- * @param whiteList
+ * 针对密码的有效判断（大小写+数字+特殊字符 +8位以上）
+ * @param input
  */
-export function matchesWhiteList(url: string, whiteList: []): boolean {
-  return whiteList.some((pattern) => createRegex(pattern).test(url));
+export function validatePassword(input: string): boolean {
+  const hasUpperCase = /[A-Z]/.test(input);
+  const hasLowerCase = /[a-z]/.test(input);
+  const hasNumber = /[0-9]/.test(input);
+  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(input);
+  const isLongEnough = input.length >= 8;
+
+  return (
+    hasUpperCase && hasLowerCase && hasNumber && hasSpecialChar && isLongEnough
+  );
 }

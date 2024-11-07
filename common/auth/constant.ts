@@ -20,11 +20,10 @@ export const userInfoCookie = "userInfo";
  * 后端请求白名单（不需要登录可以访问的 api）
  */
 export const whiteList = [
-  "/user/open/login",
-  "/user/open/register",
-  "/category/open/list",
-  "/post/open/queryPostList",
-  "/user/open/recommendedUser",
+  "/category/open/**",
+  "/post/open/**",
+  "/user/open/**",
+  "/common/open/**",
 
   "/system/verif/gen/random",
   "/system/verif/check3",

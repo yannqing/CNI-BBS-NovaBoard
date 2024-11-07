@@ -1,8 +1,7 @@
 import axios from "axios";
-import { toast } from "sonner";
 
 import { ErrorCode } from "@/types/error/ErrorCode";
-import { decrypt, encrypt, generateRandomIV } from "@/utils/tools";
+import { decrypt, encrypt, generateRandomIV, matchPath } from "@/utils/tools";
 import { getCookie } from "@/utils/cookies";
 import { userInfoCookie, whiteList } from "@/common/auth/constant";
 import { CustomError } from "@/types/error/Error";
@@ -12,7 +11,7 @@ const BaseURL = "http://localhost:8080";
 const service = axios.create({
   baseURL: BaseURL, // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 10000, // request timeout
+  timeout: 50000, // request timeout
 });
 
 service.defaults.withCredentials = true;
@@ -40,8 +39,8 @@ service.interceptors.request.use(
     } else {
       // 用户未登录，判断请求路径是否在白名单内
       // 不在白名单内，直接重定向到登录页
-      if (config.url && whiteList.indexOf(config.url) === -1) {
-        toast.error(ErrorCode.TOKEN_EXPIRE.message);
+      if (config.url && !matchPath(whiteList, config.url)) {
+        // toast.error(ErrorCode.TOKEN_EXPIRE.message);
 
         // 拒绝继续请求
         return Promise.reject(
@@ -98,7 +97,7 @@ service.interceptors.response.use(
         // 解密后，判断后端错误代码
         // 1). token 过期
         if (response.data.errorCode == ErrorCode.TOKEN_EXPIRE.code) {
-          toast.error(ErrorCode.TOKEN_EXPIRE.message);
+          // toast.error(ErrorCode.TOKEN_EXPIRE.message);
 
           return Promise.reject(
             new CustomError(
@@ -111,7 +110,7 @@ service.interceptors.response.use(
         return response.data;
       } else {
         // 后端返回数据为空 TODO 其他处理
-        toast.error(ErrorCode.SERVER_ERROR.message);
+        // toast.error(ErrorCode.SERVER_ERROR.message);
 
         return Promise.reject(
           new CustomError(
@@ -122,9 +121,9 @@ service.interceptors.response.use(
       }
     } else {
       // 响应码不是 200 TODO 其他处理
-      toast.error(ErrorCode.SERVER_ERROR.message);
+      // toast.error(ErrorCode.SERVER_ERROR.message);
 
-      return Promise.reject(
+      throw Promise.reject(
         new CustomError(
           ErrorCode.SERVER_ERROR.message,
           ErrorCode.SERVER_ERROR.code,
@@ -136,9 +135,9 @@ service.interceptors.response.use(
     console.log("error", error);
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
-    toast.error(ErrorCode.SERVER_ERROR.message);
+    // toast.error(ErrorCode.SERVER_ERROR.message);
 
-    return Promise.reject(
+    throw Promise.reject(
       new CustomError(
         ErrorCode.SERVER_ERROR.message,
         ErrorCode.SERVER_ERROR.code,
