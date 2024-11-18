@@ -4,11 +4,11 @@ import { Input } from "@nextui-org/input";
 import { Link } from "@nextui-org/link";
 import { Checkbox } from "@nextui-org/checkbox";
 import { Button } from "@nextui-org/button";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { EyeFilledIcon, EyeSlashFilledIcon } from "@nextui-org/shared-icons";
 import { toast } from "sonner";
 // @ts-ignore
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Card } from "@nextui-org/card";
 
 import { title } from "@/components/primitives";
@@ -25,6 +25,10 @@ import { ThemeSwitch } from "@/components/home/theme-switch";
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const passcode = searchParams.get("passcode");
+  const socialUserId = searchParams.get("socialUserId");
 
   const [isVisible, setIsVisible] = React.useState(false);
 
@@ -38,6 +42,14 @@ export default function LoginPage() {
     loginType: "password",
     rememberMe: "0",
   });
+
+  useEffect(() => {
+    const message = searchParams.get("message");
+
+    if (message) {
+      toast.error(message);
+    }
+  }, []);
 
   async function clickToLogin() {
     console.log("loginRequest", loginRequest);
@@ -143,15 +155,23 @@ export default function LoginPage() {
           <div className="flex-col mt-2">
             <div>Or you can login with</div>
             <div className={"flex gap-3 mt-2"}>
-              <Link isExternal href={siteConfig.links.twitter}>
+              <Link href={siteConfig.links.google}>
                 <GoogleIcon className="text-default-500" />
               </Link>
-              <Link isExternal href={siteConfig.links.discord}>
+              <Link isExternal href={siteConfig.links.gitee}>
                 <GiteeIcon className="text-default-500 w-[24px] h-[24px]" />
               </Link>
-              <Link isExternal href={siteConfig.links.github}>
+              <Link isExternal href={siteConfig.links.wechat}>
                 <WeChatIcon className="w-[24px] h-[24px]" />
               </Link>
+              <Button
+                onPress={() => {
+                  console.log("passcode", passcode);
+                  console.log("socialUserId", socialUserId);
+                }}
+              >
+                test
+              </Button>
             </div>
           </div>
         </div>

@@ -1,3 +1,5 @@
+"use client";
+
 import clsx from "clsx";
 import { Button } from "@nextui-org/button";
 import { User } from "@nextui-org/user";

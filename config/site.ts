@@ -52,11 +52,9 @@ export const siteConfig = {
     },
   ],
   links: {
-    github: "https://github.com/nextui-org/nextui",
-    twitter: "https://twitter.com/getnextui",
-    docs: "https://nextui.org",
-    discord: "https://discord.gg/9b6yyZKmH4",
-    sponsor: "https://patreon.com/jrgarciadev",
+    wechat: "http://localhost:8080/auth/render/wechat_open",
+    gitee: "http://localhost:8080/auth/render/gitee",
+    google: "http://localhost:8080/auth/render/google",
   },
   innerLinks: {
     login: "/login",

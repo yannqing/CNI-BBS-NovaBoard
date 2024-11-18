@@ -196,7 +196,17 @@ export default function LoginPage() {
     // 4. 是否勾选**同意协议**（放第二步了）
     // 5. 发送请求
     await registerAction(registerRequest).then((res: BaseResponse<any>) => {
-      console.log("register result", res);
+      if (res.success) {
+        // 注册成功！
+        toast.success("注册成功，即将返回登录");
+        setTimeout(() => {
+          router.push(siteConfig.innerLinks.login);
+        }, 3000);
+      } else {
+        // 注册失败
+        console.log("register result", res);
+        toast.error(res.message);
+      }
     });
   }
 

@@ -140,13 +140,13 @@ export const Navbar = () => {
         justify="end"
       >
         <NavbarItem className="hidden sm:flex gap-2">
-          <Link isExternal href={siteConfig.links.twitter}>
+          <Link isExternal href={siteConfig.links.gitee}>
             <TwitterIcon className="text-default-500" />
           </Link>
-          <Link isExternal href={siteConfig.links.discord}>
+          <Link isExternal href={siteConfig.links.wechat}>
             <DiscordIcon className="text-default-500" />
           </Link>
-          <Link isExternal href={siteConfig.links.github}>
+          <Link isExternal href={siteConfig.links.google}>
             <GithubIcon className="text-default-500" />
           </Link>
           <ThemeSwitch />
@@ -288,7 +288,7 @@ export const Navbar = () => {
       </NavbarContent>
 
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
-        <Link isExternal href={siteConfig.links.github}>
+        <Link isExternal href={siteConfig.links.google}>
           <GithubIcon className="text-default-500" />
         </Link>
         <ThemeSwitch />
