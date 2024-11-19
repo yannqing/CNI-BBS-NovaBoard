@@ -3,17 +3,14 @@
 import { Card, CardBody, CardFooter, CardHeader } from "@nextui-org/card";
 import { Image } from "@nextui-org/image";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
 import { Tooltip } from "@nextui-org/tooltip";
 import { User } from "@nextui-org/user";
 import { Button } from "@nextui-org/button";
 import { Avatar } from "@nextui-org/avatar";
 
-import { ErrorCode } from "@/types/error/ErrorCode";
-import { BaseResponse } from "@/types";
-import { externalPost, GetPostListRequest, Post } from "@/types/post/post";
-import { queryPostList } from "@/app/(main)/home/action";
+import { GetPostListRequest } from "@/types/post/post";
 import HomeLayout from "@/app/(main)/home/layout";
+import { useGetPostContext } from "@/app/(main)/PostContext";
 
 export default function HomePage() {
   const request: GetPostListRequest = {
@@ -26,33 +23,93 @@ export default function HomePage() {
 
   const [isFollowed, setIsFollowed] = useState(false);
 
+  // 页面初始化
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res: BaseResponse<externalPost> = await queryPostList(request);
-
-        console.log("查询全部帖子：", res);
-
-        if (res.data) {
-          setList(res.data.records);
-        } else {
-          // 后端返回无数据
-          toast.error(ErrorCode.SERVER_ERROR.message);
-        }
-      } catch (error) {
-        console.error("err--->", error);
-      }
-    };
-
-    fetchData();
+    console.log("postList", postList);
+    // if (fetchData) {
+    //   console.log("xxxx");
+    //   fetchData(request);
+    // }
   }, []);
 
-  const [list, setList] = useState<Post[]>([]);
+  // 标签
+  const { postList, fetchData } = useGetPostContext();
+
+  // const postList: Post[] = [
+  //   {
+  {
+    /*    authorName: "xx",*/
+  }
+  {
+    /*    categoryVo: {*/
+  }
+  {
+    /*      categoryName: "",*/
+  }
+  {
+    /*      categoryUrl: "",*/
+  }
+  //       createTime: 123,
+  //       description: "",
+  //       id: 123,
+  //       updateTime: 123,
+  //     },
+  //     commentTime: 123,
+  //     createTime: 123,
+  //     isTop: "",
+  //     postId: "",
+  //     summary: "",
+  //     tagVos: [
+  {
+    /*      {*/
+  }
+  {
+    /*        createTime: 123,*/
+  }
+  {
+    /*        description: "",*/
+  }
+  {
+    /*        tagUrl: "",*/
+  }
+  //         updateTime: 123,
+  //         id: 123,
+  //       },
+  //     ],
+  //     title: "",
+  //     type: "",
+  //     updateTime: 123,
+  //     urls: [
+  //       {
+  //         createTime: 123,
+  //         id: 123,
+  //         mediaType: "",
+  //         mediaUrl: "",
+  //       },
+  //     ],
+  //     userVo: {
+  //       avatar: "",
+  //       bio: "",
+  //       fansCount: "",
+  //       followingCount: "",
+  //       userId: "",
+  //       userName: "",
+  //     },
+  //     view_counts: "",
+  //   },
+  // ];
+
+  // 添加保护措施
+  if (!postList) {
+    console.log("123");
+
+    return <div>Loading...</div>; // 或其他适当的加载状态
+  }
 
   return (
     <HomeLayout>
       <div className="gap-2 grid grid-cols-2 sm:grid-cols-4 m-4">
-        {list.map((item, index) => (
+        {postList.map((item, index) => (
           <Card
             key={index}
             isPressable
