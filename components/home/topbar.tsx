@@ -54,14 +54,16 @@ export const TopBar = () => {
   }, []);
 
   async function selectChange(key: React.Key) {
-    if (key === -1) {
+    if (Number(key) === -1) {
       postRequest.categoryId = "";
+      console.log("???");
       fetchData(postRequest);
     } else {
       for (let i = 0; i < data.length; i++) {
         if (i === Number(key)) {
           if (data[i].id) {
             postRequest.categoryId = String(data[i].id);
+            console.log("帖子类别请求：", postRequest);
             fetchData(postRequest);
             console.log("data[i].id", data[i].id);
             break;

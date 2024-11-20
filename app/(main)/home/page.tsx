@@ -2,112 +2,27 @@
 
 import { Card, CardBody, CardFooter, CardHeader } from "@nextui-org/card";
 import { Image } from "@nextui-org/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Tooltip } from "@nextui-org/tooltip";
 import { User } from "@nextui-org/user";
 import { Button } from "@nextui-org/button";
 import { Avatar } from "@nextui-org/avatar";
 
-import { GetPostListRequest } from "@/types/post/post";
-import HomeLayout from "@/app/(main)/home/layout";
 import { useGetPostContext } from "@/app/(main)/PostContext";
 
 export default function HomePage() {
-  const request: GetPostListRequest = {
-    pageNo: 1,
-    pageSize: 10,
-    postId: "",
-    categoryId: "",
-    tagIds: [],
-  };
-
   const [isFollowed, setIsFollowed] = useState(false);
 
   // 页面初始化
-  useEffect(() => {
-    console.log("postList", postList);
-    // if (fetchData) {
-    //   console.log("xxxx");
-    //   fetchData(request);
-    // }
-  }, []);
+  // useEffect(() => {
+  //   console.log("postList", postList);
+  // }, []);
 
   // 标签
-  const { postList, fetchData } = useGetPostContext();
-
-  // const postList: Post[] = [
-  //   {
-  {
-    /*    authorName: "xx",*/
-  }
-  {
-    /*    categoryVo: {*/
-  }
-  {
-    /*      categoryName: "",*/
-  }
-  {
-    /*      categoryUrl: "",*/
-  }
-  //       createTime: 123,
-  //       description: "",
-  //       id: 123,
-  //       updateTime: 123,
-  //     },
-  //     commentTime: 123,
-  //     createTime: 123,
-  //     isTop: "",
-  //     postId: "",
-  //     summary: "",
-  //     tagVos: [
-  {
-    /*      {*/
-  }
-  {
-    /*        createTime: 123,*/
-  }
-  {
-    /*        description: "",*/
-  }
-  {
-    /*        tagUrl: "",*/
-  }
-  //         updateTime: 123,
-  //         id: 123,
-  //       },
-  //     ],
-  //     title: "",
-  //     type: "",
-  //     updateTime: 123,
-  //     urls: [
-  //       {
-  //         createTime: 123,
-  //         id: 123,
-  //         mediaType: "",
-  //         mediaUrl: "",
-  //       },
-  //     ],
-  //     userVo: {
-  //       avatar: "",
-  //       bio: "",
-  //       fansCount: "",
-  //       followingCount: "",
-  //       userId: "",
-  //       userName: "",
-  //     },
-  //     view_counts: "",
-  //   },
-  // ];
-
-  // 添加保护措施
-  if (!postList) {
-    console.log("123");
-
-    return <div>Loading...</div>; // 或其他适当的加载状态
-  }
+  const { postList } = useGetPostContext();
 
   return (
-    <HomeLayout>
+    <>
       <div className="gap-2 grid grid-cols-2 sm:grid-cols-4 m-4">
         {postList.map((item, index) => (
           <Card
@@ -214,6 +129,6 @@ export default function HomePage() {
           </Card>
         ))}
       </div>
-    </HomeLayout>
+    </>
   );
 }

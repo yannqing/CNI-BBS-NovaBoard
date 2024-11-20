@@ -107,7 +107,13 @@ export function PostProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <PostContext.Provider value={{ postList, fetchData }}>
-      {postList[0].authorName !== "xx" ? children : <div>加载中...</div>}
+      {postList[0] && postList[0].authorName !== "xx" ? (
+        children
+      ) : !postList[0] ? (
+        children
+      ) : (
+        <div>加载中...</div>
+      )}
     </PostContext.Provider>
   );
 }

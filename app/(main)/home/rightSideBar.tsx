@@ -7,13 +7,17 @@ import { Tooltip } from "@nextui-org/tooltip";
 import { Card, CardBody, CardFooter, CardHeader } from "@nextui-org/card";
 import { Avatar } from "@nextui-org/avatar";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { fontMono } from "@/config/fonts";
 import { getRecommendUsers } from "@/app/(main)/home/action";
 import { BaseResponse } from "@/types";
 import { RecommendUsers } from "@/types/auth/user";
+import { siteConfig } from "@/config/site";
 
 export default function RightSideBar() {
+  const router = useRouter();
+
   const [isFollowed, setIsFollowed] = useState(false);
 
   const [recommendUsers, setRecommendUsers] = useState<RecommendUsers[]>([]);
@@ -44,6 +48,9 @@ export default function RightSideBar() {
           )}
           color="primary"
           variant="light"
+          onPress={() => {
+            router.push(siteConfig.innerLinks.chat);
+          }}
         >
           936 人正在热聊，点击加入
         </Button>

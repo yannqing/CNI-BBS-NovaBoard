@@ -6,7 +6,7 @@ export const siteConfig = {
   navItems: [
     {
       label: "主页",
-      href: "/",
+      href: "/home",
     },
     {
       label: "关于",
@@ -58,6 +58,7 @@ export const siteConfig = {
   },
   innerLinks: {
     login: "/login",
+    chat: "/chat",
     register: "/register",
     forgetPassword: "/forget",
     dashboard: "/dashboard/home",
