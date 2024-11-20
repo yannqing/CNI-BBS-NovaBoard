@@ -43,29 +43,25 @@ export const TopBar = () => {
         const res: BaseResponse<CategoryList> =
           await getAllCategoryAction(request);
 
-        console.log("res", res);
         if (res.data) {
           setData(res.data.records); // 更新状态
         }
       } catch (error) {}
     };
 
-    fetchData();
+    fetchData().then(() => {});
   }, []);
 
   async function selectChange(key: React.Key) {
     if (Number(key) === -1) {
       postRequest.categoryId = "";
-      console.log("???");
       fetchData(postRequest);
     } else {
       for (let i = 0; i < data.length; i++) {
         if (i === Number(key)) {
           if (data[i].id) {
             postRequest.categoryId = String(data[i].id);
-            console.log("帖子类别请求：", postRequest);
             fetchData(postRequest);
-            console.log("data[i].id", data[i].id);
             break;
           } else {
             toast.error("无法获取信息，请联系管理员");
@@ -75,7 +71,6 @@ export const TopBar = () => {
         }
       }
     }
-    console.log("React.Key", key);
   }
 
   return (

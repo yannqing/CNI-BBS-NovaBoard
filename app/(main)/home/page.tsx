@@ -9,14 +9,12 @@ import { Button } from "@nextui-org/button";
 import { Avatar } from "@nextui-org/avatar";
 
 import { useGetPostContext } from "@/app/(main)/PostContext";
+import { useGetUserContext } from "@/app/UserContext";
 
 export default function HomePage() {
   const [isFollowed, setIsFollowed] = useState(false);
 
-  // 页面初始化
-  // useEffect(() => {
-  //   console.log("postList", postList);
-  // }, []);
+  const { isCookiePresent } = useGetUserContext();
 
   // 标签
   const { postList } = useGetPostContext();
@@ -32,6 +30,7 @@ export default function HomePage() {
             onPress={() => console.log("item pressed")}
           >
             <CardBody className="overflow-visible p-0">
+              {/*TODO 这里头像默认取的数组第一个*/}
               <Image
                 alt={item.title}
                 className="w-full object-cover h-[140px]"
@@ -87,6 +86,7 @@ export default function HomePage() {
                       </Button>
                     </CardHeader>
                     <CardBody className="px-3 py-0">
+                      {/*TODO 目前写死，需要根据后端内容来调整*/}
                       <p className="text-small pl-px text-default-500">
                         Full-stack developer, @getnextui lover she/her
                         <span aria-label="confetti" role="img">

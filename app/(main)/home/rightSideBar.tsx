@@ -18,17 +18,23 @@ import { siteConfig } from "@/config/site";
 export default function RightSideBar() {
   const router = useRouter();
 
+  // 是否关注
   const [isFollowed, setIsFollowed] = useState(false);
 
+  // 推荐作者
   const [recommendUsers, setRecommendUsers] = useState<RecommendUsers[]>([]);
 
+  // 页面初始化
   useEffect(() => {
-    getRecommendUsers().then((res: BaseResponse<RecommendUsers[]>) => {
-      console.log("获取推荐作者 result：", res);
+    const fetchRecommendUsersData = async () => {
+      const res: BaseResponse<RecommendUsers[]> = await getRecommendUsers();
+
       if (res.success && res.data) {
         setRecommendUsers(res.data);
       }
-    });
+    };
+
+    fetchRecommendUsersData().then(() => {});
   }, []);
 
   return (

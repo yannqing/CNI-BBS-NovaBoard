@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 import { userInfoCookie } from "@/common/auth/constant";
 
-// This function can be marked `async` if using `await` inside
+// 中间件：可以使用 async，运行在服务端
 export function middleware(request: NextRequest) {
   const token = request.cookies.get(userInfoCookie);
 
@@ -33,7 +33,7 @@ export function middleware(request: NextRequest) {
   return NextResponse.next(); // 继续处理请求
 }
 
-// See "Matching Paths" below to learn more
+// 路由匹配
 export const config = {
   matcher: ["/chat/:path*", "/"],
 };
