@@ -132,7 +132,8 @@ module.exports = {
 				},
 			},
 		}),
-		require("tailwindcss-animate")
+		require("tailwindcss-animate"),
+		require('@tailwindcss/typography'),
 	],
 	// 设置颜色 safelist：始终被 JIT（即时编译）模式解析
 	safelist: [

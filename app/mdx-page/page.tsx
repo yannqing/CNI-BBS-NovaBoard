@@ -2,5 +2,9 @@
 
 import Welcome from "./Welcome.mdx";
 export default function mdxPage() {
-  return <Welcome />;
+  return (
+    <article className="prose">
+      <Welcome />
+    </article>
+  );
 }

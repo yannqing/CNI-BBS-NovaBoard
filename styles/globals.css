@@ -133,3 +133,30 @@
     }
 }
 
+@layer components {
+      .prose {
+            /* 添加您的自定义样式 */
+            color: #f8ecec; /* 示例：更改文本颜色 */
+            font-size: 1.125rem; /* 示例：更改字体大小 */
+      }
+
+      .prose h1 {
+            color: #f8ecec; /* 示例：更改文本颜色 */
+            @apply text-3xl font-bold; /* 使用 Tailwind 的 @apply */
+      }
+
+      .prose p {
+            @apply mb-4; /* 添加下边距 */
+      }
+
+      .prose strong {
+            color: #f8ecec; /* 示例：更改文本颜色 */
+            @apply font-bold; /* 使用 Tailwind 的 @apply */
+      }
+
+      .prose a {
+            color: #f8ecec; /* 示例：更改文本颜色 */
+            /*@apply font-bold; !* 使用 Tailwind 的 @apply *!*/
+      }
+}
+
