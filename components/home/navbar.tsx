@@ -67,6 +67,7 @@ export const Navbar = () => {
           }
           // 无论是否退出成功，都要把 cookie 删除
           deleteCookie();
+          localStorage.removeItem("token");
         },
       );
     } catch (error) {
@@ -171,10 +172,10 @@ export const Navbar = () => {
           <Button
             as={Link}
             color="primary"
-            href={siteConfig.innerLinks.dashboard}
+            href={siteConfig.innerLinks.postMsg}
             variant="flat"
           >
-            dashboard
+            toMdx
           </Button>
         </NavbarItem>
         <Dropdown
@@ -244,7 +245,13 @@ export const Navbar = () => {
                   name="Junior Garcia"
                 />
               </DropdownItem>
-              <DropdownItem key="dashboard">Dashboard</DropdownItem>
+              <DropdownItem
+                key="dashboard"
+                as={Link}
+                href={siteConfig.innerLinks.dashboard}
+              >
+                Dashboard
+              </DropdownItem>
               <DropdownItem key="settings">Settings</DropdownItem>
               <DropdownItem key="new_project" endContent="+">
                 New Project

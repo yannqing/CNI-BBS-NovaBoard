@@ -58,10 +58,13 @@ export const siteConfig = {
   },
   innerLinks: {
     login: "/login",
-    chat: "/chat",
     register: "/register",
     forgetPassword: "/forget",
-    dashboard: "/dashboard/home",
+
+    chat: "/chat",
     about: "/about",
+    postMsg: "/mdx-page",
+
+    dashboard: "/dashboard/home",
   },
 };

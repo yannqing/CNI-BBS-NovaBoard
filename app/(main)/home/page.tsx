@@ -7,11 +7,13 @@ import { Tooltip } from "@nextui-org/tooltip";
 import { User } from "@nextui-org/user";
 import { Button } from "@nextui-org/button";
 import { Avatar } from "@nextui-org/avatar";
+import { useRouter } from "next/navigation";
 
 import { useGetPostContext } from "@/app/(main)/PostContext";
 import { useGetUserContext } from "@/app/UserContext";
 
 export default function HomePage() {
+  const router = useRouter();
   const [isFollowed, setIsFollowed] = useState(false);
 
   const { isCookiePresent } = useGetUserContext();
@@ -27,7 +29,7 @@ export default function HomePage() {
             key={index}
             isPressable
             shadow="sm"
-            onPress={() => console.log("item pressed")}
+            onPress={() => router.push("")}
           >
             <CardBody className="overflow-visible p-0">
               {/*TODO 这里头像默认取的数组第一个*/}

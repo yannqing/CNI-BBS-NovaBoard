@@ -52,23 +52,31 @@ export default function LoginPage() {
   }, []);
 
   async function clickToLogin() {
+    fetchLoginData().then(() => {});
     console.log("loginRequest", loginRequest);
-    loginAction(loginRequest).then((res: BaseResponse<LoginDTO>) => {
-      if (res.success === true) {
-        // 判断后端返回数据是否有错
-        if (res.data) {
-          toast.success("login success");
-          router.push("/");
-          console.log("login result", res);
-          updateCookie(userInfoCookie, JSON.stringify(res.data), false);
-        } else {
-          toast.error("服务器异常，请重试！");
-        }
-      } else {
-        toast.error("登录失败，请重试");
-      }
-    });
   }
+
+  /**
+   * 登录接口
+   */
+  const fetchLoginData = async () => {
+    const res: BaseResponse<LoginDTO> = await loginAction(loginRequest);
+
+    if (res.success === true) {
+      // 判断后端返回数据是否有错
+      if (res.data) {
+        toast.success("login success");
+        router.push("/");
+        console.log("login result", res);
+        updateCookie(userInfoCookie, JSON.stringify(res.data), false);
+        localStorage.setItem("token", res.data.token);
+      } else {
+        toast.error("服务器异常，请重试！");
+      }
+    } else {
+      toast.error("登录失败，请重试");
+    }
+  };
 
   function toRegisterPage() {
     router.push(siteConfig.innerLinks.register);

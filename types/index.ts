@@ -10,3 +10,8 @@ export type BaseResponse<Object> = {
   errorCode?: string;
   data?: Object;
 };
+
+export type BasePage<Object> = {
+  records: Object[];
+  total: number;
+};

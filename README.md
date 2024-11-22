@@ -24,6 +24,8 @@
 
   - [svg 图标处理库 @svgr/webpack]()
 
+  - [MDX：markdown + jsx 渲染 html](https://mdxjs.com/)
+
 - 工具库
 
   - axios： 请求处理
@@ -145,7 +147,13 @@ PS：将所有的提示字符串给抽象为 枚举
 
 
 
+### /home
 
+url：
+
+- https://ibw.bwnet.com.tw/ac_gallery/2023/03/537517ab-4f2b-16cd-095e-b5857110dfdd_620.jpg
+- https://ibw.bwnet.com.tw/AC_Gallery/2023/03/88d700a4-e06f-d1ac-3153-976ace4ce9b5.jpg
+- https://ibw.bwnet.com.tw/AC_Gallery/2023/03/4ba10704-2a05-c83f-116e-ba3fd026f107.jpg
 
 
 
@@ -212,6 +220,8 @@ PS：将所有的提示字符串给抽象为 枚举
 1. 对所有的手机号，邮箱，密码，账号做格式校验
 2. 将所有的提示字符串给抽象为常量放一个单独的 ts 文件中
 3. page 页面不能以组件形式调用，例如<HomePage />
+4. 全局状态管理，上下文 Context，要确定不是 undefined 才能返回 children
+5. 
 
 
 

@@ -146,16 +146,17 @@
       }
 
       .prose p {
+            color: #f8ecec;
             @apply mb-4; /* 添加下边距 */
       }
 
       .prose strong {
-            color: #f8ecec; /* 示例：更改文本颜色 */
+            color: #f8ecec; /* 示例：更改加粗颜色 */
             @apply font-bold; /* 使用 Tailwind 的 @apply */
       }
 
       .prose a {
-            color: #f8ecec; /* 示例：更改文本颜色 */
+            color: #f8ecec; /* 示例：更改超链接颜色 */
             /*@apply font-bold; !* 使用 Tailwind 的 @apply *!*/
       }
 }

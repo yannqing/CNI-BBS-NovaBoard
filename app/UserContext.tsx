@@ -2,24 +2,7 @@
 // eslint-disable-next-line import/order
 import { createContext, useContext, useEffect, useState } from "react";
 
-/**
- * import { toLogin } from "./login/action"
- */
-
 import { getCookie, removeCookie, setCookie } from "@/utils/cookies";
-
-// import { User } from "@/types/User";
-// import { setupUser } from "@/utils/setupUser";
-// const defaultUser: User = {
-//   user_id: -1,
-//   username: "",
-//   phone: "",
-//   email: "",
-//   nick_name: "",
-//   disk_size: -1,
-//   role: -1,
-//   token: "",
-// };
 
 interface UserProvider {
   isCookiePresent: Boolean;
