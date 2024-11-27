@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@nextui-org/button";
 import ReactMarkdown from "react-markdown";
 import { twMerge } from "tailwind-merge";
-import { Eye } from "lucide-react";
+import { Eye, PartyPopper } from "lucide-react";
 
 import { getPostInfoByIdAction } from "@/app/(main)/mdx-page/[slug]/action";
 import { BaseResponse } from "@/types";
@@ -83,6 +83,7 @@ export default function Page({ params }: { params: { slug: string } }) {
               : ""}
           </div>
           <div>
+            {/*TODO 如果 tag 数量过多，如何处理？*/}
             {postContent?.tagVos
               ? postContent?.tagVos?.map((tag, index) => (
                   <span key={index} className={"mr-2"}>
@@ -96,8 +97,27 @@ export default function Page({ params }: { params: { slug: string } }) {
             {postContent?.view_counts}
           </div>
         </div>
+        <div className={"flex justify-center w-full mt-5"}>
+          <div className={"w-2/3 border-2 rounded-lg p-4"}>
+            <div className={"flex flex-row gap-2"}>
+              <PartyPopper className={"mt-0.5 w-5"} />
+              <div>AI 生成的摘要</div>
+            </div>
+            <div
+              className={
+                "flex gap-2 mt-2 text-sm tracking-wide leading-relaxed"
+              }
+            >
+              {postContent?.summary}
+            </div>
+          </div>
+        </div>
       </div>
-      <ReactMarkdown className={"px-20"}>{markdown}</ReactMarkdown>
+      <div className={"px-20 flex justify-center w-full mt-5"}>
+        <div className={"w-2/3"}>
+          <ReactMarkdown className={"w-full"}>{markdown}</ReactMarkdown>
+        </div>
+      </div>
     </div>
   );
 }
