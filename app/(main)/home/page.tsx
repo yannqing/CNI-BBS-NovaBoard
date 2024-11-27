@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 
 import { useGetPostContext } from "@/app/(main)/PostContext";
 import { useGetUserContext } from "@/app/UserContext";
+import { siteConfig } from "@/config/site";
 
 export default function HomePage() {
   const router = useRouter();
@@ -29,7 +30,9 @@ export default function HomePage() {
             key={index}
             isPressable
             shadow="sm"
-            onPress={() => router.push("")}
+            onPress={() =>
+              router.push(siteConfig.innerLinks.postMsg + item.postId)
+            }
           >
             <CardBody className="overflow-visible p-0">
               {/*TODO 这里头像默认取的数组第一个*/}

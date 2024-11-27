@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { fontMono } from "@/config/fonts";
-import { getRecommendUsers } from "@/app/(main)/home/action";
+import { getRecommendUsersAction } from "@/app/(main)/home/action";
 import { BaseResponse } from "@/types";
 import { RecommendUsers } from "@/types/auth/user";
 import { siteConfig } from "@/config/site";
@@ -27,7 +27,8 @@ export default function RightSideBar() {
   // 页面初始化
   useEffect(() => {
     const fetchRecommendUsersData = async () => {
-      const res: BaseResponse<RecommendUsers[]> = await getRecommendUsers();
+      const res: BaseResponse<RecommendUsers[]> =
+        await getRecommendUsersAction();
 
       if (res.success && res.data) {
         setRecommendUsers(res.data);

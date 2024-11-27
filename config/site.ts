@@ -63,7 +63,7 @@ export const siteConfig = {
 
     chat: "/chat",
     about: "/about",
-    postMsg: "/mdx-page",
+    postMsg: "/mdx-page/",
 
     dashboard: "/dashboard/home",
   },

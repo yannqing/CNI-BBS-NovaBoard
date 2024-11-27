@@ -20,7 +20,9 @@ export async function getAllCategoryAction(
  * 查询所有帖子列表
  * @param getPostListRequest
  */
-export async function queryPostList(getPostListRequest: GetPostListRequest) {
+export async function queryPostListAction(
+  getPostListRequest: GetPostListRequest,
+) {
   return await service({
     url: "/post/open/queryPostList",
     method: "post",
@@ -28,7 +30,10 @@ export async function queryPostList(getPostListRequest: GetPostListRequest) {
   });
 }
 
-export async function getRecommendUsers() {
+/**
+ * 查询推荐作者列表
+ */
+export async function getRecommendUsersAction() {
   return await service({
     url: "/user/open/recommendedUser",
     method: "get",

@@ -6,6 +6,16 @@ export const metadata = {
   description: 'Welcome to my MDX page',
 }
 
+export const markdown = `# I love mdx`;
+
+export function Thing() {
+return (
+<>
+{markdown}
+</>
+)
+}
+
 # Welcome to my MDX page!
 
 > ps: 这是我的第一个 MDX + Next.js 页面
@@ -21,4 +31,5 @@ This is a list in markdown:
 - Three
 
 Checkout my React component:
-<Button >MDX</Button>
+
+<Thing />

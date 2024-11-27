@@ -3,11 +3,11 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 
-import { externalPost, GetPostListRequest, Post } from "@/types/post/post";
+import { GetPostListRequest, Post } from "@/types/post/post";
 import { CustomError } from "@/types/error/Error";
 import { ErrorCode } from "@/types/error/ErrorCode";
-import { queryPostList } from "@/app/(main)/home/action";
-import { BaseResponse } from "@/types";
+import { queryPostListAction } from "@/app/(main)/home/action";
+import { BasePage, BaseResponse } from "@/types";
 
 const defaultPostArray: Post[] = [
   {
@@ -77,7 +77,8 @@ export function PostProvider({ children }: { children: React.ReactNode }) {
   const [postList, setPostList] = useState<Post[]>(defaultPostArray);
   const fetchData = async (request: GetPostListRequest) => {
     try {
-      const res: BaseResponse<externalPost> = await queryPostList(request);
+      const res: BaseResponse<BasePage<Post>> =
+        await queryPostListAction(request);
 
       console.log("查询全部帖子：", res);
 
