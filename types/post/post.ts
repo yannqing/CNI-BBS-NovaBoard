@@ -14,7 +14,7 @@ export type GetPostByIdResponse = {
   categoryVo?: CategoryVo;
   commentTime?: string;
   createTime?: string;
-  postContent?: object; //xx
+  postContent?: PostContent; //xx
   postId?: string;
   summary?: string;
   tagVos?: TagVo[];
@@ -71,4 +71,10 @@ export type CategoryVo = {
   description: string;
   id: number;
   updateTime: number;
+};
+
+// 帖子内容
+export type PostContent = {
+  content: string;
+  contentHtml: string;
 };
