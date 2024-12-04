@@ -14,7 +14,7 @@ export type GetPostByIdResponse = {
   categoryVo?: CategoryVo;
   commentTime?: string;
   createTime?: string;
-  postContent?: PostContent; //xx
+  postContent?: PostContent;
   postId?: string;
   summary?: string;
   tagVos?: TagVo[];

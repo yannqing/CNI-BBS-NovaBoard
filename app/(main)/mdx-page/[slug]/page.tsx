@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button } from "@nextui-org/button";
 import ReactMarkdown from "react-markdown";
 import { twMerge } from "tailwind-merge";
 import { Eye, PartyPopper } from "lucide-react";
+import { Divider } from "@nextui-org/divider";
 
 import { getPostInfoByIdAction } from "@/app/(main)/mdx-page/[slug]/action";
 import { BaseResponse } from "@/types";
@@ -24,38 +24,11 @@ export default function Page({ params }: { params: { slug: string } }) {
       params.slug,
     );
 
-    console.log("getPostById", res);
     if (res.success && res.data) {
       // toast.success("获取帖子信息成功");
       setPostContent(res.data);
     }
   };
-
-  const markdown = `
-  # Welcome to my Markdown page!
-  
-  > ps: 这是我的第一个 Markdown + Next.js 页面
-  
-  我 **喜欢** 使用 [Next.js](https://nextjs.org)
-  
-  This is some **bold** and _italics_ text.
-  
-  This is a list in markdown:
-  
-  - One
-  - Two
-  - Three
-  `;
-
-  // 你的 React 组件
-  function Thing() {
-    return (
-      <div>
-        <h2>这是一个组件</h2>
-        <Button>点击我</Button>
-      </div>
-    );
-  }
 
   return (
     <div className="prose flex flex-col">
@@ -66,7 +39,7 @@ export default function Page({ params }: { params: { slug: string } }) {
       >
         <AuthorCard userVo={postContent?.userVo} />
       </div>
-      <div className={"flex flex-col px-20 justify-center w-full mt-10"}>
+      <div className={"flex flex-col px-10 justify-center w-full mt-10"}>
         {/*TODO 如果数据未空会怎样？*/}
         <div className={"text-4xl flex justify-center"}>
           <div>{postContent?.title}</div>
@@ -113,11 +86,23 @@ export default function Page({ params }: { params: { slug: string } }) {
           </div>
         </div>
       </div>
-      <div className={"px-20 flex justify-center w-full mt-5"}>
+      <div className={"px-10 flex justify-center w-full mt-5"}>
         <div className={"w-2/3"}>
           <ReactMarkdown className={"w-full"}>
             {postContent?.postContent?.content}
           </ReactMarkdown>
+        </div>
+      </div>
+      <Divider className="my-4" />
+      <div className={"flex justify-center w-full mt-1 px-10"}>
+        <div className={"w-2/3 font-serif text-sm"}>
+          商业转载请联系站长获得授权，非商业转载请注明本文出处及文章链接，您可以自由地在任何媒体以任何形式复制和分发作品，也可以修改和创作，但是分发衍生作品时必须采用相同的许可协议。
+        </div>
+      </div>
+      <div className={"flex justify-center w-full mt-1 px-10"}>
+        <div className={"w-2/3 font-serif text-sm"}>
+          本文采用CC BY-NC-SA 4.0 - 非商业性使用 - 相同方式共享 4.0
+          国际进行许可。
         </div>
       </div>
     </div>
