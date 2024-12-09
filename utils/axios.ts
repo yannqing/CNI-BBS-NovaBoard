@@ -5,11 +5,12 @@ import { decrypt, encrypt, generateRandomIV, matchPath } from "@/utils/tools";
 import { getCookie } from "@/utils/cookies";
 import { userInfoCookie, whiteList } from "@/common/auth/constant";
 import { CustomError } from "@/types/error/Error";
+import { toast } from "sonner";
 
 const BaseURL = "http://localhost:8080";
 // create an axios instance
 const service = axios.create({
-  baseURL: BaseURL, // url = base url + request url
+  baseURL: process.env.BackEndUrl || BaseURL, // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 50000, // request timeout
 });
@@ -21,6 +22,9 @@ service.defaults.headers.post["Content-Type"] =
 // Add a request interceptor 请求拦截器
 service.interceptors.request.use(
   function (config) {
+    const url = (config.baseURL || '') + (config.url || '');
+    console.log('Request URL:', url);
+    
     // 系统错误
     if (!config.headers) {
       throw new Error(
@@ -30,8 +34,6 @@ service.interceptors.request.use(
     // 1. 判断用户是否登录
     // 从 cookie 中取出数据
     const userInfo = getCookie(userInfoCookie);
-
-    console.log(userInfo);
     // 存在数据，则已登录
     if (userInfo) {
       // 用户已登录，则把 token 放入请求头
@@ -40,8 +42,6 @@ service.interceptors.request.use(
       // 用户未登录，判断请求路径是否在白名单内
       // 不在白名单内，直接重定向到登录页
       if (config.url && !matchPath(whiteList, config.url)) {
-        // toast.error(ErrorCode.TOKEN_EXPIRE.message);
-
         // 拒绝继续请求
         return Promise.reject(
           new CustomError(
@@ -59,7 +59,7 @@ service.interceptors.request.use(
       const jsonData = JSON.stringify(config.data);
       const encryptData = encrypt(jsonData, ivBase64);
 
-      // 用加密后的数据替换原始请求体
+      // 用加密后���数据替换原始请求体
       config.data = encryptData.replace(/^"|"$/g, "");
     }
 
@@ -74,7 +74,6 @@ service.interceptors.request.use(
 // Add a response interceptor 响应拦截器
 service.interceptors.response.use(
   function (response) {
-    console.log("2222");
     // 获取响应状态码和数据
     const status = response.status;
     const data = response.data;
@@ -132,7 +131,7 @@ service.interceptors.response.use(
     }
   },
   function (error) {
-    console.log("error", error);
+    console.log("=======================error", error);
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
     // toast.error(ErrorCode.SERVER_ERROR.message);

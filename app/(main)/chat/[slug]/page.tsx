@@ -17,6 +17,11 @@ import { getCookie } from "@/utils/cookies";
 interface ChatMessageProps {
   message: string; // 指定 message 的类型为 string
 }
+
+interface ChatMessageType {
+  text: string;
+  side: string;
+}
 export default function Page({ params }: { params: { slug: string } }) {
   const divRef = useRef<HTMLDivElement | null>(null); // 创建 ref
   const [divHeight, setDivHeight] = useState<number>(0); // 状态存储高度
@@ -24,34 +29,7 @@ export default function Page({ params }: { params: { slug: string } }) {
    * 输入框绑定
    */
   const [inputValue, setInputValue] = useState("");
-  const [messages, setMessages] = useState([
-    { text: "Hello, how can I help you?", side: "left" },
-    {
-      text: "Make beautiful websites regardless of your design experience.",
-      side: "right",
-    },
-    { text: "Feel free to ask any questions!", side: "left" },
-    {
-      text: "Make beautiful websites regardless of your design experience.",
-      side: "right",
-    },
-    { text: "Feel free to ask any questions!", side: "left" },
-    {
-      text: "Make beautiful websites regardless of your design experience.",
-      side: "right",
-    },
-    { text: "Feel free to ask any questions!", side: "left" },
-    {
-      text: "Make beautiful websites regardless of your design experience.",
-      side: "right",
-    },
-    { text: "Feel free to ask any questions!", side: "left" },
-    {
-      text: "Make beautiful websites regardless of your design experience.",
-      side: "right",
-    },
-    { text: "Feel free to ask any questions!", side: "left" },
-  ]);
+  const [messages, setMessages] = useState<ChatMessageType[]>([]);
 
   /**
    * 发送消息
@@ -92,7 +70,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   const getChatRecordRequest: GetChatRecordRequest = {
     pageNo: 1,
     pageSize: 10,
-    isDesc: "0",
+    isDesc: "0", // 0 为倒序
     fromId: "0", // 登录用户 id
     targetId: "0", // 目标用户 id
   };
@@ -104,9 +82,31 @@ export default function Page({ params }: { params: { slug: string } }) {
       const res: BaseResponse<BasePage<GetChatRecordResponse>> =
         await getChatRecord(getChatRecordRequest);
 
+      console.log("获取聊天数据 request：", getChatRecordRequest);
+
       if (res.success) {
-        // toast.success("获取聊天数据成功");
-        console.log("获取聊天数据：", res);
+        if (res.data && res.data.records.length > 0) {
+          // 有数据
+          const responseData = res.data.records;
+
+          console.log("聊天记录：", responseData);
+          for (let i = 0; i < responseData.length; i++) {
+            if (
+              responseData[i].fromId == Number(userInfo.id) &&
+              responseData[i].chatMessageContent.content
+            ) {
+              setMessages((prevMessages) => [
+                ...prevMessages,
+                {
+                  text: responseData[i].chatMessageContent.content,
+                  side: "right",
+                },
+              ]);
+            }
+          }
+        } else {
+          // 无数据
+        }
       }
     }
   };

@@ -44,7 +44,7 @@ export type GetChatRecordResponse = {
 
 // 聊天消息内容封装类
 export type ChatMessageContent = {
-  content?: string;
+  content: string;
   ext?: string;
   formUserId?: string;
   formUserName?: string;

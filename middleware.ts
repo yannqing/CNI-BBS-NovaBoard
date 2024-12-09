@@ -6,6 +6,12 @@ import { userInfoCookie } from "@/common/auth/constant";
 
 // 中间件：可以使用 async，运行在服务端
 export function middleware(request: NextRequest) {
+  console.log("================ 中间件开始执行 ================");
+  console.log("当前路径:", request.nextUrl.pathname);
+  console.log("完整URL:", request.url);
+  console.log("请求方法:", request.method);
+  console.log("Cookie:", request.cookies.getAll());
+  
   const token = request.cookies.get(userInfoCookie);
 
   if (request.nextUrl.pathname === "/about") {
@@ -21,7 +27,8 @@ export function middleware(request: NextRequest) {
   }
 
   // 未登录阻止访问资源
-  if (!token && request.nextUrl.pathname === "/chat") {
+  if (!token && request.nextUrl.pathname === "/chat") { 
+    console.log("token", token);
     return NextResponse.redirect(
       new URL(
         "/login?message=您还未登录，无法访问对应资源，请返回登录！",
@@ -30,6 +37,7 @@ export function middleware(request: NextRequest) {
     );
   }
 
+  console.log("================ 中间件执行结束 ================");
   return NextResponse.next(); // 继续处理请求
 }
 

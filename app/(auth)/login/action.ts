@@ -1,3 +1,5 @@
+"use server";
+
 import service from "@/utils/axios";
 import { LoginVo } from "@/types/auth/login";
 

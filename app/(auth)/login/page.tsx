@@ -53,7 +53,6 @@ export default function LoginPage() {
 
   async function clickToLogin() {
     fetchLoginData().then(() => {});
-    console.log("loginRequest", loginRequest);
   }
 
   /**
@@ -66,10 +65,9 @@ export default function LoginPage() {
       // 判断后端返回数据是否有错
       if (res.data) {
         toast.success("login success");
-        router.push("/");
-        console.log("login result", res);
         updateCookie(userInfoCookie, JSON.stringify(res.data), false);
         localStorage.setItem("token", res.data.token);
+        router.push("/");
       } else {
         toast.error("服务器异常，请重试！");
       }
@@ -101,10 +99,10 @@ export default function LoginPage() {
                 type="text"
                 value={loginRequest.username}
                 onValueChange={(value) => {
-                  setLoginRequest({
-                    ...loginRequest,
+                  setLoginRequest(prev => ({
+                    ...prev,
                     username: value,
-                  });
+                  }));
                 }}
               />
               <Input
@@ -127,10 +125,10 @@ export default function LoginPage() {
                 type={isVisible ? "text" : "password"}
                 value={loginRequest.password}
                 onValueChange={(value) => {
-                  setLoginRequest({
+                  setLoginRequest(prev => ({
                     ...loginRequest,
                     password: value,
-                  });
+                  }));
                 }}
               />
             </form>
@@ -138,10 +136,10 @@ export default function LoginPage() {
               className="size-1/11"
               isSelected={loginRequest.rememberMe === "1"}
               onValueChange={(value) => {
-                setLoginRequest({
+                setLoginRequest(prev => ({
                   ...loginRequest,
                   rememberMe: value ? "1" : "0",
-                });
+                }));
               }}
             >
               Remember Me

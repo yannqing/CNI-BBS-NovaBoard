@@ -14,6 +14,7 @@ import { getRecommendUsersAction } from "@/app/(main)/home/action";
 import { BaseResponse } from "@/types";
 import { RecommendUsers } from "@/types/auth/user";
 import { siteConfig } from "@/config/site";
+import { log } from "console";
 
 export default function RightSideBar() {
   const router = useRouter();
@@ -29,6 +30,8 @@ export default function RightSideBar() {
     const fetchRecommendUsersData = async () => {
       const res: BaseResponse<RecommendUsers[]> =
         await getRecommendUsersAction();
+
+      console.log(res);
 
       if (res.success && res.data) {
         setRecommendUsers(res.data);

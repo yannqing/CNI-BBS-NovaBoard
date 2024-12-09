@@ -13,13 +13,14 @@ import {
 import { Button } from "@nextui-org/button";
 import { useRouter } from "next/navigation";
 
-import { getChatList } from "@/app/(main)/chat/action";
+import { getChatListAction } from "@/app/(main)/chat/action";
 import { GetChatListRequest, GetChatListResponse } from "@/types/chat/chatList";
 import { BasePage, BaseResponse } from "@/types";
 import { getCookie } from "@/utils/cookies";
 import { userInfoCookie } from "@/common/auth/constant";
 import { useGetUserContext } from "@/app/UserContext";
 import { siteConfig } from "@/config/site";
+import { log } from "console";
 
 export default function SidBar() {
   const router = useRouter();
@@ -38,12 +39,13 @@ export default function SidBar() {
   // 获取聊天列表，接口调用
   const fetchChatList = async () => {
     const res: BaseResponse<BasePage<GetChatListResponse>> =
-      await getChatList(getChatListRequest);
+      await getChatListAction(getChatListRequest);
 
     if (res.success && res.data) {
       setChatList(res.data.records);
     } else {
       // TODO 返回登录，服务器异常
+      console.log("res", res);
     }
   };
 

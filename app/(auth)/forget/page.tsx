@@ -20,10 +20,10 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import {
-  checkUserIfExist,
-  checkUserVerificationCode,
+  checkUserIfExistAction,
+  checkUserVerificationCodeAction,
   resetPasswordAction,
-  sendCode,
+  sendCodeAction,
 } from "@/app/(auth)/forget/action";
 import { BaseResponse } from "@/types";
 import {
@@ -87,7 +87,7 @@ export default function LoginPage() {
     let accountIsExist = false;
 
     if (account) {
-      await checkUserIfExist(account).then((res: BaseResponse<boolean>) => {
+      await checkUserIfExistAction(account).then((res: BaseResponse<boolean>) => {
         if (res.data) {
           accountIsExist = true;
         }
@@ -107,7 +107,7 @@ export default function LoginPage() {
               captchaType: "phone",
             };
 
-        await sendCode(sendCodeRequest).then((res: BaseResponse<any>) => {
+        await sendCodeAction(sendCodeRequest).then((res: BaseResponse<any>) => {
           if (res.data) {
             // 验证码发送成功
             setIsLoading(false);
@@ -268,7 +268,7 @@ export default function LoginPage() {
                     code: captchaCode,
                   };
 
-            await checkUserVerificationCode(verificationCodeRequest).then(
+            await checkUserVerificationCodeAction(verificationCodeRequest).then(
               (res: BaseResponse<VerificationCodeResponseType>) => {
                 if (res.success && res.data?.passed && res.data.temporaryCode) {
                   setTemporaryCode(res.data.temporaryCode);

@@ -1,3 +1,5 @@
+"use server";
+
 import { RegisterRequestType } from "@/types/auth/register";
 import service from "@/utils/axios";
 
