@@ -29,6 +29,7 @@ import {
 import { User } from "@nextui-org/user";
 import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useEffect, useCallback } from "react";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/home/theme-switch";
@@ -45,6 +46,8 @@ import { CustomError } from "@/types/error/Error";
 import { ErrorCode } from "@/types/error/ErrorCode";
 import { useGetUserContext } from "@/app/UserContext";
 import { getCookie } from "@/utils/cookies";
+import { userInfo } from "os";
+import { userInfoCookie } from "@/common/auth/constant";
 
 export const Navbar = () => {
   const currentPath = usePathname();
@@ -55,24 +58,25 @@ export const Navbar = () => {
 
   const cookie = getCookie();
 
-  async function clickToLogout() {
+  const userInfo = getCookie(userInfoCookie);
+
+  const handleLogout = useCallback(async () => {
+    if (!cookie) return;
+    
     try {
-      await logoutAction(cookie !== null ? cookie.id : "").then(
-        (res: BaseResponse<null>) => {
-          if (res.success) {
-            toast.success("退出登录成功！");
-            router.push(currentPath);
-          } else {
-            toast.error("退出登录失败，请联系管理员！");
-          }
-          // 无论是否退出成功，都要把 cookie 删除
-          deleteCookie();
-          localStorage.removeItem("token");
-        },
-      );
+      const res: BaseResponse<null> = await logoutAction(cookie.id);
+      console.log("logout result:", res)
+      if (res.success) {
+        toast.success("退出登录成功！");
+        localStorage.removeItem("token");
+        deleteCookie();
+        router.push(currentPath);
+      } else {
+        toast.error("退出登录失败，请联系管理员！");
+        localStorage.removeItem("token");
+        deleteCookie();
+      }
     } catch (error) {
-      deleteCookie();
-      // 异常统一被 响应拦截器捕获
       if (error instanceof CustomError) {
         if (
           error.code === ErrorCode.NOT_LOGIN.code ||
@@ -84,7 +88,7 @@ export const Navbar = () => {
         toast.error(ErrorCode.NOT_KNOWN.message);
       }
     }
-  }
+  }, [cookie, deleteCookie, router, currentPath]);
 
   const searchInput = (
     <Input
@@ -248,7 +252,7 @@ export const Navbar = () => {
               <DropdownItem
                 key="dashboard"
                 as={Link}
-                href={siteConfig.innerLinks.dashboard}
+                href={siteConfig.innerLinks.dashboard + "/" + userInfo?.username}
               >
                 Dashboard
               </DropdownItem>
@@ -286,7 +290,7 @@ export const Navbar = () => {
               <DropdownItem key="help_and_feedback">
                 Help & Feedback
               </DropdownItem>
-              <DropdownItem key="logout" onPress={clickToLogout}>
+              <DropdownItem key="logout" onPress={handleLogout}>
                 Log Out
               </DropdownItem>
             </DropdownSection>

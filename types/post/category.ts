@@ -17,8 +17,3 @@ export type Category = {
   createDate?: number;
   updateDate?: number;
 };
-
-export type CategoryList = {
-  records: Category[];
-  total: number;
-};

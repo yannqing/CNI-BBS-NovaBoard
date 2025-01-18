@@ -24,6 +24,7 @@ export const whiteList = [
   "/post/open/**",
   "/user/open/**",
   "/common/open/**",
+  "/tag/open/**",
 
   "/system/verif/gen/random",
   "/system/verif/check3",

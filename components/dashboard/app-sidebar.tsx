@@ -30,6 +30,10 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { siteConfig } from "@/config/site";
+import { userInfoCookie } from "@/common/auth/constant";
+import { getCookie } from "@/utils/cookies";
+
+const userInfo = getCookie(userInfoCookie);
 
 const data = {
   user: {
@@ -41,26 +45,22 @@ const data = {
   navMain: [
     {
       title: "仪表板",
-      url: "/dashboard/yannqing",
+      url: "/dashboard/" + userInfo?.username,
       icon: LayoutGrid,
-      isActive: false,
+      isActive: true,
     },
     {
-      title: "发布",
+      title: "文章",
       url: "#",
       icon: SquareTerminal,
       isActive: false,
       items: [
         {
-          title: "文章",
-          url: "/dashboard/yannqing/photoes",
+          title: "发布",
+          url: "/dashboard/" + userInfo?.username + "/photoes",
         },
         {
-          title: "页面",
-          url: "#",
-        },
-        {
-          title: "图文",
+          title: "管理",
           url: "#",
         },
       ],

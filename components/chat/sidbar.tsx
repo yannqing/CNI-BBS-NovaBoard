@@ -55,16 +55,14 @@ export default function SidBar() {
   useEffect(() => {
     const isLogin = localStorage.getItem("token");
 
-    // 判断登录态
-    if (isCookiePresent || isLogin) {
-      // 获取数据
-      fetchChatList().then(() => {});
+    // 修改登录状态检查的逻辑顺序
+    setIsOpen(!isCookiePresent && !isLogin);
 
-      setIsOpen(false);
-    } else {
-      setIsOpen(true);
+    // 只有在登录状态下才获取聊天列表
+    if (isCookiePresent || isLogin) {
+      fetchChatList();
     }
-  }, []);
+  }, [isCookiePresent]); // 添加 isCookiePresent 作为依赖项
 
   function clickTo(id: string | undefined) {
     router.push(siteConfig.innerLinks.chat + "/" + id);

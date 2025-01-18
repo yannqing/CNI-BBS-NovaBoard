@@ -32,6 +32,8 @@ const defaultPostArray: Post[] = [
         tagUrl: "",
         updateTime: 123,
         id: 123,
+        categoryId: "",
+        tagName: ""
       },
     ],
     title: "",

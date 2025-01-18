@@ -7,10 +7,9 @@ import { toast } from "sonner";
 import { getAllCategoryAction } from "@/app/(main)/home/action";
 import {
   Category,
-  CategoryList,
   GetAllCategoryRequest,
 } from "@/types/post/category";
-import { BaseResponse } from "@/types";
+import { BasePage, BaseResponse } from "@/types";
 import { useGetPostContext } from "@/app/(main)/PostContext";
 import { GetPostListRequest } from "@/types/post/post";
 
@@ -40,16 +39,16 @@ export const TopBar = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res: BaseResponse<CategoryList> =
+        const res: BaseResponse<BasePage<Category>> =
           await getAllCategoryAction(request);
 
         if (res.data) {
           setData(res.data.records); // 更新状态
         }
-      } catch (error) {}
+      } catch (error) { }
     };
 
-    fetchData().then(() => {});
+    fetchData().then(() => { });
   }, []);
 
   async function selectChange(key: React.Key) {

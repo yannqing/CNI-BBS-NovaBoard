@@ -4,7 +4,7 @@ import { Input } from "@nextui-org/input";
 import { Link } from "@nextui-org/link";
 import { Checkbox } from "@nextui-org/checkbox";
 import { Button } from "@nextui-org/button";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { EyeFilledIcon, EyeSlashFilledIcon } from "@nextui-org/shared-icons";
 import { toast } from "sonner";
 // @ts-ignore
@@ -51,30 +51,39 @@ export default function LoginPage() {
     }
   }, []);
 
-  async function clickToLogin() {
-    fetchLoginData().then(() => {});
-  }
-
-  /**
-   * 登录接口
-   */
   const fetchLoginData = async () => {
-    const res: BaseResponse<LoginDTO> = await loginAction(loginRequest);
+    try {
+      const res: BaseResponse<LoginDTO> = await loginAction(loginRequest);
 
-    if (res.success === true) {
-      // 判断后端返回数据是否有错
-      if (res.data) {
-        toast.success("login success");
-        updateCookie(userInfoCookie, JSON.stringify(res.data), false);
-        localStorage.setItem("token", res.data.token);
-        router.push("/");
+      if (res.success && res.data) {
+        // 将所有状态更新和副作用放在一个 Promise 中处理，确保状态更新完成
+        await new Promise<void>((resolve) => {
+          // 先更新 localStorage
+          localStorage.setItem("token", res.data?.token || "");
+          // 更新 cookie
+          updateCookie(userInfoCookie, JSON.stringify(res.data), false);
+          // 确保状态更新完成
+          resolve();
+        });
+
+        // 使用 requestAnimationFrame 确保在下一帧渲染前完成状态更新
+        requestAnimationFrame(() => {
+          toast.success("登录成功");
+          router.push("/");
+        });
       } else {
-        toast.error("服务器异常，请重试！");
+        toast.error(res.success ? "服务器异常，请重试！" : "登录失败，请重试");
       }
-    } else {
-      toast.error("登录失败，请重试");
+    } catch (error) {
+      console.error("Login error:", error);
+      toast.error("登录过程发生错误，请重试");
     }
   };
+
+  // useCallback 对函数进行缓存(loginRequest 变化的时候重新缓存)
+  const clickToLogin = useCallback(async () => {
+    await fetchLoginData();
+  }, [loginRequest]); // 添加依赖项
 
   function toRegisterPage() {
     router.push(siteConfig.innerLinks.register);

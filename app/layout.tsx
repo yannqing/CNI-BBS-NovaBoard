@@ -41,16 +41,16 @@ export default function RootLayout({
           fontSans.variable,
         )}
       >
-        <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-          <div className="relative flex flex-col h-screen">
-            <Toaster richColors position="top-center" />
-            <UserProvider>
-              <main className="container mx-auto max-w-7xl flex-grow">
-                {children}
-              </main>
-            </UserProvider>
-          </div>
-        </Providers>
+        <UserProvider>
+          <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
+            <div className="relative flex flex-col h-screen">
+              <Toaster richColors position="top-center" />
+                <main className="container mx-auto max-w-7xl flex-grow">
+                  {children}
+                </main>
+            </div>
+          </Providers>
+        </UserProvider>
       </body>
     </html>
   );

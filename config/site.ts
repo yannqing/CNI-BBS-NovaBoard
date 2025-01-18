@@ -65,6 +65,6 @@ export const siteConfig = {
     about: "/about",
     postMsg: "/mdx-page/",
 
-    dashboard: "/dashboard/home",
+    dashboard: "/dashboard",
   },
 };

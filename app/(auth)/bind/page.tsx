@@ -24,7 +24,7 @@ import { useGetUserContext } from "@/app/UserContext";
 import { userInfoCookie } from "@/common/auth/constant";
 import { LoginDTO, LoginVo } from "@/types/auth/login";
 import { title } from "@/components/primitives";
-import { checkUserIfExist, sendCode } from "@/app/(auth)/forget/action";
+import { checkUserIfExistAction, sendCodeAction } from "@/app/(auth)/forget/action";
 import {
   ACCOUNT_NOT_EMPTY,
   ACCOUNT_NOT_EXIST,
@@ -77,8 +77,9 @@ export default function BindPage() {
     let accountIsExist = false;
 
     if (accountPhone) {
-      await checkUserIfExist(accountPhone).then(
+      await checkUserIfExistAction(accountPhone).then(
         (res: BaseResponse<boolean>) => {
+          console.log("checkUserIfExistAction result:", res)
           if (res.data) {
             accountIsExist = true;
           }
@@ -91,18 +92,18 @@ export default function BindPage() {
           accountPhone.includes("@")
             ? {
                 emailNumber: accountPhone,
-                temporaryCode: passcode,
-                socialUserId: socialUserId,
+                temporaryCode: passcode || undefined,
+                socialUserId: socialUserId || undefined,
                 hasLocalUser: true,
               }
             : {
                 phoneNumber: accountPhone,
-                temporaryCode: passcode,
-                socialUserId: socialUserId,
+                temporaryCode: passcode || undefined,
+                socialUserId: socialUserId || undefined,
                 hasLocalUser: true,
               };
 
-        await sendCode(socialUserBindLocalUserRequestType).then(
+        await sendCodeAction(socialUserBindLocalUserRequestType).then(
           (res: BaseResponse<any>) => {
             if (res.data) {
               // 验证码发送成功
