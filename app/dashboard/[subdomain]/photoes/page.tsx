@@ -21,6 +21,7 @@ export default function DashBoardPhotosPage({
   params: { subdomain: string };
 }) {
   // 发布帖子请求构建
+  // TODO 封面图片
   const [publishPostRequest, setPublishPostRequest] = useState<CreatePostRequest>({
     id: "",
     authorId: getCookie()?.id,
