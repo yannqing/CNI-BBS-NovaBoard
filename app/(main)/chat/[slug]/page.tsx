@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { toast } from "sonner";
 import { Card, CardBody } from "@nextui-org/card";
 import { Textarea } from "@nextui-org/input";
@@ -12,6 +12,7 @@ import {
 import { BasePage, BaseResponse } from "@/types";
 import {getChatRecordAction, sendMessageAction } from "@/app/(main)/chat/[slug]/action";
 import { getCookie } from "@/utils/cookies";
+import { useGetChatContext } from "../ChatContext";
 
 // 定义 props 类型
 interface ChatMessageProps {
@@ -30,6 +31,14 @@ export default function Page({ params }: { params: { slug: string } }) {
    */
   const [inputValue, setInputValue] = useState("");
   const [messages, setMessages] = useState<ChatMessageType[]>([]);
+
+  // 获取聊天上下文
+  const { resetChatList } = useGetChatContext();
+
+  // 1. 修改 handleResetChatList 为异步函数
+  const handleResetChatList = useCallback(async () => {
+    await resetChatList();
+  }, [resetChatList]);
 
   /**
    * 发送消息
@@ -66,15 +75,12 @@ export default function Page({ params }: { params: { slug: string } }) {
         // 发送消息
         const res: BaseResponse<Object> = await sendMessageAction(sendMessageRequest)
 
-        // 获取发送消息的结果
+        // 2. 在使用处等待完成
         if(res.success) {
           console.log("发送消息成功！");
-          console.log(res);
-
-          // TODO 更新消息列表
+          await handleResetChatList();  // 等待刷新完成
         } else {
           console.log("发送消息失败！");
-          console.log(res);
         }
         
 

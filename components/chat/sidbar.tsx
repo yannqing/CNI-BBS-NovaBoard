@@ -21,48 +21,23 @@ import { userInfoCookie } from "@/common/auth/constant";
 import { useGetUserContext } from "@/app/UserContext";
 import { siteConfig } from "@/config/site";
 import { log } from "console";
+import { useGetChatContext } from "@/app/(main)/chat/ChatContext";
 
 export default function SidBar() {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const [chatList, setChatList] = useState<GetChatListResponse[]>();
-
-  const getChatListRequest: GetChatListRequest = {
-    pageNo: 1,
-    pageSize: 10,
-    fromId: getCookie(userInfoCookie)?.id,
-  };
+  const { chatList } = useGetChatContext();
 
   const { isCookiePresent } = useGetUserContext();
-
-  // 获取聊天列表，接口调用
-  const fetchChatList = async () => {
-    const res: BaseResponse<BasePage<GetChatListResponse>> =
-      await getChatListAction(getChatListRequest);
-
-    if (res.success && res.data) {
-      setChatList(res.data.records);
-    } else {
-      // TODO 返回登录，服务器异常
-      console.log("res", res);
-    }
-  };
 
   /**
    * 页面初始化
    */
   useEffect(() => {
     const isLogin = localStorage.getItem("token");
-
-    // 修改登录状态检查的逻辑顺序
     setIsOpen(!isCookiePresent && !isLogin);
-
-    // 只有在登录状态下才获取聊天列表
-    if (isCookiePresent || isLogin) {
-      fetchChatList();
-    }
-  }, [isCookiePresent]); // 添加 isCookiePresent 作为依赖项
+  }, [isCookiePresent]);
 
   function clickTo(id: string | undefined) {
     router.push(siteConfig.innerLinks.chat + "/" + id);
