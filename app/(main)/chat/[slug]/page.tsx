@@ -10,7 +10,7 @@ import {
   GetChatRecordResponse,
 } from "@/types/chat/chatList";
 import { BasePage, BaseResponse } from "@/types";
-import { getChatRecord } from "@/app/(main)/chat/[slug]/action";
+import {getChatRecordAction, sendMessageAction } from "@/app/(main)/chat/[slug]/action";
 import { getCookie } from "@/utils/cookies";
 
 // 定义 props 类型
@@ -35,7 +35,7 @@ export default function Page({ params }: { params: { slug: string } }) {
    * 发送消息
    * @param event
    */
-  const handleKeyDown = (event: any) => {
+  const handleKeyDown = async (event: any) => {
     if (event.key === "Enter") {
       event.preventDefault(); // 防止换行
       if (inputValue.trim()) {
@@ -45,7 +45,39 @@ export default function Page({ params }: { params: { slug: string } }) {
           side: "right",
         };
 
-        setMessages((prevMessages) => [...prevMessages, newMessage]); // 更新消息列表
+        // 更新消息列表
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
+
+        // 构建发送消息的请求
+        const sendMessageRequest: SendMessageRequestType = {
+          fromId: getCookie()?.id.toString(),
+          toId: params.slug,
+          source: "user",
+          messageType: "message",
+          chatMessageContent: {
+            fromUserId: getCookie()?.id,
+            fromUserName: getCookie()?.username,
+            fromUserPortrait: getCookie()?.avatar,
+            type: "message",
+            content: inputValue,
+          }
+        };
+
+        // 发送消息
+        const res: BaseResponse<Object> = await sendMessageAction(sendMessageRequest)
+
+        // 获取发送消息的结果
+        if(res.success) {
+          console.log("发送消息成功！");
+          console.log(res);
+
+          // TODO 更新消息列表
+        } else {
+          console.log("发送消息失败！");
+          console.log(res);
+        }
+        
+
         setInputValue(""); // 清空输入框
       } else {
         toast.error("不能发送空消息！");
@@ -67,6 +99,7 @@ export default function Page({ params }: { params: { slug: string } }) {
     fetchData().then(() => {});
   }, []);
 
+  // 构建获取聊天内容请求
   const getChatRecordRequest: GetChatRecordRequest = {
     pageNo: 1,
     pageSize: 10,
@@ -75,12 +108,13 @@ export default function Page({ params }: { params: { slug: string } }) {
     targetId: "0", // 目标用户 id
   };
 
+  // 获取聊天内容
   const fetchData = async () => {
     if (userInfo?.id) {
       getChatRecordRequest.fromId = userInfo.id;
       getChatRecordRequest.targetId = params.slug;
       const res: BaseResponse<BasePage<GetChatRecordResponse>> =
-        await getChatRecord(getChatRecordRequest);
+        await getChatRecordAction(getChatRecordRequest);
 
       console.log("获取聊天数据 request：", getChatRecordRequest);
 
@@ -105,11 +139,16 @@ export default function Page({ params }: { params: { slug: string } }) {
             }
           }
         } else {
-          // 无数据
+          // TODO 无数据
         }
       }
     }
   };
+
+  // 发送消息
+  const sendMessage = async () => {
+
+  }
 
   const LeftChat: React.FC<ChatMessageProps> = ({ message }) => (
     <div className="justify-start grid mt-3 mb-3 ml-6">
