@@ -47,7 +47,7 @@ export default function HomePage() {
             </CardBody>
             <CardFooter className="text-small flex flex-col items-start gap-y-1">
               <div className="font-bold text-base text-left">{item.title}</div>
-              <Tooltip content={item.summary} showArrow={true}>
+              <Tooltip content={item.summary} showArrow={true} className="max-w-[300px] break-words">
                 <div className="text-xs text-left ellipsis w-full">
                   {item.summary}
                 </div>
