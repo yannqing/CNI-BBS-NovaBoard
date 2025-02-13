@@ -70,9 +70,6 @@ export default function HomePage() {
                           <h4 className="text-small font-semibold leading-none text-default-600">
                             {item.userVo.userName}
                           </h4>
-                          <h5 className="text-small tracking-tight text-default-500">
-                            {item.userVo.bio}
-                          </h5>
                         </div>
                       </div>
                       <Button
@@ -91,12 +88,8 @@ export default function HomePage() {
                       </Button>
                     </CardHeader>
                     <CardBody className="px-3 py-0">
-                      {/*TODO 目前写死，需要根据后端内容来调整*/}
                       <p className="text-small pl-px text-default-500">
-                        Full-stack developer, @getnextui lover she/her
-                        <span aria-label="confetti" role="img">
-                          🎉
-                        </span>
+                        {item.userVo.bio}
                       </p>
                     </CardBody>
                     <CardFooter className="gap-3">
@@ -125,7 +118,6 @@ export default function HomePage() {
                       size: "sm",
                     }}
                     className="transition-transform mt-1"
-                    description={item.userVo.bio}
                     name={item.userVo.userName}
                   />
                 </div>
