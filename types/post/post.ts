@@ -7,6 +7,7 @@ export type GetPostListRequest = {
   postId: string;
   categoryId: string;
   tagIds: string[];
+  userId?: string;
 };
 
 // 根据帖子 id 查询帖子信息接口响应

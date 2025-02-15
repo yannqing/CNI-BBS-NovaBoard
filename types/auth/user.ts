@@ -6,6 +6,7 @@ export type UserVo = {
   followingCount: string;
   userId: string;
   userName: string;
+  followStatus: string;
 };
 
 // cookie 中存储的用户信息

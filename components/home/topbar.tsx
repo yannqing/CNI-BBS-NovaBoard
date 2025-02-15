@@ -12,6 +12,7 @@ import {
 import { BasePage, BaseResponse } from "@/types";
 import { useGetPostContext } from "@/app/(main)/PostContext";
 import { GetPostListRequest } from "@/types/post/post";
+import { getCookie } from "@/utils/cookies";
 
 export const TopBar = () => {
   const [data, setData] = useState<Category[]>([]);
@@ -30,6 +31,7 @@ export const TopBar = () => {
     postId: "",
     categoryId: "",
     tagIds: [],
+    userId: '',
   };
 
   // 帖子获取
@@ -51,26 +53,23 @@ export const TopBar = () => {
     fetchData().then(() => { });
   }, []);
 
-  async function selectChange(key: React.Key) {
-    if (Number(key) === -1) {
-      postRequest.categoryId = "";
-      fetchData(postRequest);
+async function selectChange(key: React.Key) {
+  if(getCookie()?.id != null){
+    postRequest.userId = getCookie()?.id;
+  }
+  if (Number(key) === -1) {
+    postRequest.categoryId = "";
+    await fetchData(postRequest); // 确保请求完成
+  } else {
+    const selectedCategory = data[Number(key)];
+    if (selectedCategory && selectedCategory.id) {
+      postRequest.categoryId = String(selectedCategory.id);
+      await fetchData(postRequest); // 确保请求完成
     } else {
-      for (let i = 0; i < data.length; i++) {
-        if (i === Number(key)) {
-          if (data[i].id) {
-            postRequest.categoryId = String(data[i].id);
-            fetchData(postRequest);
-            break;
-          } else {
-            toast.error("无法获取信息，请联系管理员");
-
-            return;
-          }
-        }
-      }
+      toast.error("无法获取信息，请联系管理员");
     }
   }
+}
 
   return (
     <div className="flex flex-wrap gap-4 w-full md:w-max max-w-4xl">
@@ -81,7 +80,7 @@ export const TopBar = () => {
           className="gap-1 flex"
           color="primary"
           radius="full"
-          onSelectionChange={selectChange}
+          onSelectionChange={(key) => selectChange(key)}
         >
           <Tab key={-1} title={"全部"} />
           {data.map((item, index) => (

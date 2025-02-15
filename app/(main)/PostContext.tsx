@@ -54,6 +54,7 @@ const defaultPostArray: Post[] = [
       followingCount: "",
       userId: "",
       userName: "",
+      followStatus: "",
     },
     view_counts: "",
   },
@@ -67,7 +68,6 @@ export const PostContext = createContext<PostProvider | undefined>(undefined);
 
 export const useGetPostContext = () => {
   const postContext = useContext(PostContext);
-
   if (postContext === undefined) {
     throw new CustomError("post context undefined!", 500);
   }
@@ -81,9 +81,6 @@ export function PostProvider({ children }: { children: React.ReactNode }) {
     try {
       const res: BaseResponse<BasePage<Post>> =
         await queryPostListAction(request);
-
-      console.log("查询全部帖子：", res);
-
       if (res.data) {
         setPostList(res.data.records);
       } else {
@@ -95,28 +92,20 @@ export function PostProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  useEffect(() => {
-    fetchData({
-      pageNo: 1,
-      pageSize: 10,
-      postId: "",
-      categoryId: "",
-      tagIds: [],
-    });
-  }, []);
-  // const fetchData = (request: GetPostListRequest) => {
-  //   return "";
-  // };
+//   useEffect(() => {
+//     fetchData({
+//         pageNo: 1,
+//         pageSize: 10,
+//         postId: "",
+//         categoryId: "",
+//         tagIds: [],
+//         userId: getCookie()?.id, 
+//     });
+// }, []);
 
   return (
     <PostContext.Provider value={{ postList, fetchData }}>
-      {postList[0] && postList[0].authorName !== "xx" ? (
-        children
-      ) : !postList[0] ? (
-        children
-      ) : (
-        <div>加载中...</div>
-      )}
+      {children}
     </PostContext.Provider>
   );
 }

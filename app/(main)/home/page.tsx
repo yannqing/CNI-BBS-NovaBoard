@@ -2,7 +2,7 @@
 
 import { Card, CardBody, CardFooter, CardHeader } from "@nextui-org/card";
 import { Image } from "@nextui-org/image";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { Tooltip } from "@nextui-org/tooltip";
 import { User } from "@nextui-org/user";
 import { Button } from "@nextui-org/button";
@@ -13,14 +13,68 @@ import { useGetPostContext } from "@/app/(main)/PostContext";
 import { useGetUserContext } from "@/app/UserContext";
 import { siteConfig } from "@/config/site";
 
+import { BuildFollowRequest,RemoveFollowRequest,FollowStatus } from "@/types/follow/follow";
+import { BasePage,BaseResponse } from "@/types";
+import { buildFollowAction,removeFollowAction } from "./action";
+import { getCookie } from "@/utils/cookies";
+import { ErrorCode } from "@/types/error/ErrorCode";
+import { toast } from "sonner";
+
 export default function HomePage() {
   const router = useRouter();
-  const [isFollowed, setIsFollowed] = useState(false);
-
   const { isCookiePresent } = useGetUserContext();
-
+  const [followStatuses, setFollowStatuses]  = useState<Record<string,FollowStatus>>({});
   // 标签
   const { postList } = useGetPostContext();
+  //初始化关注状态
+  useEffect(() => {
+      const initialFollowStatuses: Record<string, FollowStatus> = {};
+      postList.forEach((item) => {
+        initialFollowStatuses[item.userVo.userId] = item.userVo.followStatus  as FollowStatus;
+      });
+      setFollowStatuses(initialFollowStatuses);
+    }, [postList]); // 每当 postList 改变时，重新初始化状态
+  //关注
+  const handleFollowToggle = async (targetUserId : string,followStatus : string) => {
+    try {
+      if(!isCookiePresent){
+        toast.error(ErrorCode.NOT_LOGIN.message);
+        router.push(siteConfig.innerLinks.login);
+      }
+      // 调用后端接口更新关注状态
+      
+      const userId = getCookie()?.id as string;
+      if(userId === null || userId === undefined){
+        toast.error(ErrorCode.NOT_LOGIN.message);
+        return;
+      }
+      if(followStatus === FollowStatus.CONFIRMED){
+        const request : RemoveFollowRequest = {
+          userId: userId,
+          followerId: targetUserId,
+        }
+        const res : BaseResponse<null> = await removeFollowAction(request);
+        toast.success("取消关注成功!");
+      }else if(followStatus === FollowStatus.NONE){
+        const request : BuildFollowRequest = {
+          userId: userId,
+          followerId: targetUserId,
+          groupId: "1",
+        }
+        const res : BaseResponse<null> = await buildFollowAction(request);
+        toast.success("请求发送成功!");
+      }
+       // 更新关注状态
+       setFollowStatuses((prev) => ({
+        ...prev,
+        [targetUserId]: followStatus === FollowStatus.CONFIRMED ? FollowStatus.NONE : FollowStatus.CONFIRMED,
+      }));
+      
+    } catch (error) {
+      console.error("Failed to update follow status:", error);
+      // 如果失败，可以在这里恢复状态或者提示用户
+    }
+  };
 
   return (
     <>
@@ -48,7 +102,7 @@ export default function HomePage() {
             <CardFooter className="text-small flex flex-col items-start gap-y-1">
               <div className="font-bold text-base text-left">{item.title}</div>
               <Tooltip content={item.summary} showArrow={true} className="max-w-[300px] break-words">
-                <div className="text-xs text-left ellipsis w-full">
+                <div className="text-xs text-left ellipsis w-full ">
                   {item.summary}
                 </div>
               </Tooltip>
@@ -73,19 +127,29 @@ export default function HomePage() {
                         </div>
                       </div>
                       <Button
-                        className={
-                          isFollowed
-                            ? "bg-transparent text-foreground border-default-200"
-                            : ""
-                        }
-                        color="primary"
-                        radius="full"
-                        size="sm"
-                        variant={isFollowed ? "bordered" : "solid"}
-                        onPress={() => setIsFollowed(!isFollowed)}
-                      >
-                        {isFollowed ? "Unfollow" : "Follow"}
-                      </Button>
+                    className={`${
+                      followStatuses[item.userVo.userId] === FollowStatus.CONFIRMED
+                        ? "bg-gray-100"
+                        : followStatuses[item.userVo.userId] === FollowStatus.NONE
+                        ? "bg-blue-900"
+                        : ""
+                    } ${followStatuses[item.userVo.userId] === FollowStatus.REJECTED ? "bg-red-400" : ""}
+                    ml-10`}
+                    color="primary"
+                    radius="md"
+                    size="sm"
+                    variant={followStatuses[item.userVo.userId] === FollowStatus.CONFIRMED ? "ghost" : "solid"}
+                    onPress={() => handleFollowToggle(item.userVo.userId, followStatuses[item.userVo.userId] || FollowStatus.NONE)}
+                    isDisabled={followStatuses[item.userVo.userId] === FollowStatus.PENDING}
+                  >
+                    {followStatuses[item.userVo.userId] === FollowStatus.PENDING
+                      ? "未通过"
+                      : followStatuses[item.userVo.userId] === FollowStatus.CONFIRMED
+                      ? "取消关注"
+                      : followStatuses[item.userVo.userId] === FollowStatus.REJECTED
+                      ? "重新请求"
+                      : "关注"}
+                  </Button>
                     </CardHeader>
                     <CardBody className="px-3 py-0">
                       <p className="text-small pl-px text-default-500">
@@ -98,14 +162,14 @@ export default function HomePage() {
                           {item.userVo.followingCount}
                         </p>
                         <p className=" text-default-500 text-small">
-                          Following
+                          正在关注
                         </p>
                       </div>
                       <div className="flex gap-1">
                         <p className="font-semibold text-default-600 text-small">
                           {item.userVo.fansCount}
                         </p>
-                        <p className="text-default-500 text-small">Followers</p>
+                        <p className="text-default-500 text-small">关注我</p>
                       </div>
                     </CardFooter>
                   </Card>
