@@ -16,5 +16,5 @@ export async function sendMessageAction(data: SendMessageRequestType) {
     url: "/chat/message/send",
     method: "post",
     data: data,
-  })
+  });
 }

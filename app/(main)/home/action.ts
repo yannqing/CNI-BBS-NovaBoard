@@ -3,7 +3,12 @@
 import service from "@/utils/axios";
 import { GetAllCategoryRequest } from "@/types/post/category";
 import { GetPostListRequest } from "@/types/post/post";
-import { BuildFollowRequest, ChangeFollowStatusRequest, GetFollowListRequest,RemoveFollowRequest } from "@/types/follow/follow";
+import {
+  BuildFollowRequest,
+  ChangeFollowStatusRequest,
+  GetFollowListRequest,
+  RemoveFollowRequest,
+} from "@/types/follow/follow";
 /**
  * 查询分类标签
  * @param getAllCategoryRequest
@@ -46,7 +51,7 @@ export async function getRecommendUsersAction() {
  */
 export async function getFollowListAction(
   getFollowListRequest: GetFollowListRequest,
-){
+) {
   return await service({
     url: "/follow/list",
     method: "post",
@@ -58,7 +63,7 @@ export async function getFollowListAction(
  */
 export async function changeFollowStatusAction(
   changeFollowStatusRequest: ChangeFollowStatusRequest,
-){
+) {
   return await service({
     url: "/follow/changeFollowStatus",
     method: "post",
@@ -70,7 +75,7 @@ export async function changeFollowStatusAction(
  */
 export async function buildFollowAction(
   buildFollowRequest: BuildFollowRequest,
-){
+) {
   return await service({
     url: "/follow/buildFollow",
     method: "post",
@@ -82,7 +87,7 @@ export async function buildFollowAction(
  */
 export async function removeFollowAction(
   removeFollowRequest: RemoveFollowRequest,
-){
+) {
   return await service({
     url: "/follow/removeFollow",
     method: "post",

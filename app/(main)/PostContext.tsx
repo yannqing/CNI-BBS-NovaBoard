@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { toast } from "sonner";
 
 import { GetPostListRequest, Post } from "@/types/post/post";
@@ -33,7 +33,7 @@ const defaultPostArray: Post[] = [
         updateTime: 123,
         id: 123,
         categoryId: "",
-        tagName: ""
+        tagName: "",
       },
     ],
     title: "",
@@ -68,6 +68,7 @@ export const PostContext = createContext<PostProvider | undefined>(undefined);
 
 export const useGetPostContext = () => {
   const postContext = useContext(PostContext);
+
   if (postContext === undefined) {
     throw new CustomError("post context undefined!", 500);
   }
@@ -81,6 +82,7 @@ export function PostProvider({ children }: { children: React.ReactNode }) {
     try {
       const res: BaseResponse<BasePage<Post>> =
         await queryPostListAction(request);
+
       if (res.data) {
         setPostList(res.data.records);
       } else {
@@ -92,16 +94,16 @@ export function PostProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-//   useEffect(() => {
-//     fetchData({
-//         pageNo: 1,
-//         pageSize: 10,
-//         postId: "",
-//         categoryId: "",
-//         tagIds: [],
-//         userId: getCookie()?.id, 
-//     });
-// }, []);
+  //   useEffect(() => {
+  //     fetchData({
+  //         pageNo: 1,
+  //         pageSize: 10,
+  //         postId: "",
+  //         categoryId: "",
+  //         tagIds: [],
+  //         userId: getCookie()?.id,
+  //     });
+  // }, []);
 
   return (
     <PostContext.Provider value={{ postList, fetchData }}>

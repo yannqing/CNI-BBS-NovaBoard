@@ -14,7 +14,6 @@ import { getRecommendUsersAction } from "@/app/(main)/home/action";
 import { BaseResponse } from "@/types";
 import { RecommendUsers } from "@/types/auth/user";
 import { siteConfig } from "@/config/site";
-import { log } from "console";
 
 export default function RightSideBar() {
   const router = useRouter();

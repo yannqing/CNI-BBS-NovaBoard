@@ -108,7 +108,7 @@ export default function LoginPage() {
                 type="text"
                 value={loginRequest.username}
                 onValueChange={(value) => {
-                  setLoginRequest(prev => ({
+                  setLoginRequest((prev) => ({
                     ...prev,
                     username: value,
                   }));
@@ -134,7 +134,7 @@ export default function LoginPage() {
                 type={isVisible ? "text" : "password"}
                 value={loginRequest.password}
                 onValueChange={(value) => {
-                  setLoginRequest(prev => ({
+                  setLoginRequest((prev) => ({
                     ...loginRequest,
                     password: value,
                   }));
@@ -145,7 +145,7 @@ export default function LoginPage() {
               className="size-1/11"
               isSelected={loginRequest.rememberMe === "1"}
               onValueChange={(value) => {
-                setLoginRequest(prev => ({
+                setLoginRequest((prev) => ({
                   ...loginRequest,
                   rememberMe: value ? "1" : "0",
                 }));

@@ -5,14 +5,18 @@ import { toast } from "sonner";
 import { Card, CardBody } from "@nextui-org/card";
 import { Textarea } from "@nextui-org/input";
 
+import { useGetChatContext } from "../ChatContext";
+
 import {
   GetChatRecordRequest,
   GetChatRecordResponse,
 } from "@/types/chat/chatList";
 import { BasePage, BaseResponse } from "@/types";
-import {getChatRecordAction, sendMessageAction } from "@/app/(main)/chat/[slug]/action";
+import {
+  getChatRecordAction,
+  sendMessageAction,
+} from "@/app/(main)/chat/[slug]/action";
 import { getCookie } from "@/utils/cookies";
-import { useGetChatContext } from "../ChatContext";
 
 // 定义 props 类型
 interface ChatMessageProps {
@@ -69,20 +73,20 @@ export default function Page({ params }: { params: { slug: string } }) {
             fromUserPortrait: getCookie()?.avatar,
             type: "message",
             content: inputValue,
-          }
+          },
         };
 
         // 发送消息
-        const res: BaseResponse<Object> = await sendMessageAction(sendMessageRequest)
+        const res: BaseResponse<Object> =
+          await sendMessageAction(sendMessageRequest);
 
         // 2. 在使用处等待完成
-        if(res.success) {
+        if (res.success) {
           console.log("发送消息成功！");
-          await handleResetChatList();  // 等待刷新完成
+          await handleResetChatList(); // 等待刷新完成
         } else {
           console.log("发送消息失败！");
         }
-        
 
         setInputValue(""); // 清空输入框
       } else {
@@ -152,9 +156,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   };
 
   // 发送消息
-  const sendMessage = async () => {
-
-  }
+  const sendMessage = async () => {};
 
   const LeftChat: React.FC<ChatMessageProps> = ({ message }) => (
     <div className="justify-start grid mt-3 mb-3 ml-6">

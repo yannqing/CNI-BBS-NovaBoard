@@ -13,14 +13,8 @@ import {
 import { Button } from "@nextui-org/button";
 import { useRouter } from "next/navigation";
 
-import { getChatListAction } from "@/app/(main)/chat/action";
-import { GetChatListRequest, GetChatListResponse } from "@/types/chat/chatList";
-import { BasePage, BaseResponse } from "@/types";
-import { getCookie } from "@/utils/cookies";
-import { userInfoCookie } from "@/common/auth/constant";
 import { useGetUserContext } from "@/app/UserContext";
 import { siteConfig } from "@/config/site";
-import { log } from "console";
 import { useGetChatContext } from "@/app/(main)/chat/ChatContext";
 
 export default function SidBar() {
@@ -36,6 +30,7 @@ export default function SidBar() {
    */
   useEffect(() => {
     const isLogin = localStorage.getItem("token");
+
     setIsOpen(!isCookiePresent && !isLogin);
   }, [isCookiePresent]);
 

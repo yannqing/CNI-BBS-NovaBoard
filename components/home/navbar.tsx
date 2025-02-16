@@ -29,7 +29,7 @@ import {
 import { User } from "@nextui-org/user";
 import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { useEffect, useCallback } from "react";
+import { useCallback } from "react";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/home/theme-switch";
@@ -46,7 +46,6 @@ import { CustomError } from "@/types/error/Error";
 import { ErrorCode } from "@/types/error/ErrorCode";
 import { useGetUserContext } from "@/app/UserContext";
 import { getCookie } from "@/utils/cookies";
-import { userInfo } from "os";
 import { userInfoCookie } from "@/common/auth/constant";
 
 export const Navbar = () => {
@@ -62,10 +61,11 @@ export const Navbar = () => {
 
   const handleLogout = useCallback(async () => {
     if (!cookie) return;
-    
+
     try {
       const res: BaseResponse<null> = await logoutAction(cookie.id);
-      console.log("logout result:", res)
+
+      console.log("logout result:", res);
       if (res.success) {
         toast.success("退出登录成功！");
         localStorage.removeItem("token");
@@ -252,7 +252,9 @@ export const Navbar = () => {
               <DropdownItem
                 key="dashboard"
                 as={Link}
-                href={siteConfig.innerLinks.dashboard + "/" + userInfo?.username}
+                href={
+                  siteConfig.innerLinks.dashboard + "/" + userInfo?.username
+                }
               >
                 Dashboard
               </DropdownItem>
