@@ -1,6 +1,13 @@
 "use client";
 // eslint-disable-next-line import/order
-import { createContext, useContext, useEffect, useState, useCallback, useMemo } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+  useMemo,
+} from "react";
 
 import { getCookie, removeCookie, setCookie } from "@/utils/cookies";
 
@@ -32,15 +39,19 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   const checkCookie = useCallback(() => {
     const cookieExists = getCookie() !== null;
+
     if (cookieExists !== isCookiePresent) {
       setIsCookiePresent(cookieExists);
     }
   }, [isCookiePresent]);
 
-  const updateCookie = useCallback((key: string, value: string, rememberMe: boolean) => {
-    setCookie(key, value, rememberMe);
-    setIsCookiePresent(true);
-  }, []);
+  const updateCookie = useCallback(
+    (key: string, value: string, rememberMe: boolean) => {
+      setCookie(key, value, rememberMe);
+      setIsCookiePresent(true);
+    },
+    [],
+  );
 
   const deleteCookie = useCallback((key?: string) => {
     removeCookie(key);
@@ -49,14 +60,16 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     checkCookie();
-    
+
     const handleStorageChange = () => {
       checkCookie();
     };
+
     // 添加事件监听器（localStorage，sessionStorage）
-    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener("storage", handleStorageChange);
+
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener("storage", handleStorageChange);
     };
   }, [checkCookie]);
 
@@ -66,12 +79,10 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       updateCookie,
       deleteCookie,
     }),
-    [isCookiePresent, updateCookie, deleteCookie]
+    [isCookiePresent, updateCookie, deleteCookie],
   );
 
   return (
-    <UserContext.Provider value={contextValue}>
-      {children}
-    </UserContext.Provider>
+    <UserContext.Provider value={contextValue}>{children}</UserContext.Provider>
   );
 }

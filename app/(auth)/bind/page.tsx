@@ -24,7 +24,10 @@ import { useGetUserContext } from "@/app/UserContext";
 import { userInfoCookie } from "@/common/auth/constant";
 import { LoginDTO, LoginVo } from "@/types/auth/login";
 import { title } from "@/components/primitives";
-import { checkUserIfExistAction, sendCodeAction } from "@/app/(auth)/forget/action";
+import {
+  checkUserIfExistAction,
+  sendCodeAction,
+} from "@/app/(auth)/forget/action";
 import {
   ACCOUNT_NOT_EMPTY,
   ACCOUNT_NOT_EXIST,
@@ -79,7 +82,7 @@ export default function BindPage() {
     if (accountPhone) {
       await checkUserIfExistAction(accountPhone).then(
         (res: BaseResponse<boolean>) => {
-          console.log("checkUserIfExistAction result:", res)
+          console.log("checkUserIfExistAction result:", res);
           if (res.data) {
             accountIsExist = true;
           }

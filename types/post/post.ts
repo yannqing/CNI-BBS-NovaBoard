@@ -91,10 +91,10 @@ export type CreatePostRequest = {
   categoryId?: string;
   type?: string;
   tagIds?: string[];
-}
+};
 
 // 发布帖子第一步请求
 export type PublishPostStepOneRequest = {
   userId?: string;
   postId?: string;
-}
+};

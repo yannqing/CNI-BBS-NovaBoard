@@ -1,4 +1,4 @@
 export interface UploadFileRequest {
-    file: File;
-    userId: string;
+  file: File;
+  userId: string;
 }

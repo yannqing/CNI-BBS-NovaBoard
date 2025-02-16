@@ -1,6 +1,9 @@
-import SidBar from "@/components/chat/sidbar";
 import { Provider } from "@radix-ui/react-tooltip";
+import React from "react";
+
 import { ChatProvider } from "./ChatContext";
+
+import SidBar from "@/components/chat/sidbar";
 
 export default function ChatLayout({
   children,
@@ -13,9 +16,7 @@ export default function ChatLayout({
         <ChatProvider>
           <Provider>
             <SidBar />
-            <div className="hidden md:flex w-5/6 h-full">
-            {children}
-            </div>
+            <div className="hidden md:flex w-5/6 h-full">{children}</div>
           </Provider>
         </ChatProvider>
       </div>

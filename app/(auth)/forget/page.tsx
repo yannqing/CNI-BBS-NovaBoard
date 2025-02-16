@@ -87,11 +87,13 @@ export default function LoginPage() {
     let accountIsExist = false;
 
     if (account) {
-      await checkUserIfExistAction(account).then((res: BaseResponse<boolean>) => {
-        if (res.data) {
-          accountIsExist = true;
-        }
-      });
+      await checkUserIfExistAction(account).then(
+        (res: BaseResponse<boolean>) => {
+          if (res.data) {
+            accountIsExist = true;
+          }
+        },
+      );
       if (accountIsExist) {
         // 账号存在
         // 识别账号是否是邮箱
