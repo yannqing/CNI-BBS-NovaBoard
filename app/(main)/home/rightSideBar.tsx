@@ -14,22 +14,27 @@ import { getRecommendUsersAction } from "@/app/(main)/home/action";
 import { BaseResponse } from "@/types";
 import { RecommendUsers } from "@/types/auth/user";
 import { siteConfig } from "@/config/site";
-import { log } from "console";
-
+import { BuildFollowRequest,RemoveFollowRequest,FollowStatus } from "@/types/follow/follow";
+import { buildFollowAction,removeFollowAction } from "./action";
+import { getCookie } from "@/utils/cookies";
+import { useGetUserContext } from "@/app/UserContext";
+import { toast } from "sonner";
+import { ErrorCode } from "@/types/error/ErrorCode";
 export default function RightSideBar() {
   const router = useRouter();
-
-  // 是否关注
-  const [isFollowed, setIsFollowed] = useState(false);
+  const { isCookiePresent } = useGetUserContext();
 
   // 推荐作者
   const [recommendUsers, setRecommendUsers] = useState<RecommendUsers[]>([]);
 
+  const userId = getCookie()?.id as string ;
   // 页面初始化
   useEffect(() => {
     const fetchRecommendUsersData = async () => {
       const res: BaseResponse<RecommendUsers[]> =
-        await getRecommendUsersAction();
+      userId != null ?  
+      await getRecommendUsersAction(userId) :
+      await getRecommendUsersAction();
 
       console.log(res);
 
@@ -40,7 +45,55 @@ export default function RightSideBar() {
 
     fetchRecommendUsersData().then(() => {});
   }, []);
+//关注
+const handleFollowToggle = async (targetUserId : string,followStatus : string) => {
+  try {
+    if(!isCookiePresent){
+      toast.error(ErrorCode.NOT_LOGIN.message);
+      router.push(siteConfig.innerLinks.login);
+      return;
+    }
+    // 调用后端接口更新关注状态
+    if(userId === null || userId === undefined){
+      toast.error(ErrorCode.NOT_LOGIN.message);
+      return;
+    }
+    // 根据followStatus更新关注状态
+    const updatedUsers = recommendUsers.map((user) =>
+      user.userId === targetUserId
+        ? {
+            ...user,
+            followStatus:
+              followStatus === FollowStatus.CONFIRMED
+                ? FollowStatus.NONE
+                : FollowStatus.CONFIRMED,
+          }
+        : user
+    );
+    // 更新状态
+    setRecommendUsers(updatedUsers);
 
+    if(followStatus === FollowStatus.CONFIRMED){
+      const request : RemoveFollowRequest = {
+        userId: userId,
+        followerId: targetUserId,
+      }
+      const res : BaseResponse<null> = await removeFollowAction(request);
+      toast.success("取消关注成功!");
+    }else if(followStatus === FollowStatus.NONE){
+      const request : BuildFollowRequest = {
+        userId: userId,
+        followerId: targetUserId,
+        groupId: "1",
+      }
+      const res : BaseResponse<null> = await buildFollowAction(request);
+      toast.success("请求发送成功!");
+    }
+  } catch (error) {
+    console.error("Failed to update follow status:", error);
+    // 如果失败，可以在这里恢复状态或者提示用户
+  }
+};
   return (
     <div className="w-full mt-10">
       <div className="min-h-44 relative">
@@ -96,18 +149,27 @@ export default function RightSideBar() {
                       </div>
                     </div>
                     <Button
-                      className={
-                        isFollowed
-                          ? "bg-transparent text-foreground border-default-200"
+                      className={`${
+                        recommendUser.followStatus === FollowStatus.CONFIRMED
+                          ? "bg-gray-100"
+                          : recommendUser.followStatus === FollowStatus.NONE
+                          ? "bg-blue-900"
                           : ""
-                      }
+                      } ${recommendUser.followStatus === FollowStatus.REJECTED ? "bg-red-400" : ""}
+                      ml-10`}
                       color="primary"
                       radius="full"
                       size="sm"
-                      variant={isFollowed ? "bordered" : "solid"}
-                      onPress={() => setIsFollowed(!isFollowed)}
+                      variant={recommendUser.followStatus ===FollowStatus.CONFIRMED ? "bordered" : "solid"}
+                      onPress={() => handleFollowToggle(recommendUser.userId, recommendUser.followStatus || FollowStatus.NONE)}
                     >
-                      {isFollowed ? "Unfollow" : "Follow"}
+                      {recommendUser.followStatus === FollowStatus.PENDING
+                      ? "未通过"
+                      : recommendUser.followStatus === FollowStatus.CONFIRMED
+                      ? "取消关注"
+                      : recommendUser.followStatus === FollowStatus.REJECTED
+                      ? "重新请求"
+                      : "关注"} 
                     </Button>
                   </CardHeader>
                   <CardBody className="px-3 py-0">

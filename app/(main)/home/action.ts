@@ -34,10 +34,13 @@ export async function queryPostListAction(
 
 /**
  * 查询推荐作者列表
+ * @param userId  可选的用户Id
+ * @returns 
  */
-export async function getRecommendUsersAction() {
+export async function getRecommendUsersAction(userId: string = '') {
+  const url = userId ? `/user/recommendedUser/${userId}` : "/user/open/recommendedUser";
   return await service({
-    url: "/user/open/recommendedUser",
+    url: url,
     method: "get",
   });
 }

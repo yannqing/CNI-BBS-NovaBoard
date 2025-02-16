@@ -27,4 +27,5 @@ export type RecommendUsers = {
   followingCount: string;
   userId: string;
   userName: string;
+  followStatus: string;
 };
