@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { toast } from "sonner";
 import { Card, CardBody } from "@nextui-org/card";
 import { Textarea } from "@nextui-org/input";
 
 import { useGetChatContext } from "../ChatContext";
+import { useWebSocket } from "../useWebSocket";
 
 import {
   GetChatRecordRequest,
@@ -29,15 +30,24 @@ interface ChatMessageType {
 }
 export default function Page({ params }: { params: { slug: string } }) {
   const divRef = useRef<HTMLDivElement | null>(null); // 创建 ref
-  const [divHeight, setDivHeight] = useState<number>(0); // 状态存储高度
+  // 从 ChatContext 获取 WebSocket 状态
+  const { resetChatList } = useGetChatContext();
+
+
+    const [isConnected, setIsConnected] = useState(false);
+  
+  // 使用 WebSocket hook
+  const { setupWebSocket, stopHeartbeat } = useWebSocket({
+    onMessage: (message) => {
+      console.log("收到消息:", message);
+    },
+    onConnectionChange: setIsConnected,
+  });
   /**
    * 输入框绑定
    */
   const [inputValue, setInputValue] = useState("");
   const [messages, setMessages] = useState<ChatMessageType[]>([]);
-
-  // 获取聊天上下文
-  const { resetChatList } = useGetChatContext();
 
   // 1. 修改 handleResetChatList 为异步函数
   const handleResetChatList = useCallback(async () => {
@@ -106,7 +116,15 @@ export default function Page({ params }: { params: { slug: string } }) {
 
   // 页面初始化
   useEffect(() => {
-    fetchData().then(() => {});
+    fetchData().then(() => { });
+    
+        // 建立 websocket 连接
+    setupWebSocket();
+
+    // 组件卸载时清理
+    return () => {
+      stopHeartbeat();
+    };
   }, []);
 
   // 构建获取聊天内容请求
@@ -114,7 +132,7 @@ export default function Page({ params }: { params: { slug: string } }) {
     pageNo: 1,
     pageSize: 10,
     isDesc: "0", // 0 为倒序
-    fromId: "0", // 登录用户 id
+    fromId: "", // 登录用户 id
     targetId: "0", // 目标用户 id
   };
 
@@ -135,10 +153,7 @@ export default function Page({ params }: { params: { slug: string } }) {
 
           console.log("聊天记录：", responseData);
           for (let i = 0; i < responseData.length; i++) {
-            if (
-              responseData[i].fromId == Number(userInfo.id) &&
-              responseData[i].chatMessageContent.content
-            ) {
+            if (responseData[i].chatMessageContent.content) {
               setMessages((prevMessages) => [
                 ...prevMessages,
                 {
@@ -150,6 +165,7 @@ export default function Page({ params }: { params: { slug: string } }) {
           }
         } else {
           // TODO 无数据
+          console.log("获取聊天记录错误：", res);
         }
       }
     }
@@ -194,7 +210,9 @@ export default function Page({ params }: { params: { slug: string } }) {
           )}
         </div>
       </div>
+      {/*TODO 添加防抖或节流，避免频繁触发消息发送。
 
+支持多行输入（Shift + Enter 换行，Enter 发送）。*/}
       <Textarea
         className="h-1/5 px-6 justify-center"
         labelPlacement="outside"

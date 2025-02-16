@@ -2,7 +2,7 @@ import axios from "axios";
 import { headers } from "next/headers";
 
 import { ErrorCode } from "@/types/error/ErrorCode";
-import { decrypt, encrypt, generateRandomIV, matchPath } from "@/utils/tools";
+import { decrypt, matchPath } from "@/utils/tools";
 import { getCookie } from "@/utils/cookies";
 import { userInfoCookie, whiteList } from "@/common/auth/constant";
 import { CustomError } from "@/types/error/Error";
@@ -79,22 +79,22 @@ service.interceptors.request.use(
       }
     }
     // 2. 给 post 请求数据加密 TODO 目前默认所有 post 请求体都加密
-    if (
-      config.method === "post" &&
-      config.url &&
-      config.data &&
-      !(config.data instanceof FormData)
-    ) {
-      const ivBase64 = generateRandomIV();
-
-      console.log("===============------------ivBase64", ivBase64);
-      config.headers["iv"] = ivBase64;
-      const jsonData = JSON.stringify(config.data);
-      const encryptData = encrypt(jsonData, ivBase64);
-
-      // 用加密后���数据替换原始请求体
-      config.data = encryptData.replace(/^"|"$/g, "");
-    }
+    // if (
+    //   config.method === "post" &&
+    //   config.url &&
+    //   config.data &&
+    //   !(config.data instanceof FormData)
+    // ) {
+    //   const ivBase64 = generateRandomIV();
+    //
+    //   console.log("===============------------ivBase64", ivBase64);
+    //   config.headers["iv"] = ivBase64;
+    //   const jsonData = JSON.stringify(config.data);
+    //   const encryptData = encrypt(jsonData, ivBase64);
+    //
+    //   // 用加密后���数据替换原始请求体
+    //   config.data = encryptData.replace(/^"|"$/g, "");
+    // }
 
     return config;
   },

@@ -1,4 +1,5 @@
 import { Provider } from "@radix-ui/react-tooltip";
+import React from "react";
 
 import { ChatProvider } from "./ChatContext";
 

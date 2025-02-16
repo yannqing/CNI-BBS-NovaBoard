@@ -8,7 +8,6 @@ import { getCookie } from "@/utils/cookies";
 import { GetChatListRequest, GetChatListResponse } from "@/types/chat/chatList";
 import { BasePage } from "@/types";
 import { BaseResponse } from "@/types";
-import { userInfoCookie } from "@/common/auth/constant";
 import { useGetUserContext } from "@/app/UserContext";
 
 // 用户上下文提供者
@@ -35,11 +34,12 @@ export const useGetChatContext = () => {
 // 用户上下文提供者
 export function ChatProvider({ children }: { children: React.ReactNode }) {
   const [chatList, setChatList] = useState<GetChatListResponse[]>([]);
+  const { isCookiePresent } = useGetUserContext();
 
   const getChatListRequest: GetChatListRequest = {
     pageNo: 1,
     pageSize: 10,
-    fromId: getCookie(userInfoCookie)?.id,
+    fromId: getCookie()?.id,
   };
 
   // 获取聊天列表，接口调用
@@ -65,17 +65,11 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     return Promise.resolve();
   };
 
-  const { isCookiePresent } = useGetUserContext();
-
-  /**
-   * 页面初始化
-   */
   useEffect(() => {
     const isLogin = localStorage.getItem("token");
 
-    // 只有在登录状态下才获取聊天列表
     if (isCookiePresent || isLogin) {
-      fetchChatList();
+      fetchChatList().then();
     }
   }, [isCookiePresent]);
 
@@ -84,7 +78,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
       chatList,
       resetChatList,
     }),
-    [chatList], // 注意：这里不需要将 resetChatList 加入依赖数组，因为它不依赖于任何状态
+    [chatList],
   );
 
   return (
