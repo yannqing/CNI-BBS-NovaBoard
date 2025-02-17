@@ -169,18 +169,18 @@ export const Navbar = () => {
             href={siteConfig.innerLinks.login}
             variant="flat"
           >
-            Sign In
+            登入
           </Button>
         </NavbarItem>
         <NavbarItem>
-          <Button
+          {/* <Button
             as={Link}
             color="primary"
             href={siteConfig.innerLinks.postMsg}
             variant="flat"
           >
             toMdx
-          </Button>
+          </Button> */}
         </NavbarItem>
         <Dropdown
           showArrow
@@ -207,7 +207,7 @@ export const Navbar = () => {
                 })}
                 color={"danger"}
                 radius="lg"
-                src="https://blogback.yannqing.com/api/v2/objects/avatar/0vqxqul8pu2skmwokn.jpg"
+                src={userInfo?.avatar}
               />
             </DropdownTrigger>
           </Badge>
@@ -239,14 +239,13 @@ export const Navbar = () => {
                 <User
                   avatarProps={{
                     size: "sm",
-                    src: "https://avatars.githubusercontent.com/u/30373425?v=4",
+                    src: userInfo?.avatar,
                   }}
                   classNames={{
                     name: "text-default-600",
                     description: "text-default-500",
                   }}
-                  description="@jrgarciadev"
-                  name="Junior Garcia"
+                  name={userInfo?.username}
                 />
               </DropdownItem>
               <DropdownItem
@@ -256,7 +255,7 @@ export const Navbar = () => {
                   siteConfig.innerLinks.dashboard + "/" + userInfo?.username
                 }
               >
-                Dashboard
+                个人后台
               </DropdownItem>
               <DropdownItem key="settings">Settings</DropdownItem>
               <DropdownItem key="new_project" endContent="+">
@@ -293,7 +292,7 @@ export const Navbar = () => {
                 Help & Feedback
               </DropdownItem>
               <DropdownItem key="logout" onPress={handleLogout}>
-                Log Out
+                退出登入
               </DropdownItem>
             </DropdownSection>
           </DropdownMenu>
