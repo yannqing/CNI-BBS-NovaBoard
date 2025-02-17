@@ -1,38 +1,16 @@
 import { Tooltip } from "@nextui-org/tooltip";
 import clsx from "clsx";
-
-interface node {
-  date: string;
-  times: number;
+import { FrequencyVo } from "@/types/dashboard/myself";
+interface ContributionGraphProps {
+  frequencyList: FrequencyVo[];
 }
+export default function ContributionGraph({ frequencyList }: ContributionGraphProps) {
 
-export default function ContributionGraph() {
-  /**
-   * 返回一个根据当前日期往前数 365 天的数组（造假数据）
-   */
+  if (!frequencyList || frequencyList.length === 0) {
+    return <div>Loading...</div>;
+  }
   function getDateArray() {
-    // 创建一个长度为365的数组
-    const dates: node[] = [];
-    // 获取当前日期
-    const currentDate = new Date();
-
-    // 填充数组
-    for (let i = 0; i < 365; i++) {
-      // 创建一个新的日期对象，并减去相应的天数
-      const pastDate = new Date(currentDate);
-
-      pastDate.setDate(currentDate.getDate() - (364 - i));
-
-      // 将日期格式化为 yyyy-MM-dd
-      const formattedDate = pastDate.toISOString().split("T")[0];
-
-      dates.push({
-        date: formattedDate,
-        times: i % 10,
-      });
-    }
-
-    return dates;
+    return frequencyList;
   }
 
   const MonthArray: string[] = [
@@ -49,31 +27,37 @@ export default function ContributionGraph() {
     "Nov",
     "Dec",
   ];
-
+  const getBgColor = (postCount: number) => {
+    if (postCount === 0) return "bg-gray-300"; // 0 投稿
+    if (postCount <= 2) return "bg-green-200"; // 小量投稿
+    if (postCount <= 3) return "bg-yellow-200"; // 中量投稿
+    return "bg-red-300"; // 大量投稿
+  };
   /**
    * 贡献图小方格
    * @param children
    */
-  const square = ({ children }: { children: node }) => (
-    <Tooltip content={children.date + " submit times:" + children.times}>
+  const square = ({ children }: { children: FrequencyVo  }) => (
+    <Tooltip content={children.postDate + " submit times:" + children.postCount}>
       <div
-        key={children.date}
+        key={children.postDate}
         className={clsx(
           "w-3 h-3 m-0.5 rounded",
-          `bg-contribution-graph-${children.times}`,
+          getBgColor(children.postCount),
         )}
       />
     </Tooltip>
   );
 
-  const dateList: node[] = getDateArray();
+ 
+  const dateList: FrequencyVo[] = getDateArray();
 
   // 索引遍历获取月份
   let i: number = 0;
   let total: number = 0;
 
   getDateArray().map((children) => {
-    total += children.times;
+    total += children.postCount;
   });
 
   return (
@@ -89,7 +73,8 @@ export default function ContributionGraph() {
               { "ml-1": index === 1 },
             )}
           >
-            {MonthArray[(new Date(dateList[0].date).getMonth() + i++) % 12]}
+           {dateList[0]?.postDate &&
+              MonthArray[(new Date(dateList[0].postDate).getMonth() + i++) % 12]}
           </span>
         ))}
       </div>
@@ -101,7 +86,7 @@ export default function ContributionGraph() {
         <div className={"col-span-7 w-5 h-5 text-xs"} />
         <div className={"col-span-7 w-5 h-5 text-xs"}>Fri</div>
         <div className={"col-span-7 w-5 h-5 text-xs"} />
-        {Array.from({ length: new Date(dateList[0].date).getDay() }).map(
+        {Array.from({ length: new Date(dateList[0]?.postDate).getDay() }).map(
           (_, index) => (
             <div key={index} className={clsx("w-3 h-3 m-0.5 rounded")} />
           ),
