@@ -62,6 +62,9 @@ export default function HomePage() {
 
         return;
       }
+      if(userId == targetUserId){
+        return;
+      }
       if (followStatus === FollowStatus.CONFIRMED) {
         const request: RemoveFollowRequest = {
           userId: userId,

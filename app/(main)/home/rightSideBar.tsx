@@ -58,6 +58,9 @@ const handleFollowToggle = async (targetUserId : string,followStatus : string) =
       toast.error(ErrorCode.NOT_LOGIN.message);
       return;
     }
+    if(userId == targetUserId){
+      return;
+    }
     // 根据followStatus更新关注状态
     const updatedUsers = recommendUsers.map((user) =>
       user.userId === targetUserId
