@@ -7,6 +7,19 @@ import {
 } from "@/types/post/post";
 import { GetTagsRequest } from "@/types/post/tags";
 
+export interface deleteFileRequest {
+  fileName?: string;
+  userId?: string;
+  path?: string;
+  isPrivate?: boolean;
+};
+
+export interface cleanTemporaryCoverRequest {
+  postId?: string;
+  authorId?: string;
+  coverUrl?: string;
+};
+
 /**
  * 上传文件
  * @param request
@@ -20,6 +33,31 @@ export async function uploadFileAction(request: FormData) {
     headers: {
       "Content-Type": "multipart/form-data",
     },
+  });
+}
+
+/**
+ * 删除上传文件
+ * @param request
+ * @returns
+ */
+export async function deleteFileAction(request: deleteFileRequest) {
+  return service({
+    url: "/common/deleteFile",
+    method: "post",
+    data: request,
+  });
+}
+/**
+ * 删除封面缓存
+ * @param request
+ * @returns
+ */
+export async function cleanTemporaryCoverAction(request: cleanTemporaryCoverRequest) {
+  return service({
+    url: "/cleanTemporaryCoverAction",
+    method: "post",
+    data: request,
   });
 }
 
