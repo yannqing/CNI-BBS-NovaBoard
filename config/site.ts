@@ -16,6 +16,10 @@ export const siteConfig = {
       label: "密聊",
       href: "/chat",
     },
+    {
+      label: "私云",
+      href: "/privacy-cloud",
+    },
   ],
   navMenuItems: [
     {

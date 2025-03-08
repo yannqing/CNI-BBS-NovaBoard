@@ -27,22 +27,15 @@ interface ChatMessageProps {
 interface ChatMessageType {
   text: string;
   side: string;
+  type: string;
 }
 export default function Page({ params }: { params: { slug: string } }) {
   const divRef = useRef<HTMLDivElement | null>(null); // 创建 ref
   // 从 ChatContext 获取 WebSocket 状态
   const { resetChatList } = useGetChatContext();
 
-
-    const [isConnected, setIsConnected] = useState(false);
-  
   // 使用 WebSocket hook
-  const { setupWebSocket, stopHeartbeat } = useWebSocket({
-    onMessage: (message) => {
-      console.log("收到消息:", message);
-    },
-    onConnectionChange: setIsConnected,
-  });
+  const { isConnected } = useWebSocket();
   /**
    * 输入框绑定
    */
@@ -66,6 +59,7 @@ export default function Page({ params }: { params: { slug: string } }) {
         const newMessage = {
           text: inputValue,
           side: "right",
+          type: "text",
         };
 
         // 更新消息列表
@@ -116,15 +110,10 @@ export default function Page({ params }: { params: { slug: string } }) {
 
   // 页面初始化
   useEffect(() => {
-    fetchData().then(() => { });
-    
-        // 建立 websocket 连接
-    setupWebSocket();
+    fetchData().then(() => {});
 
     // 组件卸载时清理
-    return () => {
-      stopHeartbeat();
-    };
+    return () => {};
   }, []);
 
   // 构建获取聊天内容请求
@@ -151,18 +140,61 @@ export default function Page({ params }: { params: { slug: string } }) {
           // 有数据
           const responseData = res.data.records;
 
+          responseData.map((response) => {
+            if (
+              response.chatMessageContent &&
+              response.chatMessageContent.content.startsWith('{\"content\":')
+            ) {
+              console.log("需要进一步解析 json");
+              let obj = JSON.parse(response.chatMessageContent.content);
+
+              console.log("obj:", obj);
+              response.chatMessageContent.content = obj.content.text;
+            }
+
+            return response;
+          });
           console.log("聊天记录：", responseData);
+          // 区分消息内容是自己发的，还是其他人发的，或者是系统消息
           for (let i = 0; i < responseData.length; i++) {
             if (responseData[i].chatMessageContent.content) {
-              setMessages((prevMessages) => [
-                ...prevMessages,
-                {
-                  text: responseData[i].chatMessageContent.content,
-                  side: "right",
-                },
-              ]);
+              if (
+                userInfo.id === responseData[i].chatMessageContent.formUserId &&
+                responseData[i].chatMessageContent.type === "text"
+              ) {
+                console.log("111");
+                setMessages((prevMessages) => [
+                  ...prevMessages,
+                  {
+                    text: responseData[i].chatMessageContent.content,
+                    side: "right",
+                    type: "message",
+                  },
+                ]);
+              } else {
+                if (responseData[i].chatMessageContent.type === "text") {
+                  setMessages((prevMessages) => [
+                    ...prevMessages,
+                    {
+                      text: responseData[i].chatMessageContent.content,
+                      side: "left",
+                      type: "message",
+                    },
+                  ]);
+                } else {
+                  setMessages((prevMessages) => [
+                    ...prevMessages,
+                    {
+                      text: responseData[i].chatMessageContent.content,
+                      side: "left",
+                      type: "system",
+                    },
+                  ]);
+                }
+              }
             }
           }
+          console.log("Messages:==>", messages);
         } else {
           // TODO 无数据
           console.log("获取聊天记录错误：", res);
@@ -200,19 +232,21 @@ export default function Page({ params }: { params: { slug: string } }) {
         ref={divRef}
         className="h-4/5 max-h-[485px] overflow-y-auto scroll-hidden"
       >
-        <div>
+        <div className="flex flex-col h-full">
           {messages.map((msg, index) =>
-            msg.side === "left" ? (
+            msg.side === "left" && msg.type === "message" ? (
               <LeftChat key={index} message={msg.text} /> // 使用左侧聊天组件
-            ) : (
+            ) : msg.type === "message" ? (
               <RightChat key={index} message={msg.text} /> // 使用右侧聊天组件
+            ) : (
+              <div key={index} className="flex justify-center ">
+                <div className="text-sm">{msg.text}</div>
+              </div>
             ),
           )}
         </div>
       </div>
-      {/*TODO 添加防抖或节流，避免频繁触发消息发送。
-
-支持多行输入（Shift + Enter 换行，Enter 发送）。*/}
+      {/*TODO 添加防抖或节流，避免频繁触发消息发送。支持多行输入（Shift + Enter 换行，Enter 发送）。*/}
       <Textarea
         className="h-1/5 px-6 justify-center"
         labelPlacement="outside"

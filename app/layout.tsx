@@ -2,12 +2,17 @@ import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
 import clsx from "clsx";
 import { Toaster } from "sonner";
+import { Suspense } from "react";
+import { Inter } from "next/font/google";
 
 import { Providers } from "./(main)/providers";
 
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import { UserProvider } from "@/app/UserContext";
+import { ChatProvider } from "./(main)/chat/ChatContext";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: {
@@ -27,6 +32,11 @@ export const viewport: Viewport = {
   ],
 };
 
+// 创建一个加载组件
+const LoadingComponent = () => {
+  return <div>加载中。。。</div>;
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -39,18 +49,23 @@ export default function RootLayout({
         className={clsx(
           "min-h-screen bg-background font-sans antialiased",
           fontSans.variable,
+          inter.className,
         )}
       >
-        <UserProvider>
-          <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-            <div className="relative flex flex-col h-screen">
-              <Toaster richColors position="top-center" />
-              <main className="container mx-auto max-w-7xl flex-grow">
-                {children}
-              </main>
-            </div>
-          </Providers>
-        </UserProvider>
+        <Suspense fallback={<LoadingComponent />}>
+          <UserProvider>
+            <ChatProvider>
+              <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
+                <div className="relative flex flex-col h-screen">
+                  <Toaster richColors position="top-center" />
+                  <main className="container mx-auto max-w-7xl flex-grow">
+                    {children}
+                  </main>
+                </div>
+              </Providers>
+            </ChatProvider>
+          </UserProvider>
+        </Suspense>
       </body>
     </html>
   );

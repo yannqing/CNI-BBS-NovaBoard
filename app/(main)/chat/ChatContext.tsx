@@ -1,6 +1,6 @@
 "use client";
 // eslint-disable-next-line import/order
-import { createContext, useContext, useEffect, useState, useMemo } from "react";
+import { createContext, useContext, useEffect, useState, useMemo, useCallback } from "react";
 
 import { getChatListAction } from "./action";
 
@@ -34,60 +34,76 @@ export const useGetChatContext = () => {
 // 用户上下文提供者
 export function ChatProvider({ children }: { children: React.ReactNode }) {
   const [chatList, setChatList] = useState<GetChatListResponse[]>([]);
-  const { isCookiePresent } = useGetUserContext();
+  const [updateFlag, setUpdateFlag] = useState(0);
+  // 添加一个状态来追踪是否在客户端
+  const [isClient, setIsClient] = useState(false);
 
-  const getChatListRequest: GetChatListRequest = {
+  const getChatListRequest: GetChatListRequest = useMemo(() => ({
     pageNo: 1,
     pageSize: 10,
     fromId: getCookie()?.id,
-  };
+  }), []);
 
   // 获取聊天列表，接口调用
-  const fetchChatList = async () => {
+  const fetchChatList = useCallback(async () => {
+    // 只在客户端执行
+    if (!isClient) return;
+
     console.log("开始获取聊天列表");
     const res: BaseResponse<BasePage<GetChatListResponse>> =
       await getChatListAction(getChatListRequest);
-
+    
     console.log("获取聊天列表响应:", res);
-
+    
     if (res.success && res.data) {
       console.log("更新聊天列表:", res.data.records);
       setChatList(res.data.records);
+      setUpdateFlag(prev => prev + 1);
     } else {
       console.log("获取聊天列表失败:", res);
     }
-  };
+  }, [getChatListRequest, isClient]);
 
-  // 修改为异步函数，并返回 Promise
-  const resetChatList = async () => {
+  const resetChatList = useCallback(async () => {
     await fetchChatList();
+  }, [fetchChatList]);
 
-    return Promise.resolve();
-  };
+  const { isCookiePresent } = useGetUserContext();
 
+  // 添加用于检测客户端的 useEffect
   useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  /**
+   * 页面初始化
+   */
+  useEffect(() => {
+    if (!isClient) return;
+
     const isLogin = localStorage.getItem("token");
 
     if (isCookiePresent || isLogin) {
-      fetchChatList().then();
+      fetchChatList();
     }
-  }, [isCookiePresent]);
+  }, [isCookiePresent, fetchChatList, isClient]);
 
   const contextValue = useMemo(
     () => ({
       chatList,
       resetChatList,
     }),
-    [chatList],
+    [chatList, resetChatList, updateFlag]
   );
+
+  // 在服务端渲染时返回加载状态
+  if (!isClient) {
+    return <div>加载中。。。</div>;
+  }
 
   return (
     <ChatContext.Provider value={contextValue}>
-      {chatList === null || chatList === undefined ? (
-        <div>加载中。。。</div>
-      ) : (
-        children
-      )}
+      {chatList === null || chatList === undefined ? <div>加载中。。。</div> : children}
     </ChatContext.Provider>
   );
 }
