@@ -41,14 +41,14 @@ export default function RootLayout({
       </UserProvider>
       <footer className="w-full flex flex-col items-center justify-center py-3">
         <div>
-          Copyright © 2024. All rights reserved. Provided by：
+          Copyright © 2025. All rights reserved. Provided by：
           <Link
             isExternal
             className="gap-1 text-current"
             href="https://www.nradiowifi.com/"
             title="nextui.org homepage"
           >
-            <span className={"text-primary"}>NRadio鲲鹏无限</span>
+            <span className={"text-primary"}>CNI-BBS</span>
           </Link>
         </div>
         <div>

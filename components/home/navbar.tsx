@@ -103,7 +103,7 @@ export const Navbar = () => {
         </Kbd>
       }
       labelPlacement="outside"
-      placeholder="Search..."
+      placeholder="搜索..."
       startContent={
         <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
       }
@@ -257,15 +257,15 @@ export const Navbar = () => {
               >
                 个人后台
               </DropdownItem>
-              <DropdownItem key="settings">Settings</DropdownItem>
+              <DropdownItem key="settings">设置</DropdownItem>
               <DropdownItem key="new_project" endContent="+">
-                New Project
+                新项目
               </DropdownItem>
             </DropdownSection>
 
             <DropdownSection showDivider aria-label="Preferences">
               <DropdownItem key="quick_search" shortcut="⌘K">
-                Quick search
+                快速搜索
               </DropdownItem>
               <DropdownItem
                 key="theme"
@@ -277,19 +277,19 @@ export const Navbar = () => {
                     id="theme"
                     name="theme"
                   >
-                    <option>System</option>
-                    <option>Dark</option>
-                    <option>Light</option>
+                    <option>系统</option>
+                    <option>暗黑</option>
+                    <option>日光</option>
                   </select>
                 }
               >
-                Theme
+                风格
               </DropdownItem>
             </DropdownSection>
 
             <DropdownSection aria-label="Help & Feedback">
               <DropdownItem key="help_and_feedback">
-                Help & Feedback
+                在线帮助|反馈
               </DropdownItem>
               <DropdownItem key="logout" onPress={handleLogout}>
                 退出登入
