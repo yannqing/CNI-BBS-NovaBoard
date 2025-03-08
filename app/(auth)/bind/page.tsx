@@ -2,7 +2,7 @@
 
 import { Input } from "@nextui-org/input";
 import { Button } from "@nextui-org/button";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { toast } from "sonner";
 // @ts-ignore
 import { useRouter, useSearchParams } from "next/navigation";
@@ -27,6 +27,7 @@ import { title } from "@/components/primitives";
 import {
   checkUserIfExistAction,
   sendCodeAction,
+  checkUserVerificationCodeAction
 } from "@/app/(auth)/forget/action";
 import {
   ACCOUNT_NOT_EMPTY,
@@ -34,7 +35,23 @@ import {
   CAPTCHA_CODE_SEND_FAILURE,
 } from "@/app/(auth)/forget/common";
 import { SocialUserBindLocalUserRequestType } from "@/types/auth/social";
+import {
+  SendCodeRequestType,
+  VerificationCodeRequestType,
+  VerificationCodeResponseType
+} from "@/types/auth/common";
+import {
+  Carousel,
+  CarouselApi,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
+interface NextType {
+  canNext: boolean;
+  message: string;
+}
 
+import { SocialUserBindLocalUserRequestTypeAction } from "@/app/(auth)/bind/action";
 export default function BindPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -57,20 +74,19 @@ export default function BindPage() {
   // 用户输入的验证码
   const [captchaCode, setCaptchaCode] = useState<string>("");
 
-  const [isVisible, setIsVisible] = React.useState(false);
+  // carousel 对应 api，用于切换下一步
+  const [api, setApi] = React.useState<CarouselApi>();
 
-  const toggleVisibility = () => setIsVisible(!isVisible);
+  //是否有本地用户
+  const [hasLocalUser, setHasLocalUser] = React.useState(false);
+
+  const [temporaryCode, setTemporaryCode] = useState<string>('');
+  const [password, setPassword] = useState<string>();
+
 
   const { updateCookie } = useGetUserContext();
 
-  const [selected, setSelected] = React.useState("login");
 
-  const [loginRequest, setLoginRequest] = useState<LoginVo>({
-    username: "",
-    password: "",
-    loginType: "password",
-    rememberMe: "0",
-  });
 
   /**
    * 发送验证码
@@ -82,91 +98,243 @@ export default function BindPage() {
     if (accountPhone) {
       await checkUserIfExistAction(accountPhone).then(
         (res: BaseResponse<boolean>) => {
-          console.log("checkUserIfExistAction result:", res);
           if (res.data) {
             accountIsExist = true;
           }
         },
       );
       if (accountIsExist) {
-        // 账号存在
-        // 识别账号是否是邮箱
-        const socialUserBindLocalUserRequestType: SocialUserBindLocalUserRequestType =
-          accountPhone.includes("@")
-            ? {
-                emailNumber: accountPhone,
-                temporaryCode: passcode || undefined,
-                socialUserId: socialUserId || undefined,
-                hasLocalUser: true,
-              }
-            : {
-                phoneNumber: accountPhone,
-                temporaryCode: passcode || undefined,
-                socialUserId: socialUserId || undefined,
-                hasLocalUser: true,
-              };
-
-        await sendCodeAction(socialUserBindLocalUserRequestType).then(
-          (res: BaseResponse<any>) => {
-            if (res.data) {
-              // 验证码发送成功
-              setIsLoading(false);
-              setIsDisabled(true);
-              setCountdown(60);
-
-              const interval = setInterval(() => {
-                setCountdown((prev) => {
-                  if (prev <= 1) {
-                    clearInterval(interval);
-                    setIsDisabled(false);
-
-                    return 0;
-                  }
-
-                  return prev - 1;
-                });
-              }, 1000);
-            } else {
-              // 验证码发送失败
-              toast.error(CAPTCHA_CODE_SEND_FAILURE);
-              setIsLoading(false);
-            }
-          },
-        );
+        setHasLocalUser(true);
       } else {
         // 账号不存在
-        toast.error(ACCOUNT_NOT_EXIST);
+        setHasLocalUser(false);
         setIsLoading(false);
       }
     } else {
-      // 账号不能为空
-      toast.error(ACCOUNT_NOT_EMPTY);
+      // 本地账号不存在
+      setHasLocalUser(false);
       setIsLoading(false);
     }
-  };
-
-  async function clickToLogin() {
-    console.log("loginRequest", loginRequest);
-    loginAction(loginRequest).then((res: BaseResponse<LoginDTO>) => {
-      if (res.success === true) {
-        // 判断后端返回数据是否有错
-        if (res.data) {
-          toast.success("login success");
-          router.push("/");
-          console.log("login result", res);
-          updateCookie(userInfoCookie, JSON.stringify(res.data), false);
-        } else {
-          toast.error("服务器异常，请重试！");
+    // 账号存在
+    const sendCodeRequestType: SendCodeRequestType =
+      accountPhone.includes("@")
+        ? {
+          emailNumber: accountPhone,
+          captchaType: 'email',
+          isRegister: 1,
         }
+        : {
+          phoneNumber: accountPhone,
+          captchaType: 'phone',
+          isRegister: 1,
+        };
+
+    await sendCodeAction(sendCodeRequestType).then(
+      (res: BaseResponse<any>) => {
+        if (res.data) {
+          // 验证码发送成功
+          setIsLoading(false);
+          setIsDisabled(true);
+          setCountdown(60);
+          toast.success('验证码发送成功!')
+          const interval = setInterval(() => {
+            setCountdown((prev) => {
+              if (prev <= 1) {
+                clearInterval(interval);
+                setIsDisabled(false);
+
+                return 0;
+              }
+
+              return prev - 1;
+            });
+          }, 1000);
+        } else {
+          // 验证码发送失败
+          toast.error(CAPTCHA_CODE_SEND_FAILURE);
+          setIsLoading(false);
+        }
+      },
+    );
+
+  };
+  const bindSocailUser = async (accountTemporaryCode: string) => {
+    let socialUserBindLocalUserRequestType: SocialUserBindLocalUserRequestType;
+    if (accountTemporaryCode == '') {
+      accountTemporaryCode = temporaryCode as string
+    }
+    socialUserBindLocalUserRequestType = accountPhone.includes("@")
+      ? {
+        emailNumber: accountPhone,
+        accountTemporaryCode: accountTemporaryCode,
+        socialTemporaryCode: passcode ?? '',
+        password: password ?? '',
+        socialUserId: socialUserId ?? '',
+        hasLocalUser: hasLocalUser,
+      }
+      : {
+        phoneNumber: accountPhone,
+        accountTemporaryCode: accountTemporaryCode,
+        socialTemporaryCode: passcode ?? '',
+        password: password ?? '',
+        socialUserId: socialUserId ?? '',
+        hasLocalUser: hasLocalUser,
+      };
+    try {
+      const res = await SocialUserBindLocalUserRequestTypeAction(socialUserBindLocalUserRequestType);
+      let data = res.data;
+      if (data != null && data.status) {
+        clickToLogin(accountTemporaryCode);
+      } else {
+        toast.error("绑定失败，请重试");
+        router.push("/login");
+      }
+    } catch (error) {
+      toast.error("绑定失败，请重试");
+      router.push("/login");
+    }
+  }
+  const handleVerification = async () => {
+    // 校验验证码是否正确
+    const verificationCodeRequest: VerificationCodeRequestType =
+      accountPhone.includes("@")
+        ? {
+          emailNumber: accountPhone,
+          code: captchaCode,
+        }
+        : {
+          phoneNumber: accountPhone,
+          code: captchaCode,
+        };
+
+    await checkUserVerificationCodeAction(verificationCodeRequest).then(
+      (res: BaseResponse<VerificationCodeResponseType>) => {
+        if (res.success && res.data?.passed && res.data.temporaryCode) {
+          let temporaryCode = String(res.data.temporaryCode);
+          setTemporaryCode(temporaryCode)
+          // 校验验证码通过，可以进入下一步
+          if (hasLocalUser) {
+            bindSocailUser(temporaryCode);
+          } else {
+            toNext({
+              canNext: true,
+              message: "",
+            });
+          }
+        } else {
+          toast.error('验证码不正确!');
+        }
+      },
+    );
+  };
+  const clickToLogin = async (temporaryCode: string) => {
+    const loginRequest: LoginVo = {
+      loginType: "t_code",
+      rememberMe: "0",
+      phoneNumber: accountPhone?.includes("@") ? "" : accountPhone,
+      emailNumber: accountPhone?.includes("@") ? accountPhone : "",
+      captchaType: accountPhone?.includes("@") ? "email" : "phone",
+      captchaCode: temporaryCode,
+    };
+
+    try {
+      const res: BaseResponse<LoginDTO> = await loginAction(loginRequest);
+      debugger
+      if (res.success && res.data) {
+        // 确保状态更新
+        await new Promise<void>((resolve) => {
+          localStorage.setItem("token", res.data?.token || "");
+          updateCookie(userInfoCookie, JSON.stringify(res.data), false);
+          resolve();
+        });
+        requestAnimationFrame(() => {
+          toast.success("登录成功");
+          router.push("/");
+        });
       } else {
         toast.error("登录失败，请重试");
       }
-    });
-  }
+    } catch (error) {
+      console.error("登录请求失败:", error);
+      toast.error("网络错误，请稍后重试");
+    }
+  };
 
-  function toRegisterPage() {
-    router.push(siteConfig.innerLinks.register);
-  }
+
+  /**
+ * 点击下一步
+ */
+  const toNext = useCallback(
+    (next: NextType) => {
+      if (api && next.canNext) {
+        api.scrollNext();
+      } else {
+        toast.error(next.message);
+      }
+    },
+    [api],
+  );
+  const stepArray: React.JSX.Element[] = [
+    <div key={0} className={" flex flex-col"}>
+      <form className="flex flex-col gap-4">
+        <Input
+          autoComplete="account"
+          label="请输入要绑定的邮箱或手机号"
+          type="text"
+          value={accountPhone}
+          onValueChange={(value) => setAccountPhone(value)}
+        />
+        <Input
+          autoComplete="account"
+          endContent={
+            <Button
+              isDisabled={isDisabled}
+              isLoading={isLoading}
+              onPress={handleButtonClick}
+            >
+              {isDisabled ? `${countdown}s` : "获取验证码"}
+            </Button>
+          }
+          label="请输入验证码"
+          type="text"
+          value={captchaCode}
+          onValueChange={(value) => setCaptchaCode(value)}
+        />
+        <div className="flex gap-2 justify-end">
+          <Button
+            fullWidth
+            className={""}
+            color={"primary"}
+            onPress={() => handleVerification()}
+          >
+            进入
+          </Button>
+        </div>
+      </form>
+    </div>,
+
+    <div key={1} className={""}>
+      <form className="flex flex-col gap-4">
+        <Input
+          autoComplete="account"
+          label="请创建新密码"
+          type="text"
+          value={password}
+          onValueChange={(value) => setPassword(value)}
+        />
+        <div className="flex gap-2 justify-end">
+          <Button
+            fullWidth
+            className={""}
+            color={"primary"}
+            onPress={() => bindSocailUser('')}
+          >
+            提交
+          </Button>
+        </div>
+      </form>
+    </div>
+  ]
 
   return (
     <Card isBlurred className="bg-transparent w-[340px]">
@@ -174,114 +342,19 @@ export default function BindPage() {
         <div>
           <h1 className={title()}>绑定用户</h1>
         </div>
-        <Tabs
-          fullWidth
-          aria-label="Tabs form"
-          className={"mt-4"}
-          selectedKey={selected}
-          size="md"
-          onSelectionChange={(value) => {
-            // @ts-ignore
-            setSelected(value);
-          }}
-        >
-          <Tab key="login" title="手机号/邮箱">
-            <form className="flex flex-col gap-4">
-              <Input
-                autoComplete="account"
-                label="请输入要绑定的邮箱或手机号"
-                type="text"
-                value={accountPhone}
-                onValueChange={(value) => setAccountPhone(value)}
-              />
-              <Input
-                autoComplete="account"
-                endContent={
-                  <Button
-                    isDisabled={isDisabled}
-                    isLoading={isLoading}
-                    onPress={handleButtonClick}
-                  >
-                    {isDisabled ? `${countdown}s` : "获取验证码"}
-                  </Button>
-                }
-                label="请输入验证码"
-                type="text"
-                value={captchaCode}
-                onValueChange={(value) => setCaptchaCode(value)}
-              />
-              <div className="flex gap-2 justify-end">
-                <Button fullWidth color="primary">
-                  进入
-                </Button>
-              </div>
-            </form>
-          </Tab>
-          <Tab key="sign-up" title="账号密码">
-            <form className="flex flex-col gap-4">
-              <Input
-                autoComplete="username"
-                label="Username"
-                type="text"
-                value={loginRequest.username}
-                onValueChange={(value) => {
-                  setLoginRequest({
-                    ...loginRequest,
-                    username: value,
-                  });
-                }}
-              />
-              <Input
-                autoComplete="current-password"
-                endContent={
-                  <button
-                    aria-label="toggle password visibility"
-                    className="focus:outline-none"
-                    type="button"
-                    onClick={toggleVisibility}
-                  >
-                    {isVisible ? (
-                      <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                    ) : (
-                      <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                    )}
-                  </button>
-                }
-                label="Password"
-                type={isVisible ? "text" : "password"}
-                value={loginRequest.password}
-                onValueChange={(value) => {
-                  setLoginRequest({
-                    ...loginRequest,
-                    password: value,
-                  });
-                }}
-              />
-              <div className="flex gap-2 justify-end">
-                <Button fullWidth color="primary">
-                  进入
-                </Button>
-              </div>
-            </form>
-          </Tab>
-        </Tabs>
+        <Carousel className=" mt-10 w-full max-w-xs" setApi={setApi}>
+          <CarouselContent>
+            {stepArray.map((step, index) => (
+              <CarouselItem
+                key={index}
+                className={"items-center justify-center"}
+              >
+                {step}
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
         <div className={"flex gap-3"}>
-          <Button
-            onPress={() => {
-              console.log("passcode", passcode);
-              console.log("socialUserId", socialUserId);
-            }}
-          >
-            test
-          </Button>
-          <Button
-            className="capitalize"
-            color="warning"
-            variant="flat"
-            onPress={() => setIsOpen(!isOpen)}
-          >
-            打开
-          </Button>
         </div>
       </CardBody>
       <Modal backdrop={"blur"} hideCloseButton={true} isOpen={isOpen}>

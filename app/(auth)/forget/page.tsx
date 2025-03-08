@@ -28,10 +28,12 @@ import {
 import { BaseResponse } from "@/types";
 import {
   ResetPasswordRequestType,
+} from "@/types/auth/forget";
+import {
   SendCodeRequestType,
   VerificationCodeRequestType,
   VerificationCodeResponseType,
-} from "@/types/auth/forget";
+} from "@/types/auth/common";
 import { validatePassword } from "@/utils/tools";
 import {
   ACCOUNT_NOT_EMPTY,
@@ -321,10 +323,9 @@ export default function LoginPage() {
       <div className="flex flex-row gap-5 m-5">
         <div className="">
           <div>
-            <h1 className={title()}>Forget Password</h1>
+            <h1 className={title()}>忘记密码</h1>
             <div className="max-w-96 mb-5 mt-5">
-              To Keep connected with up please login with your personal
-              information by email address and password
+              请使用平台验证过的账号进行操作！
             </div>
           </div>
           <Carousel className="w-full max-w-xs ml-8" setApi={setApi}>
@@ -341,7 +342,7 @@ export default function LoginPage() {
           </Carousel>
           <div className={"mt-3 flex flex-row"}>
             <Button color="primary" variant="light" onPress={toLoginPage}>
-              <ArrowLeft /> Return Login
+              <ArrowLeft /> 返回登入
             </Button>
             <Spacer x={3} />
             <ThemeSwitch />

@@ -1,8 +1,9 @@
 export type SocialUserBindLocalUserRequestType = {
   phoneNumber?: string;
   emailNumber?: string;
+  accountTemporaryCode?: string;
   password?: string;
-  temporaryCode?: string;
-  socialUserId?: string;
-  hasLocalUser?: boolean;
+  socialTemporaryCode: string;
+  socialUserId: string;
+  hasLocalUser: boolean;
 };

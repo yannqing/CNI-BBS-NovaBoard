@@ -1,11 +1,11 @@
 "use server";
 
 import service from "@/utils/axios";
+import { ResetPasswordRequestType } from "@/types/auth/forget";
 import {
-  ResetPasswordRequestType,
   SendCodeRequestType,
   VerificationCodeRequestType,
-} from "@/types/auth/forget";
+} from "@/types/auth/common";
 
 /**
  * 检查账户是否存在

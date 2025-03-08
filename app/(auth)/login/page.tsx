@@ -94,17 +94,16 @@ export default function LoginPage() {
       <div className="flex flex-row gap-5 m-5">
         <div className="">
           <div>
-            <h1 className={title()}>Welcome</h1>
+            <h1 className={title()}>欢迎</h1>
             <div className="max-w-80 mb-5 mt-5">
-              To Keep connected with up please login with your personal
-              information by email address and password
+              为了保持联系，请使用电子邮件地址和密码登录您的个人信息
             </div>
           </div>
           <div className="flex max-w-[300px] flex-wrap gap-4">
             <form className="flex max-w-[300px] flex-wrap gap-4">
               <Input
                 autoComplete="username"
-                label="Username"
+                label="账户"
                 type="text"
                 value={loginRequest.username}
                 onValueChange={(value) => {
@@ -130,7 +129,7 @@ export default function LoginPage() {
                     )}
                   </button>
                 }
-                label="Password"
+                label="密码"
                 type={isVisible ? "text" : "password"}
                 value={loginRequest.password}
                 onValueChange={(value) => {
@@ -151,24 +150,24 @@ export default function LoginPage() {
                 }));
               }}
             >
-              Remember Me
+              记住我
             </Checkbox>
             <Link
               className="size-1/11"
               href={siteConfig.innerLinks.forgetPassword}
             >
-              Forget Password？
+              忘记密码？
             </Link>
             <Button color="primary" onPress={clickToLogin}>
-              Login
+              登入
             </Button>
             <Button color="primary" variant="bordered" onPress={toRegisterPage}>
-              Registry
+              注册
             </Button>
             <ThemeSwitch />
           </div>
           <div className="flex-col mt-2">
-            <div>Or you can login with</div>
+            <div>第三方登入平台</div>
             <div className={"flex gap-3 mt-2"}>
               <Link href={siteConfig.links.google}>
                 <GoogleIcon className="text-default-500" />
@@ -179,14 +178,6 @@ export default function LoginPage() {
               <Link isExternal href={siteConfig.links.wechat}>
                 <WeChatIcon className="w-[24px] h-[24px]" />
               </Link>
-              <Button
-                onPress={() => {
-                  console.log("passcode", passcode);
-                  console.log("socialUserId", socialUserId);
-                }}
-              >
-                test
-              </Button>
             </div>
           </div>
         </div>

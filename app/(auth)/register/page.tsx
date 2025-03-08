@@ -22,7 +22,7 @@ import {
   validatePhoneNumber,
   validEmail,
 } from "@/utils/tools";
-import { checkUserIfExist } from "@/app/(auth)/forget/action";
+import { checkUserIfExistAction } from "@/app/(auth)/forget/action";
 import { BaseResponse } from "@/types";
 import { registerAction } from "@/app/(auth)/register/action";
 
@@ -171,7 +171,7 @@ export default function LoginPage() {
 
       return;
     }
-    await checkUserIfExist(account).then((res: BaseResponse<any>) => {
+    await checkUserIfExistAction(account).then((res: BaseResponse<any>) => {
       if (res.data) {
         // 账号存在
         toast.error("账号已存在，请重试！");
@@ -215,10 +215,9 @@ export default function LoginPage() {
       <div className="flex flex-row gap-5 m-5">
         <div className="">
           <div>
-            <h1 className={title()}>Register</h1>
+            <h1 className={title()}>注册</h1>
             <div className="max-w-80 mb-5 mt-5">
-              To Keep connected with up please login with your personal
-              information by email address and password
+              为了保持联系，请使用电子邮件地址和密码注册您的个人信息
             </div>
           </div>
           <div className="flex max-w-[300px] flex-wrap gap-4">
@@ -384,14 +383,14 @@ export default function LoginPage() {
               </form>
             </ScrollShadow>
             <Button color="primary" onPress={toLoginPage}>
-              Return Login
+              返回登入
             </Button>
             <Button
               color="primary"
               variant="bordered"
               onPress={clickToRegister}
             >
-              Registry
+              注册
             </Button>
             <ThemeSwitch />
           </div>

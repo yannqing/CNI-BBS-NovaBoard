@@ -3,6 +3,10 @@ export type LoginVo = {
   password?: string;
   loginType?: string;
   rememberMe?: string;
+  phoneNumber?: string;
+  emailNumber?: string;
+  captchaType?: string;
+  captchaCode?: string;
 };
 
 export type LoginDTO = {
