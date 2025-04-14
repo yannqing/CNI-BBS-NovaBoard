@@ -97,3 +97,17 @@ export async function removeFollowAction(
     data: removeFollowRequest,
   });
 }
+
+/**
+ * 根据Token获取用户登入信息
+ * @returns 
+ */
+export async function getUserInfoByTokenAction(token:string) {
+  return await service({
+    url: "/user/getUserInfoByToken",
+    method: "get",
+    headers: {
+      "token": token,
+    },
+  });
+}

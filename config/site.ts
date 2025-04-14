@@ -56,9 +56,14 @@ export const siteConfig = {
     },
   ],
   links: {
-    wechat: "http://localhost:8080/auth/render/wechat_open",
-    gitee: "http://localhost:8080/auth/render/gitee",
-    google: "http://localhost:8080/auth/render/google",
+    wechat: "http://us.shumei.gq:8999/auth/render/wechat_open",
+    gitee: "http://us.shumei.gq:8999/auth/render/gitee",
+    google: "http://us.shumei.gq:8999/auth/render/google",
+    // wechat: "http://localhost:8080/auth/render/wechat_open",
+    // gitee: "http://localhost:8080/auth/render/gitee",
+    // google: "http://localhost:8080/auth/render/google",
+
+    githubproject: "https://github.com/patricleehua/CNI-BBS-TitanCore"
   },
   innerLinks: {
     login: "/login",

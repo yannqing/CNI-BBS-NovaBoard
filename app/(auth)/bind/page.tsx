@@ -182,9 +182,10 @@ export default function BindPage() {
       };
     try {
       const res = await SocialUserBindLocalUserRequestTypeAction(socialUserBindLocalUserRequestType);
+      debugger
       let data = res.data;
       if (data != null && data.status) {
-        clickToLogin(accountTemporaryCode);
+        router.push("/home?token="+ data.message);
       } else {
         toast.error("绑定失败，请重试");
         router.push("/login");
@@ -226,38 +227,6 @@ export default function BindPage() {
         }
       },
     );
-  };
-  const clickToLogin = async (temporaryCode: string) => {
-    const loginRequest: LoginVo = {
-      loginType: "t_code",
-      rememberMe: "0",
-      phoneNumber: accountPhone?.includes("@") ? "" : accountPhone,
-      emailNumber: accountPhone?.includes("@") ? accountPhone : "",
-      captchaType: accountPhone?.includes("@") ? "email" : "phone",
-      captchaCode: temporaryCode,
-    };
-
-    try {
-      const res: BaseResponse<LoginDTO> = await loginAction(loginRequest);
-      debugger
-      if (res.success && res.data) {
-        // 确保状态更新
-        await new Promise<void>((resolve) => {
-          localStorage.setItem("token", res.data?.token || "");
-          updateCookie(userInfoCookie, JSON.stringify(res.data), false);
-          resolve();
-        });
-        requestAnimationFrame(() => {
-          toast.success("登录成功");
-          router.push("/");
-        });
-      } else {
-        toast.error("登录失败，请重试");
-      }
-    } catch (error) {
-      console.error("登录请求失败:", error);
-      toast.error("网络错误，请稍后重试");
-    }
   };
 
 

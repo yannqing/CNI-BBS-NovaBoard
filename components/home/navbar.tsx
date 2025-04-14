@@ -151,13 +151,7 @@ export const Navbar = () => {
         justify="end"
       >
         <NavbarItem className="hidden sm:flex gap-2">
-          <Link isExternal href={siteConfig.links.gitee}>
-            <TwitterIcon className="text-default-500" />
-          </Link>
-          <Link isExternal href={siteConfig.links.wechat}>
-            <DiscordIcon className="text-default-500" />
-          </Link>
-          <Link isExternal href={siteConfig.links.google}>
+          <Link isExternal href={siteConfig.links.githubproject}>
             <GithubIcon className="text-default-500" />
           </Link>
           <ThemeSwitch />

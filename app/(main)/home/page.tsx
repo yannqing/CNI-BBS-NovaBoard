@@ -7,13 +7,14 @@ import { Tooltip } from "@nextui-org/tooltip";
 import { User } from "@nextui-org/user";
 import { Button } from "@nextui-org/button";
 import { Avatar } from "@nextui-org/avatar";
-import { useRouter } from "next/navigation";
+import { useRouter,useSearchParams  } from "next/navigation";
 import { toast } from "sonner";
 
-import { buildFollowAction, removeFollowAction } from "./action";
+import { buildFollowAction, removeFollowAction,getUserInfoByTokenAction } from "./action";
 
 import { useGetPostContext } from "@/app/(main)/PostContext";
 import { useGetUserContext } from "@/app/UserContext";
+import { userInfoCookie } from "@/common/auth/constant";
 import { siteConfig } from "@/config/site";
 import {
   BuildFollowRequest,
@@ -23,15 +24,45 @@ import {
 import { BaseResponse } from "@/types";
 import { getCookie } from "@/utils/cookies";
 import { ErrorCode } from "@/types/error/ErrorCode";
-
+import { LoginDTO } from "@/types/auth/login";
 export default function HomePage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { isCookiePresent } = useGetUserContext();
   const [followStatuses, setFollowStatuses] = useState<
     Record<string, FollowStatus>
   >({});
+  const { updateCookie } = useGetUserContext();
+
+
   // 标签
   const { postList } = useGetPostContext();
+  useEffect(() => {
+    const token = searchParams.get('token');
+    if (token) {
+      handleTokenLogin(token);
+    }
+  }, [searchParams]);
+
+  const handleTokenLogin = async (token: string) => {
+    try {
+      const res: BaseResponse<LoginDTO> = await getUserInfoByTokenAction(token);
+      debugger
+        if (res.success && res.data) {
+        await new Promise<void>((resolve) => {
+          localStorage.setItem("token", res.data?.token || "");
+          updateCookie(userInfoCookie, JSON.stringify(res.data), false);
+          resolve();
+        });
+        router.replace("/home");
+        toast.success("登录成功");
+      } else {
+        toast.error(res.message);
+      }
+    } catch (error) {
+      toast.error("Token登录请求失败:"+ error);
+    }
+  };
 
   //初始化关注状态
   useEffect(() => {

@@ -23,6 +23,7 @@ export const whiteList = [
   "/category/open/**",
   "/post/open/**",
   "/user/open/**",
+  "/user/getUserInfoByToken",
   "/common/open/**",
   "/tag/open/**",
 
