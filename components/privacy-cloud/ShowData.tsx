@@ -20,56 +20,56 @@ export const columns = [
 
 export const users = [
   {
-    id: 1,
-    name: "Tony Reichert",
-    role: "CEO",
-    team: "Management",
-    status: "active",
-    age: "29",
-    avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
-    email: "tony.reichert@example.com",
+    "id": 1,
+    "name": "patricLee",
+    "role": "超级管理员",
+    "team": "系统管理员",
+    "status": "正常",
+    "age": "29",
+    "avatar": "http://www.nbcpe.cn:9000/cni-bbs-open/userFile/1/avatar/56adb6f120fb4f1d.png",
+    "email": "admin@gmail.com"
   },
   {
-    id: 2,
-    name: "Zoey Lang",
-    role: "Technical Lead",
-    team: "Development",
-    status: "paused",
-    age: "25",
-    avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704d",
-    email: "zoey.lang@example.com",
+    "id": 2,
+    "name": "yannqing",
+    "role": "管理员",
+    "team": "系统管理员",
+    "status": "正常",
+    "age": "25",
+    "avatar": "http://www.nbcpe.cn:9000/cni-bbs-open/userFile/3/avatar/bef4e00190c346ef.jpg",
+    "email": "yannqing@gmail.com"
   },
   {
-    id: 3,
-    name: "Jane Fisher",
-    role: "Senior Developer",
-    team: "Development",
-    status: "active",
-    age: "22",
-    avatar: "https://i.pravatar.cc/150?u=a04258114e29026702d",
-    email: "jane.fisher@example.com",
+    "id": 3,
+    "name": "lisi",
+    "role": "管理员",
+    "team": "系统管理员",
+    "status": "正常",
+    "age": "22",
+    "avatar": "http://www.nbcpe.cn:9000/cni-bbs-open/userFile/2/avatar/f6facd72eec24121.png",
+    "email": "zhang.min@example.com"
   },
   {
-    id: 4,
-    name: "William Howard",
-    role: "Community Manager",
-    team: "Marketing",
-    status: "vacation",
-    age: "28",
-    avatar: "https://i.pravatar.cc/150?u=a048581f4e29026701d",
-    email: "william.howard@example.com",
+    "id": 4,
+    "name": "测2",
+    "role": "普通用户",
+    "team": "用户",
+    "status": "正常",
+    "age": "28",
+    "avatar": "https://i.pravatar.cc/150?u=a048581f4e29026701d",
+    "email": "test1@gmail.com"
   },
   {
-    id: 5,
-    name: "Kristen Copper",
-    role: "Sales Manager",
-    team: "Sales",
-    status: "active",
-    age: "24",
-    avatar: "https://i.pravatar.cc/150?u=a092581d4ef9026700d",
-    email: "kristen.cooper@example.com",
-  },
-];
+    "id": 5,
+    "name": "测1",
+    "role": "普通用户",
+    "team": "用户",
+    "status": "关闭",
+    "age": "24",
+    "avatar": "http://www.nbcpe.cn:9000/cni-bbs-open/userFile/3/avatar/bef4e00190c346ef.jpg",
+    "email": "test2@gmail.com"
+  }
+]
 
 export const EyeIcon = (props: any) => {
   return (

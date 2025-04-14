@@ -251,7 +251,7 @@ export default function Page({ params }: { params: { slug: string } }) {
         className="h-1/5 px-6 justify-center"
         labelPlacement="outside"
         maxRows={3}
-        placeholder="Enter message"
+        placeholder="发送消息"
         // placeholder={params.[slug]}
         value={inputValue}
         onKeyDown={handleKeyDown}

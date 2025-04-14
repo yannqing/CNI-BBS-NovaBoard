@@ -29,7 +29,7 @@ import {
 import { User } from "@nextui-org/user";
 import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/home/theme-switch";
@@ -50,14 +50,17 @@ import { userInfoCookie } from "@/common/auth/constant";
 
 export const Navbar = () => {
   const currentPath = usePathname();
-
   const router = useRouter();
-
+  const [searchQuery, setSearchQuery] = useState("");
   const { isCookiePresent, deleteCookie } = useGetUserContext();
-
   const cookie = getCookie();
-
   const userInfo = getCookie(userInfoCookie);
+
+  const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && searchQuery.trim()) {
+      router.push(`/search/results?q=${encodeURIComponent(searchQuery.trim())}&page=1`);
+    }
+  };
 
   const handleLogout = useCallback(async () => {
     if (!cookie) return;
@@ -98,8 +101,8 @@ export const Navbar = () => {
         input: "text-sm",
       }}
       endContent={
-        <Kbd className="hidden lg:inline-block" keys={["command"]}>
-          K
+        <Kbd className="hidden lg:inline-block" keys={["enter"]}>
+          ↵
         </Kbd>
       }
       labelPlacement="outside"
@@ -108,6 +111,9 @@ export const Navbar = () => {
         <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
       }
       type="search"
+      value={searchQuery}
+      onChange={(e) => setSearchQuery(e.target.value)}
+      onKeyDown={handleSearch}
     />
   );
 
@@ -160,7 +166,6 @@ export const Navbar = () => {
         <NavbarItem
           className={clsx({
             hidden: isCookiePresent,
-            // hidden: false,
           })}
         >
           <Button
@@ -172,20 +177,10 @@ export const Navbar = () => {
             登入
           </Button>
         </NavbarItem>
-        <NavbarItem>
-          {/* <Button
-            as={Link}
-            color="primary"
-            href={siteConfig.innerLinks.postMsg}
-            variant="flat"
-          >
-            toMdx
-          </Button> */}
-        </NavbarItem>
         <Dropdown
           showArrow
           classNames={{
-            base: "before:bg-default-200", // change arrow background
+            base: "before:bg-default-200",
             content: "p-0 border-small border-divider bg-background",
           }}
           radius="sm"
@@ -193,7 +188,6 @@ export const Navbar = () => {
           <Badge
             className={clsx({
               hidden: !isCookiePresent,
-              // hidden: true,
             })}
             color="danger"
             content="5"
@@ -203,7 +197,6 @@ export const Navbar = () => {
                 isBordered
                 className={clsx({
                   hidden: !isCookiePresent,
-                  // hidden: true,
                 })}
                 color={"danger"}
                 radius="lg"
@@ -308,7 +301,26 @@ export const Navbar = () => {
       </NavbarContent>
 
       <NavbarMenu>
-        {searchInput}
+        <Input
+          aria-label="Search"
+          classNames={{
+            inputWrapper: "bg-default-100",
+            input: "text-sm",
+          }}
+          endContent={
+            <Kbd className="hidden lg:inline-block" keys={["enter"]}>
+              ↵
+            </Kbd>
+          }
+          placeholder="搜索..."
+          startContent={
+            <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
+          }
+          type="search"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={handleSearch}
+        />
         <div className="mx-4 mt-2 flex flex-col gap-2">
           {siteConfig.navMenuItems.map((item, index) => (
             <NavbarMenuItem key={`${item}-${index}`}>

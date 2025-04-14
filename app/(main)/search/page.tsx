@@ -2,48 +2,18 @@
 
 import {  useState } from "react";
 import { useRouter } from "next/navigation";
-interface SearchResult {
-  title: string;
-  url: string;
-  snippet: string;
-}
-
-const mockResults: SearchResult[] = [
-  {
-    title: "手术注意事项 - 医疗百科",
-    url: "https://medical.com/surgery-guide",
-    snippet: "了解手术前的准备事项和术后护理指南，包含常见手术的注意事项..."
-  },
-  {
-    title: "微创手术最新技术发展",
-    url: "https://tech-surgery.com",
-    snippet: "近年来微创手术技术的突破性进展，减少患者恢复时间..."
-  }
-];
-
 export default function SearchPage() {
   const [query, setQuery] = useState('');
   const router = useRouter();
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!query.trim()) return;
-
-    // TODO: 替换为实际API调用
-    // fetch(`/api/search?q=${encodeURIComponent(query)}`)
-    //   .then(res => res.json())
-    //   .then(data => router.push({
-    //     pathname: '/results',
-    //     query: { q: query },
-    //   }))
-
-    // 使用模拟数据跳转
-
-    router.push(`/search/results?q=${encodeURIComponent(query)}`);
+        router.push(`/search/results?q=${encodeURIComponent(query)}`);
   };
 
   return (
-    <div className=" mt-36 flex flex-col items-center justify-center p-4">
+    <div className=" mt-24 ml-36 flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-3xl space-y-6">
         <h1 className="text-7xl font-bold text-center text-blue-600">CNI-BBS</h1>
         
