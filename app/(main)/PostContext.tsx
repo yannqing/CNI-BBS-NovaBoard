@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 import { toast } from "sonner";
 
 import { GetPostListRequest, Post } from "@/types/post/post";
@@ -89,9 +89,7 @@ export function PostProvider({ children }: { children: React.ReactNode }) {
         // 后端返回无数据
         toast.error(ErrorCode.SERVER_ERROR.message);
       }
-    } catch (error) {
-      console.error("err--->", error);
-    }
+    } catch (error) {}
   };
 
   //   useEffect(() => {

@@ -52,7 +52,7 @@ export function encrypt(word: string, ivBase64: string) {
  * @param {string} ivBase64 对应的 iv
  * @returns {string} - 解密后的 json 字符串
  */
-export function decrypt(encryptWord: string, ivBase64: string) {
+export function decrypt(encryptWord: string, ivBase64: string): string {
   try {
     // 将 IV Base64转换为 WordArray
     let iv1 = CryptoJS.enc.Base64.parse(deformatBase64(ivBase64));

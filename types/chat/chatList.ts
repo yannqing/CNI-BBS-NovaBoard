@@ -30,7 +30,7 @@ export type GetChatRecordRequest = {
 // 查询聊天内容，响应参数
 export type GetChatRecordResponse = {
   chatMessageContent: ChatMessageContent;
-  fromId: number;
+  fromId: string;
   id: number;
   isShowTime: boolean;
   levelType: string;

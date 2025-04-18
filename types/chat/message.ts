@@ -11,10 +11,10 @@ type SendMessageRequestType = {
 
 // 消息内容
 type ChatMessageContent = {
-  fromUserId?: string;
-  fromUserName?: string;
+  formUserId?: string;
+  formUserName?: string;
   // 发送方用户头像
-  fromUserPortrait?: string;
+  formUserPortrait?: string;
   // 消息内容类型 check in MessageContentType
   type?: string;
   content?: string;

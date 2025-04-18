@@ -2,15 +2,15 @@ import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
 import clsx from "clsx";
 import { Toaster } from "sonner";
-import { Suspense } from "react";
+import React, { Suspense } from "react";
 import { Inter } from "next/font/google";
 
 import { Providers } from "./(main)/providers";
+import { ChatProvider } from "./(main)/chat/ChatContext";
 
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import { UserProvider } from "@/app/UserContext";
-import { ChatProvider } from "./(main)/chat/ChatContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -44,10 +44,12 @@ export default function RootLayout({
 }) {
   return (
     <html suppressHydrationWarning lang="en">
-      <head />
+      <head>
+        <title>CNI-BBS</title>
+      </head>
       <body
         className={clsx(
-          "min-h-screen bg-background font-sans antialiased",
+          "min-h-screen bg-background font-sans antialiasing",
           fontSans.variable,
           inter.className,
         )}
@@ -55,12 +57,12 @@ export default function RootLayout({
         <Suspense fallback={<LoadingComponent />}>
           <UserProvider>
             <ChatProvider>
-              <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
+              <Providers
+                themeProps={{ attribute: "class", defaultTheme: "dark" }}
+              >
                 <div className="relative flex flex-col h-screen">
                   <Toaster richColors position="top-center" />
-                  <main className="container mx-auto max-w-7xl flex-grow">
-                    {children}
-                  </main>
+                  <main className="flex-grow">{children}</main>
                 </div>
               </Providers>
             </ChatProvider>

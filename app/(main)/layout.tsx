@@ -35,9 +35,7 @@ export default function RootLayout({
       <Toaster richColors position="top-center" />
       <UserProvider>
         <Navbar />
-        <main className="container mx-auto max-w-7xl flex-grow">
-          {children}
-        </main>
+        <main className="flex-grow">{children}</main>
       </UserProvider>
       <footer className="w-full flex flex-col items-center justify-center py-3">
         <div>

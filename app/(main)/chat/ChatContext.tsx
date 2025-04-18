@@ -1,6 +1,13 @@
 "use client";
 // eslint-disable-next-line import/order
-import { createContext, useContext, useEffect, useState, useMemo, useCallback } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useMemo,
+  useCallback,
+} from "react";
 
 import { getChatListAction } from "./action";
 
@@ -38,11 +45,14 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
   // 添加一个状态来追踪是否在客户端
   const [isClient, setIsClient] = useState(false);
 
-  const getChatListRequest: GetChatListRequest = useMemo(() => ({
-    pageNo: 1,
-    pageSize: 10,
-    fromId: getCookie()?.id,
-  }), []);
+  const getChatListRequest: GetChatListRequest = useMemo(
+    () => ({
+      pageNo: 1,
+      pageSize: 10,
+      fromId: getCookie()?.id,
+    }),
+    [],
+  );
 
   // 获取聊天列表，接口调用
   const fetchChatList = useCallback(async () => {
@@ -52,21 +62,24 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     console.log("开始获取聊天列表");
     const res: BaseResponse<BasePage<GetChatListResponse>> =
       await getChatListAction(getChatListRequest);
-    
+
     console.log("获取聊天列表响应:", res);
-    
+
     if (res.success && res.data) {
       console.log("更新聊天列表:", res.data.records);
       setChatList(res.data.records);
-      setUpdateFlag(prev => prev + 1);
+      setUpdateFlag((prev) => prev + 1);
     } else {
       console.log("获取聊天列表失败:", res);
     }
   }, [getChatListRequest, isClient]);
 
   const resetChatList = useCallback(async () => {
+    console.log("重置聊天列表开始");
     await fetchChatList();
-  }, [fetchChatList]);
+    console.log("重置后的聊天列表:", chatList);
+    // 不返回任何值
+  }, [fetchChatList, chatList]);
 
   const { isCookiePresent } = useGetUserContext();
 
@@ -93,7 +106,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
       chatList,
       resetChatList,
     }),
-    [chatList, resetChatList, updateFlag]
+    [chatList, resetChatList, updateFlag],
   );
 
   // 在服务端渲染时返回加载状态
@@ -103,7 +116,11 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <ChatContext.Provider value={contextValue}>
-      {chatList === null || chatList === undefined ? <div>加载中。。。</div> : children}
+      {chatList === null || chatList === undefined ? (
+        <div>加载中。。。</div>
+      ) : (
+        children
+      )}
     </ChatContext.Provider>
   );
 }

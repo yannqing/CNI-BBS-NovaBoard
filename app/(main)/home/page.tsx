@@ -7,10 +7,14 @@ import { Tooltip } from "@nextui-org/tooltip";
 import { User } from "@nextui-org/user";
 import { Button } from "@nextui-org/button";
 import { Avatar } from "@nextui-org/avatar";
-import { useRouter,useSearchParams  } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 
-import { buildFollowAction, removeFollowAction,getUserInfoByTokenAction } from "./action";
+import {
+  buildFollowAction,
+  removeFollowAction,
+  getUserInfoByTokenAction,
+} from "./action";
 
 import { useGetPostContext } from "@/app/(main)/PostContext";
 import { useGetUserContext } from "@/app/UserContext";
@@ -34,11 +38,12 @@ export default function HomePage() {
   >({});
   const { updateCookie } = useGetUserContext();
 
-
   // 标签
   const { postList } = useGetPostContext();
+
   useEffect(() => {
-    const token = searchParams.get('token');
+    const token = searchParams.get("token");
+
     if (token) {
       handleTokenLogin(token);
     }
@@ -47,8 +52,9 @@ export default function HomePage() {
   const handleTokenLogin = async (token: string) => {
     try {
       const res: BaseResponse<LoginDTO> = await getUserInfoByTokenAction(token);
-      debugger
-        if (res.success && res.data) {
+
+      debugger;
+      if (res.success && res.data) {
         await new Promise<void>((resolve) => {
           localStorage.setItem("token", res.data?.token || "");
           updateCookie(userInfoCookie, JSON.stringify(res.data), false);
@@ -60,7 +66,7 @@ export default function HomePage() {
         toast.error(res.message);
       }
     } catch (error) {
-      toast.error("Token登录请求失败:"+ error);
+      toast.error("Token登录请求失败:" + error);
     }
   };
 
@@ -93,7 +99,7 @@ export default function HomePage() {
 
         return;
       }
-      if(userId == targetUserId){
+      if (userId == targetUserId) {
         return;
       }
       if (followStatus === FollowStatus.CONFIRMED) {
@@ -101,8 +107,8 @@ export default function HomePage() {
           userId: userId,
           followerId: targetUserId,
         };
-        const res: BaseResponse<null> = await removeFollowAction(request);
 
+        await removeFollowAction(request);
         toast.success("取消关注成功!");
       } else if (followStatus === FollowStatus.NONE) {
         const request: BuildFollowRequest = {
@@ -123,7 +129,6 @@ export default function HomePage() {
             : FollowStatus.CONFIRMED,
       }));
     } catch (error) {
-      console.error("Failed to update follow status:", error);
       // 如果失败，可以在这里恢复状态或者提示用户
     }
   };
