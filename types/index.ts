@@ -15,3 +15,10 @@ export type BasePage<Object> = {
   records: Object[];
   total: number;
 };
+
+export type PageResult<T> = {
+  total: number;
+  current: number;
+  pageSize: number;
+  records: T[];
+};

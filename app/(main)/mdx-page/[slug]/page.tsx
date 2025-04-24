@@ -10,6 +10,8 @@ import { getPostInfoByIdAction } from "@/app/(main)/mdx-page/[slug]/action";
 import { BaseResponse } from "@/types";
 import { GetPostByIdResponse } from "@/types/post/post";
 import AuthorCard from "@/components/myself/author/AuthorCard";
+import CommentList from "@/components/post/CommentList";
+
 
 export default function Page({ params }: { params: { slug: string } }) {
   const [postContent, setPostContent] = useState<GetPostByIdResponse>();
@@ -88,11 +90,13 @@ export default function Page({ params }: { params: { slug: string } }) {
       </div>
       <div className={"px-10 flex justify-center w-full mt-5"}>
         <div className={"w-2/3"}>
-          <ReactMarkdown className={"w-full"}>
+          {/* <ReactMarkdown className={"w-full"}>
             {postContent?.postContent?.content}
-          </ReactMarkdown>
+          </ReactMarkdown> */}
         </div>
       </div>
+      <CommentList postId={params.slug}/>
+
       <Divider className="my-4" />
       <div className={"flex justify-center w-full mt-1 px-10"}>
         <div className={"w-2/3 font-serif text-sm"}>
