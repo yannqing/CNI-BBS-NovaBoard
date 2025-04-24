@@ -1,7 +1,7 @@
 import { TopBar } from "@/components/home/topbar";
 import RightSideBar from "@/app/(main)/home/rightSideBar";
 import { PostProvider } from "@/app/(main)/PostContext";
-
+import ChatBot from "@/components/home/ChatBot";
 export default function HomeLayout({
   children,
 }: {
@@ -17,6 +17,7 @@ export default function HomeLayout({
           </div>
           <div className="hidden md:flex w-1/4 ml-6 h-screen">
             <RightSideBar />
+            <ChatBot />
           </div>
         </div>
       </PostProvider>
