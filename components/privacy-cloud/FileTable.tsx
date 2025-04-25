@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useDisclosure } from "@nextui-org/react";
+import ShareModal from "./ShareModal";
 import {
   Table,
   TableHeader,
@@ -16,8 +18,12 @@ import {
   CardFooter,
   Divider,
   Button,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem
 } from "@nextui-org/react";
-import { Download, Trash2 } from "lucide-react";
+import { Download, Trash2, Info, Filter } from "lucide-react";
 import {
   queryFileListAction,
   createTemporaryUrlAction,
@@ -52,6 +58,9 @@ const columns = [
   { name: "类型", uid: "type" },
   { name: "大小", uid: "size" },
   { name: "修改时间", uid: "modified" },
+  { name: "文件路径", uid: "path" },
+  { name: "ETAG", uid: "etag" },
+  { name: "存储类型", uid: "storagetype" },
   { name: "操作", uid: "actions" },
 ];
 
@@ -75,16 +84,44 @@ const fileTypeMap: Record<string, string> = {
   default: "文件",
 };
 
+const formatFileSize = (bytes: string) => {
+  if (!bytes) return '0 B';
+  const size = parseInt(bytes);
+  if (size < 1024) return `${size} B`;
+  if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`;
+  if (size < 1024 * 1024 * 1024) return `${(size / (1024 * 1024)).toFixed(1)} MB`;
+  return `${(size / (1024 * 1024 * 1024)).toFixed(1)} GB`;
+};
+
+const formatDate = (dateStr: string) => {
+  if (!dateStr) return '';
+  const date = new Date(dateStr);
+  return date.toLocaleString('zh-CN', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+};
+
 const getFileType = (fileName: string) => {
   const ext = fileName.split(".").pop()?.toLowerCase() || "";
   return fileTypeMap[ext] || fileTypeMap.default;
 };
+
 interface FileTableProps {
-    isList: boolean;
-    currentId?: string;
-  }
-  export default function FileTable({ isList, currentId }: FileTableProps) {
+  isList: boolean;
+  currentId?: string;
+  key?: number;
+}
+
+export default function FileTable({ isList, currentId }: FileTableProps) {
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [selectedFile, setSelectedFile] = useState<FileItem | null>(null);
   const [files, setFiles] = useState<FileItem[]>([]);
+  const [filteredFiles, setFilteredFiles] = useState<FileItem[]>([]);
+  const [filterType, setFilterType] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -96,7 +133,9 @@ interface FileTableProps {
       }
       try {
         const response: BaseResponse<FileListVo> = await queryFileListAction(currentId);
-        setFiles(response.data?.files || []);
+        const fetchedFiles = response.data?.files || [];
+        setFiles(fetchedFiles);
+        setFilteredFiles(fetchedFiles);
       } catch (error) {
         toast.error("获取文件列表失败");
         console.error(error);
@@ -105,29 +144,28 @@ interface FileTableProps {
     fetchFiles();
   }, [currentId, router]);
 
-  const handleDownload = async (file: FileItem) => {
-    if (!currentId) {
-        toast.error("请先登录");
-        router.push("/login");
-        return;
-      }
-    try {
-      const data : CreateTemporaryUrlRequest = {
-        fileName: file.fileName,
-        userId: currentId,
-        expiresIn: 7,
-        isPrivate: '0'
-      };
-      const response = await createTemporaryUrlAction(data);
-      debugger
-      if (response.data) {
-        window.open(response.data, "_blank");
-      } else {
-        console.error("No download URL returned");
-      }
-    } catch (error) {
-      console.error("Download failed:", error);
+  const applyFilters = () => {
+    let result = [...files];
+    
+    if (filterType) {
+      result = result.filter(file => getFileType(file.fileName ?? '') === filterType);
     }
+
+    setFilteredFiles(result);
+  };
+
+  useEffect(() => {
+    applyFilters();
+  }, [filterType, files]);
+
+  const handleDownload = (file: FileItem) => {
+    if (!currentId) {
+      toast.error("请先登录");
+      router.push("/login");
+      return;
+    }
+    setSelectedFile(file);
+    onOpen();
   };
 
   const handleDelete = async (file: FileItem) => {
@@ -147,8 +185,8 @@ interface FileTableProps {
       const res : BaseResponse<boolean>=await deleteFileAction(data);
       if (res.data) {
         toast.success("删除成功");
-        
-      setFiles((prev) => prev.filter((fileprev) => fileprev.etag !== file.etag));
+        setFiles((prev) => prev.filter((fileprev) => fileprev.etag !== file.etag));
+        setFilteredFiles((prev) => prev.filter((fileprev) => fileprev.etag !== file.etag));
       } else {
         toast.error("删除失败");
       }
@@ -171,11 +209,17 @@ interface FileTableProps {
           </div>
         );
       case "type":
-        return <Chip variant="flat">{file.fileType}</Chip>;
+        return <Chip variant="flat">{getFileType(file.fileName ?? '')}</Chip>;
       case "size":
-        return <span>{file.fileSize}</span>;
+        return <span>{formatFileSize(file.fileSize ?? '0')}</span>;
       case "modified":
-        return <span>{file.lastModified}</span>;
+        return <span>{formatDate(file.lastModified ?? '')}</span>;
+      case "path":
+        return <span className="truncate max-w-[200px]">{file.filePath}</span>;
+      case "etag":
+        return <span className="truncate max-w-[100px]">{file.etag}</span>;
+      case "storagetype":
+        return <span>{file.storageClass}</span>;
       case "actions":
         return (
           <div className="flex gap-2">
@@ -207,72 +251,139 @@ interface FileTableProps {
     }
   };
 
+  const renderFilterButtons = () => (
+    <div className="flex gap-2 mb-4">
+      <Dropdown>
+        <DropdownTrigger>
+          <Button variant="bordered" startContent={<Filter size={16} />}>
+            类型筛选
+          </Button>
+        </DropdownTrigger>
+        <DropdownMenu 
+          aria-label="类型筛选"
+          onAction={(key) => setFilterType(key === 'all' ? null : key as string)}
+        >
+          <DropdownItem key="all">全部</DropdownItem>
+          <DropdownItem key="图片">图片</DropdownItem>
+          <DropdownItem key="视频">视频</DropdownItem>
+          <DropdownItem key="文档">文档</DropdownItem>
+          <DropdownItem key="压缩文件">压缩文件</DropdownItem>
+        </DropdownMenu>
+      </Dropdown>
+    </div>
+  );
+
   if (!isList) {
-    // Grid 卡片视图
-    return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {files.map((file) => (
-          <Card key={file.etag} className="max-w-[240px]">
-            <CardBody className="flex flex-col items-center justify-center p-4">
-              <Image
-                alt="file icon"
-                className="w-16 h-16"
-                src={`/icons/${(file.fileType ?? "file").split(" ")[0].toLowerCase()}.png`}
-              />
-              <p className="text-sm font-medium mt-2 text-center truncate w-full">
-                {file.fileName}
-              </p>
-            </CardBody>
-            <Divider />
-            <CardFooter className="flex justify-between">
-              <Tooltip content="下载">
-                <Button
-                  isIconOnly
-                  size="sm"
-                  variant="light"
-                  onPress={() => handleDownload(file)}
+  return (
+    <>
+      {selectedFile && (
+        <ShareModal
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          fileName={selectedFile.fileName || ""}
+          userId={currentId || ""}
+        />
+      )}
+        {renderFilterButtons()}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {filteredFiles.map((file) => (
+            <Card key={file.etag} className="max-w-[240px]">
+              <CardBody className="flex flex-col items-center justify-center p-4">
+                {file.fileType?.includes("图片") || file.fileType?.includes("视频") ? (
+                  <Image
+                    alt="file preview"
+                    className="w-full h-32 object-contain"
+                    src={file.filePath}
+                  />
+                ) : (
+                  <Image
+                    alt="file icon"
+                    className="w-16 h-16"
+                    src={`/icons/${(file.fileType ?? "file").split(" ")[0].toLowerCase()}.png`}
+                  />
+                )}
+                <p className="text-sm font-medium mt-2 text-center truncate w-full">
+                  {file.fileName}
+                </p>
+              </CardBody>
+              <Divider />
+              <CardFooter className="flex justify-between items-center">
+                <Tooltip 
+                  content={
+                    <div className="p-2">
+                      <p>文件名: {file.fileName}</p>
+                      <p>类型: {getFileType(file.fileName ?? '')}</p>
+                      <p>大小: {formatFileSize(file.fileSize ?? '0')}</p>
+                      <p>修改时间: {formatDate(file.lastModified ?? '')}</p>
+                      <p>文件路径: {file.filePath}</p>
+                      <p>ETAG: {file.etag}</p>
+                      <p>存储类型: {file.storageClass}</p>
+                    </div>
+                  }
                 >
-                  <Download size={16} />
-                </Button>
-              </Tooltip>
-              <Tooltip content="删除" color="danger">
-                <Button
-                  isIconOnly
-                  size="sm"
-                  variant="light"
-                  color="danger"
-                  onPress={() => handleDelete(file)}
-                >
-                  <Trash2 size={16} />
-                </Button>
-              </Tooltip>
-            </CardFooter>
-          </Card>
-        ))}
-      </div>
+                  <Button isIconOnly size="sm" variant="light">
+                    <Info size={16} />
+                  </Button>
+                </Tooltip>
+                <Tooltip content="下载">
+                  <Button
+                    isIconOnly
+                    size="sm"
+                    variant="light"
+                    onPress={() => handleDownload(file)}
+                  >
+                    <Download size={16} />
+                  </Button>
+                </Tooltip>
+                <Tooltip content="删除" color="danger">
+                  <Button
+                    isIconOnly
+                    size="sm"
+                    variant="light"
+                    color="danger"
+                    onPress={() => handleDelete(file)}
+                  >
+                    <Trash2 size={16} />
+                  </Button>
+                </Tooltip>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      </>
     );
   }
 
-  // List 表格视图
   return (
-    <Table aria-label="文件列表">
-      <TableHeader columns={columns}>
-        {(column) => (
-          <TableColumn
-            key={column.uid}
-            align={column.uid === "actions" ? "center" : "start"}
-          >
-            {column.name}
-          </TableColumn>
-        )}
-      </TableHeader>
-      <TableBody items={files}>
-        {(item) => (
-          <TableRow key={item.etag}>
-            {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+    <>
+      {selectedFile && (
+        <ShareModal
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          fileName={selectedFile.fileName || ""}
+          userId={currentId || ""}
+        />
+      )}
+      {renderFilterButtons()}
+      <Table aria-label="文件列表">
+        <TableHeader columns={columns}>
+          {(column) => (
+            <TableColumn
+              key={column.uid}
+              align={column.uid === "actions" ? "center" : "start"}
+            >
+              {column.name}
+            </TableColumn>
+          )}
+        </TableHeader>
+        <TableBody items={filteredFiles}>
+          {(item) => (
+            <TableRow key={item.etag}>
+              {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </>
   );
 }

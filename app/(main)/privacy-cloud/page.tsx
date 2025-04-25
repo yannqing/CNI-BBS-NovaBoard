@@ -8,10 +8,8 @@ import { getCookie } from "@/utils/cookies";
 
 import SelectButton from "@/components/privacy-cloud/SelectButton";
 import FileTable from "@/components/privacy-cloud/FileTable";
-// import { uploadFileAction } from "@/utils/upload";
-import {
-  UploadFileRequest
-} from '@/types/cloud/cloudfile';
+import { uploadFileAction } from "@/app/(main)/privacy-cloud/action";
+
 import { toast } from "sonner";
 import { BaseResponse } from "@/types";
 
@@ -24,14 +22,14 @@ export default function PrivacyCloudPage() {
   const router = useRouter();
   const currentUser = getCookie();
   const currentId = currentUser?.id;
-
-  // 新增状态管理
+  const token = currentUser?.token;
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [filePreview, setFilePreview] = useState<string | null>(null);
   const [fileType, setFileType] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [reloadKey, setReloadKey] = useState(0);
 
   // 动态创建文件选择器，支持多种文件类型，根据需求修改accept
   const handleFileSelect = () => {
@@ -44,9 +42,9 @@ export default function PrivacyCloudPage() {
       const file = (e.target as HTMLInputElement).files?.[0];
       if (!file) return;
 
-      // 检查文件大小限制 —— 示例：20MB
-      if (file.size > 20 * 1024 * 1024) {
-        toast.error("文件大小不能超过20MB");
+      // 检查文件大小限制 —— 示例：1G
+      if (file.size > 1024 * 1024 * 1024) {
+        toast.error("文件大小不能超过1G");
         return;
       }
 
@@ -77,11 +75,12 @@ export default function PrivacyCloudPage() {
   const handleUpload = async () => {
     if (!selectedFile) return;
 
-    if (!currentId) {
+  if (!currentId || !token) {
       toast.error("请先登录");
       router.push("/login");
       return;
     }
+
 
     setIsUploading(true);
     setUploadProgress(0);
@@ -100,12 +99,13 @@ export default function PrivacyCloudPage() {
       }, 300);
 
       // 组装上传请求参数
-      const data: UploadFileRequest = {
-        file: selectedFile,
-        userId: currentId,
-      };
+      const formData = new FormData();
+      formData.append("file", selectedFile); 
+      formData.append("userId", currentId); 
+      formData.append("token", token);    
+  
 
-      const res: BaseResponse<string> = await uploadFileAction(data);
+      const res: BaseResponse<any> = await uploadFileAction(formData);
 
       clearInterval(interval);
 
@@ -116,7 +116,8 @@ export default function PrivacyCloudPage() {
         setFilePreview(null);
         setIsUploading(false);
         setUploadProgress(0);
-        router.refresh(); // 刷新页面更新列表
+        // 强制重新获取文件列表
+        setReloadKey(prev => prev + 1); // 触发FileTable重新加载
       } else {
         toast.error(res.message || "上传失败");
         setIsUploading(false);
@@ -167,15 +168,12 @@ export default function PrivacyCloudPage() {
           </ButtonGroup>
         </div>
       </div>
-      <div className="mt-5">
-        <div className="gap-3 flex">
-          <SelectButton>类型</SelectButton>
-          <SelectButton>修改时间</SelectButton>
-          <SelectButton>大小</SelectButton>
-        </div>
-      </div>
       <div className="mt-4">
-        <FileTable isList={viewMode === "list"} currentId={currentId} />
+        <FileTable 
+          isList={viewMode === "list"} 
+          currentId={currentId} 
+          key={reloadKey} 
+        />
       </div>
 
       {/* 上传确认模态框 */}
