@@ -16,7 +16,7 @@ export default function ChatLayout({
         <ChatProvider>
           <Provider>
             <SidBar />
-            <div className="hidden md:flex w-5/6 h-full">{children}</div>
+            <div className="flex w-full md:w-5/6 h-full">{children}</div>
           </Provider>
         </ChatProvider>
       </div>

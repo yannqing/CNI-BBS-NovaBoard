@@ -1,5 +1,5 @@
 // 发送消息请求
-type SendMessageRequestType = {
+export type SendMessageRequestType = {
   fromId?: string;
   toId?: string;
   // 消息源：user，group，system
@@ -10,7 +10,7 @@ type SendMessageRequestType = {
 };
 
 // 消息内容
-type ChatMessageContent = {
+export type ChatMessageContent = {
   formUserId?: string;
   formUserName?: string;
   // 发送方用户头像
