@@ -46,5 +46,5 @@ export function middleware(request: NextRequest) {
 
 // 路由匹配
 export const config = {
-  matcher: ["/chat/:path*", "/"],
+  matcher: ["/chat/:path*", "/", "/v3/:path*", "/aiService/:path*"],
 };

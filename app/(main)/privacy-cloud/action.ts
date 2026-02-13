@@ -12,8 +12,7 @@ import { CustomError } from "@/types/error/Error";
 import { ErrorCode } from "@/types/error/ErrorCode";
 import { BaseResponse } from "@/types";
 import { headers } from "next/headers";
-
-const BaseURL = "http://localhost:8080";
+import { BACKEND_URL } from "@/config/api";
 
 /**
  * 根据用户ID查询文件列表
@@ -74,8 +73,7 @@ export async function uploadFileAction(formData: FormData) {
     const uploadFormData = new FormData();
     uploadFormData.append("file", file);
     uploadFormData.append("userId", userId);
-    let backendUrl = process.env.BackEndUrl || BaseURL;
-    const response = await fetch(`${backendUrl}/common/upload/file`, {
+    const response = await fetch(`${BACKEND_URL}/common/upload/file`, {
       method: "POST",
       body: uploadFormData,
       headers: {

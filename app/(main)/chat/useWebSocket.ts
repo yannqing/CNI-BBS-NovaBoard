@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import { getCookie } from "@/utils/cookies";
+import { WEBSOCKET_URL } from "@/config/api";
 
 interface WebSocketHookOptions {
   onMessage?: (message: any) => void;
@@ -43,7 +44,7 @@ export const useWebSocket = (options: WebSocketHookOptions = {}) => {
 
     try {
       // 在 URL 中添加 token 参数
-      const wsUrl = `ws://localhost:9100/ws?x-token=${userInfo?.token}`;
+      const wsUrl = `${WEBSOCKET_URL}/ws?x-token=${userInfo?.token}`;
 
       ws.current = new WebSocket(wsUrl);
 

@@ -90,9 +90,9 @@ export default function Page({ params }: { params: { slug: string } }) {
       </div>
       <div className={"px-10 flex justify-center w-full mt-5"}>
         <div className={"w-2/3"}>
-          {/* <ReactMarkdown className={"w-full"}>
+          <ReactMarkdown className={"w-full"}>
             {postContent?.postContent?.content}
-          </ReactMarkdown> */}
+          </ReactMarkdown>
         </div>
       </div>
       <CommentList postId={params.slug}/>

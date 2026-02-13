@@ -1,3 +1,5 @@
+import { AUTH_URLS } from "./api";
+
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
@@ -56,12 +58,10 @@ export const siteConfig = {
     },
   ],
   links: {
-    wechat: "http://us.shumei.gq:8999/auth/render/wechat_open",
-    gitee: "http://us.shumei.gq:8999/auth/render/gitee",
-    google: "http://us.shumei.gq:8999/auth/render/google",
-    // wechat: "http://localhost:8080/auth/render/wechat_open",
-    // gitee: "http://localhost:8080/auth/render/gitee",
-    // google: "http://localhost:8080/auth/render/google",
+    // OAuth 认证链接从统一配置获取
+    wechat: AUTH_URLS.wechat,
+    gitee: AUTH_URLS.gitee,
+    google: AUTH_URLS.google,
 
     githubproject: "https://github.com/patricleehua/CNI-BBS-TitanCore"
   },
